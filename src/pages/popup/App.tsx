@@ -4,7 +4,7 @@ const App = (): JSX.Element => {
 	return (
 		<div>
 			<h1>Popup Page</h1>
-			<p>If you are seeing this, pat is workig!</p>
+			<p>If you are seeing this, pat is working!</p>
 		</div>
 	)
 }
