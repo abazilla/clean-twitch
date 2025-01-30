@@ -4,10 +4,23 @@
 	"private": true,
 	"description": "Hide annoying twitch stuff",
 	"author": "aba",
+	"source": "src/pages/popup/index.html",
+	"targets": {
+		"chrome": {
+			"engines": {
+				"browsers": "> 0.5%, last 5 Chrome version"
+			}
+		},
+		"firefox": {
+			"engines": {
+				"browsers": "last 5 firefox version"
+			}
+		}
+	},
 	"scripts": {
-		"build": "rollup -c",
-		"release": "cross-env NODE_ENV=production rollup -c",
-		"start": "rollup -c -w",
+		"start": "parcel watch src/manifest.json --host localhost",
+		"build": "rm -rf dist && parcel build src/manifest.json && rm -rf releases && mkdir releases && zip -r releases/hide-twitch-2-chrome-$(jq -r .version < package.json).zip dist/chrome",
+		"build-firefox": "rm -rf dist && parcel build src/manifest.json && rm -rf releases && mkdir releases && zip -r releases/hide-twitch-2-firefox-$(jq -r .version < package.json).zip dist/firefox",
 		"test": "jest"
 	},
 	"dependencies": {
@@ -17,11 +30,7 @@
 	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^4.4.1",
-		"@rollup/plugin-alias": "^3.1.1",
-		"@rollup/plugin-commonjs": "^17.0.0",
-		"@rollup/plugin-node-resolve": "^11.0.1",
-		"@rollup/plugin-replace": "^3.0.0",
-		"@rollup/plugin-typescript": "^8.1.0",
+		"@parcel/config-webextension": "^2.13.3",
 		"@types/chrome": "^0.0.193",
 		"@types/firefox-webext-browser": "^82.0.0",
 		"@types/jest": "^26.0.19",
@@ -31,16 +40,16 @@
 		"@types/webextension-polyfill": "^0.12.1",
 		"@typescript-eslint/eslint-plugin": "^8.22.0",
 		"@typescript-eslint/parser": "^8.22.0",
-		"cross-env": "^7.0.3",
+		"autoprefixer": "^10.4.20",
 		"eslint": "^9.19.0",
 		"eslint-plugin-react": "^7.21.5",
 		"jest": "^26.6.3",
 		"jest-chrome": "^0.7.0",
+		"parcel": "^2.13.3",
+		"postcss": "^8.5.1",
 		"prettier": "3.4.2",
-		"rollup": "^2.56.3",
-		"rollup-plugin-chrome-extension": "^3.6.12",
-		"rollup-plugin-empty-dir": "^1.0.5",
-		"rollup-plugin-zip": "^1.0.3",
+		"process": "^0.11.10",
+		"tailwindcss": "^4.0.1",
 		"ts-jest": "^26.4.4",
 		"tslib": "^2.0.3",
 		"typescript": "^4.1.3",
