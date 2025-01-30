@@ -1,9 +1,14 @@
-import React from 'react'
-import { render } from 'react-dom'
-import App from './App'
+import React from "react"
+import { createRoot } from "react-dom/client"
 
-console.log('popup script')
+import App from "./App"
 
-const root = document.querySelector('#root')
+console.log("popup script test")
 
-render(<App />, root)
+const rootElement = document.querySelector("#root")
+if (rootElement) {
+	const root = createRoot(rootElement)
+	root.render(<App />)
+} else {
+	console.error("Root element not found")
+}

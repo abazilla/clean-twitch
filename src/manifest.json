@@ -17,6 +17,5 @@
 		}
 	],
 	"background": { "service_worker": "background/index.ts" },
-	"host_permissions": ["https://*.twitch.tv/*"],
 	"action": { "default_popup": "pages/popup/index.html" }
 }

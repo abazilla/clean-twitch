@@ -1,4 +1,5 @@
 import $ from "jquery"
+
 import { Status } from "./types"
 
 const strg = chrome.storage

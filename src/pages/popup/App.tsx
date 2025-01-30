@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { JSX } from "react"
 
 const App = (): JSX.Element => {
-  return (
-    <div>
-      <h1>Popup Page</h1>
-      <p>If you are seeing this, React is working!</p>
-    </div>
-  )
+	return (
+		<div>
+			<h1>Popup Page</h1>
+			<p>If you are seeing this, pat is workig!</p>
+		</div>
+	)
 }
 
 export default App

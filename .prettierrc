@@ -4,8 +4,7 @@
 	"trailingComma": "es5",
 	"singleQuote": false,
 	"semi": false,
-	"plugins": [],
+	"plugins": ["@ianvs/prettier-plugin-sort-imports"],
 	"importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "", "^@(/.*)$", "^[.]", ".css$"],
-	"importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
-	"importOrderTypeScriptVersion": "5.0.0"
+	"importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
 }
