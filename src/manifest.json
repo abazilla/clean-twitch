@@ -1,0 +1,22 @@
+{
+	"name": "Hide Twitch Chrome Extension",
+	"description": "Hide unwanted sections of twitch",
+	"version": "0.1.0",
+	"manifest_version": 3,
+	"permissions": [
+		"tabs",
+		"scripting",
+		"storage",
+		"declarativeNetRequest",
+		"declarativeNetRequestFeedback"
+	],
+	"content_scripts": [
+		{
+			"matches": ["https://*.twitch.tv/*"],
+			"js": ["content/index.ts"]
+		}
+	],
+	"background": { "service_worker": "background/index.ts" },
+	"host_permissions": ["https://*.twitch.tv/*"],
+	"action": { "default_popup": "pages/popup/index.html" }
+}
