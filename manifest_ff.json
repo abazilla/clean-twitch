@@ -18,10 +18,17 @@
 			"js": ["content/index.ts"]
 		},
 		{
-			"world": "MAIN",
+			"all_frames": true,
 			"run_at": "document_start",
+			// "contentScriptWhen": "start", // ff friendly
 			"matches": ["https://*.twitch.tv/*"],
-			"js": ["content/ws/sniffer.ts"]
+			"js": ["content/ws-setup.ts"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["content/ws-setup.ts"],
+			"matches": ["https://*.twitch.tv/*"]
 		}
 	],
 	"background": { "service_worker": "background/index.ts" },
