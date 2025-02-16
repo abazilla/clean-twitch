@@ -1,15 +1,62 @@
-export interface FeatureItem {
-	id: string
-	label: string
-	conflicts: string[]
-	children?: FeatureItem[]
-}
+// export interface FeatureItem {
+// 	id: string
+// 	label: string
+// 	conflicts: readonly string[]
+// 	children: readonly FeatureItem[]
+// }
 
-export const features: FeatureItem[] = [
+// type ExtractFeatureIds<T extends readonly FeatureItem[]> =
+// 	| T[number]["id"]
+// 	| (T[number] extends { children: readonly FeatureItem[] }
+// 			? ExtractFeatureIds<T[number]["children"]>
+// 			: never)
+
+// export type FeatureId = ExtractFeatureIds<typeof features>
+
+export type FeatureItem = (typeof features)[number]
+
+export type FeatureId = FeatureItem["id"] | FeatureItem["children"][number]["id"]
+
+// todo convert FeatureItem to type of features?
+export const features = [
 	{
 		id: "block_gql",
 		label: "Block GQL Requests",
 		conflicts: [],
+		children: [],
+	},
+	{
+		id: "greyscale_all",
+		label: "Grayscale Site",
+		conflicts: [],
+		children: [],
+	},
+	{
+		id: "hide_left_sidebar",
+		label: "Hide left sidebar",
+		conflicts: [],
+		children: [
+			{
+				id: "hide_left_sidebar_stories",
+				label: 'Hide "Stories"',
+				conflicts: [],
+			},
+			{
+				id: "hide_left_sidebar_followed_channels",
+				label: 'Hide "Followed Channels"',
+				conflicts: [],
+			},
+			{
+				id: "hide_left_sidebar_live_channels",
+				label: 'Hide "Live Channels"',
+				conflicts: [],
+			},
+			{
+				id: "hide_left_sidebar_viewers_also_watch",
+				label: 'Hide "Viewers Also Watch"',
+				conflicts: [],
+			},
+		],
 	},
 	{
 		id: "chat_only",
@@ -27,15 +74,18 @@ export const features: FeatureItem[] = [
 		id: "no_chat",
 		label: "Hide Chat",
 		conflicts: ["chat_only"],
+		children: [],
 	},
 	{
 		id: "no_recommendations",
-		label: "Hide Recommendations",
+		label: 'Hide "Recommendations"',
 		conflicts: [],
+		children: [],
 	},
 	{
 		id: "prime_gaming_button",
-		label: "Hide Prime Gaming Button",
+		label: 'Hide "Prime Gaming Button"',
 		conflicts: [],
+		children: [],
 	},
-]
+] as const

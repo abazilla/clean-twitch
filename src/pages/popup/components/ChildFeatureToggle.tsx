@@ -15,14 +15,14 @@ export const ChildFeatureToggle: React.FC<ChildFeatureToggleProps> = ({
 	const [checked, setChecked] = useStorageState(id)
 
 	return (
-		<div className="ml-6 mt-2">
-			<div className="flex items-center gap-2">
+		<div className="ml-4 mt-0.5">
+			<div className="flex items-center gap-1">
 				<input
 					type="checkbox"
 					id={id}
-					className="h-4 w-4 rounded border-gray-300 text-purple-800 focus:ring-purple-500"
+					className="mt-0.5 h-4 w-4 place-self-start rounded border-gray-300 text-purple-800 focus:ring-purple-500"
 					checked={checked}
-					disabled={!parentEnabled}
+					disabled={parentEnabled}
 					onChange={(e) => setChecked(e.target.checked)}
 				/>
 				<label htmlFor={id} className="select-none text-sm font-medium">

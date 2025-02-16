@@ -15,24 +15,24 @@
 		console.log("WebSocket Init:", { url, protocols })
 
 		ws.addEventListener("message", (event: MessageEvent) => {
-			console.log("WebSocket Received:", JSON.parse(event.data))
+			// console.log("WebSocket Received:", JSON.parse(event.data))
 		})
 
 		ws.addEventListener("open", (event: Event) => {
-			console.log("WebSocket Opened:", event)
+			// console.log("WebSocket Opened:", event)
 		})
 
 		ws.addEventListener("close", (event: CloseEvent) => {
-			console.log("WebSocket Closed:", event)
+			// console.log("WebSocket Closed:", event)
 		})
 
 		ws.addEventListener("error", (event: Event) => {
-			console.log("WebSocket Error:", event)
+			// console.log("WebSocket Error:", event)
 		})
 
 		const originalSend = ws.send
 		ws.send = function (data: string | ArrayBufferLike | Blob | ArrayBufferView) {
-			console.log("WebSocket Sending:", data)
+			// console.log("WebSocket Sending:", data)
 			return originalSend.call(ws, data)
 		}
 

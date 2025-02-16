@@ -26,8 +26,8 @@ export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
 	}
 
 	return (
-		<div className="mt-3 first:mt-0">
-			<div className="flex items-center gap-2">
+		<div className="mt-1">
+			<div className="flex items-center gap-1">
 				<input
 					type="checkbox"
 					id={item.id}
@@ -40,14 +40,18 @@ export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
 				</label>
 			</div>
 
-			{item.children?.map((child) => (
-				<ChildFeatureToggle
-					key={child.id}
-					id={child.id}
-					label={child.label}
-					parentEnabled={checked}
-				/>
-			))}
+			{item.children.length > 0 && (
+				<div className="mb-2">
+					{item.children?.map((child) => (
+						<ChildFeatureToggle
+							key={child.id}
+							id={child.id}
+							label={child.label}
+							parentEnabled={checked}
+						/>
+					))}
+				</div>
+			)}
 		</div>
 	)
 }
