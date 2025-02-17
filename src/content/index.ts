@@ -2,9 +2,6 @@ import $ from "jquery"
 import { FeatureId, features } from "../pages/popup/types"
 
 $(function () {
-	$(document).ready(function () {
-		console.log("reabdy!")
-	})
 	// Initial setup
 	features.forEach((f) => {
 		chrome.storage.sync.get(f.id).then((result) => {
@@ -93,8 +90,6 @@ function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 			)
 			break
 		case "hide_sticky_footer":
-			break
-		case "no_recommendations":
 			updateElement(
 				{
 					type: "id",
@@ -103,7 +98,8 @@ function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
-
+		case "no_recommendations":
+			break
 		case "block_gql":
 			break
 		case "chat_minimal":
@@ -123,27 +119,21 @@ type SelectorType = {
 	siblingDirection?: "prev" | "next"
 }
 
-function getElement(options: SelectorType): Element | null {
-	let element =
-		options.type === "id"
-			? document.getElementById(options.selector)
-			: document.querySelector(options.selector)
+function getElement(options: SelectorType): JQuery<HTMLElement> {
+	let $element = options.type === "id" ? $(`#${options.selector}`) : $(options.selector)
 
-	if (options.siblingDirection === "next") {
-		element = element?.nextElementSibling || null
-	} else if (options.siblingDirection === "prev") {
-		element = element?.previousElementSibling || null
-	}
+	if (options.siblingDirection === "next") $element = $element.next()
+	else if (options.siblingDirection === "prev") $element = $element.prev()
 
-	return element
+	return $element
 }
 
-function updateElementAsync(options: SelectorType, action: (element: Element) => void) {
+function updateElementAsync(options: SelectorType, action: (element: JQuery<HTMLElement>) => void) {
 	// Create observer to watch for changes
 	const observer = new MutationObserver((mutations, obs) => {
 		const element = getElement(options)
 		console.log(options.selector + options.siblingDirection)
-		if (element) {
+		if (element.length) {
 			action(element)
 			obs.disconnect() // Stop observing once we've found and handled the element
 		}
@@ -158,31 +148,30 @@ function updateElementAsync(options: SelectorType, action: (element: Element) =>
 
 // Curry the toggled parameter
 const withToggle =
-	(toggled: boolean, fn: (el: Element, toggled: boolean) => void) => (el: Element) => {
-		fn(el, toggled)
+	(toggled: boolean, fn: ($el: JQuery<HTMLElement>, toggled: boolean) => void) =>
+	($el: JQuery<HTMLElement>) => {
+		fn($el, toggled)
 	}
 
 // Curry the toggled parameter for element updates
-const updateElement = (options: SelectorType, action: (element: Element) => void) => {
-	const element = getElement(options)
-	if (element) action(element)
+const updateElement = (options: SelectorType, action: (element: JQuery<HTMLElement>) => void) => {
+	const $element = getElement(options)
+	if ($element.length) action($element)
 	else updateElementAsync(options, action)
 }
 
 function toggleGreyscale(toggled: boolean) {
 	toggled
-		? document.documentElement.setAttribute("style", "filter: grayscale(1) !important;")
-		: document.documentElement.removeAttribute("style")
+		? $("html").attr("style", "filter: grayscale(1) !important;")
+		: $("html").removeAttr("style")
 }
 
-function toggleElementVisibility(element: Element, toggled: boolean) {
-	toggled
-		? element.setAttribute("style", "display: none !important;")
-		: element.removeAttribute("style")
+function toggleElementVisibility($element: JQuery<HTMLElement>, toggled: boolean) {
+	toggled ? $element.attr("style", "display: none !important;") : $element.removeAttr("style")
 }
 
-function toggleElementWidth(element: Element, toggled: boolean) {
-	toggled ? element.setAttribute("style", "width: 0 !important;") : element.removeAttribute("style")
+function toggleElementWidth($element: JQuery<HTMLElement>, toggled: boolean) {
+	toggled ? $element.attr("style", "width: 0 !important;") : $element.removeAttr("style")
 }
 
 function hidePrimeGamingButton(isHidden: boolean) {
