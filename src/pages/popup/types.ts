@@ -59,6 +59,12 @@ export const features = [
 		],
 	},
 	{
+		id: "no_chat",
+		label: "Hide Chat",
+		conflicts: ["chat_only"],
+		children: [],
+	},
+	{
 		id: "chat_only",
 		label: "Chat Only Mode",
 		conflicts: ["no_chat"],
@@ -68,13 +74,17 @@ export const features = [
 				label: "Minimal Chat",
 				conflicts: [],
 			},
+			{
+				id: "hide_chat_highlights",
+				label: "Hide Chat Highlights (predictions, pinned messages, etc)",
+				conflicts: [],
+			},
+			// {
+			// 	id: "hide_chat_community_highlight",
+			// 	label: "Hide chat Community Highlights (Predictions etc.)",
+			// 	conflicts: [],
+			// },
 		],
-	},
-	{
-		id: "no_chat",
-		label: "Hide Chat",
-		conflicts: ["chat_only"],
-		children: [],
 	},
 	{
 		id: "no_recommendations",

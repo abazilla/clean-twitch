@@ -52,49 +52,38 @@ function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 			break
 		case "hide_left_sidebar_stories":
 			updateElement(
-				{
-					type: "querySelector",
-					selector: "div[aria-label='Followed Channels']",
-
-					siblingDirection: "prev",
-				},
+				() => $("div[aria-label='Followed Channels']").prev(),
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
 		case "hide_left_sidebar_followed_channels":
 			updateElement(
-				{
-					type: "querySelector",
-					selector: "div[aria-label='Followed Channels']",
-				},
+				() => $("div[aria-label='Followed Channels']"),
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
 		case "hide_left_sidebar_live_channels":
 			updateElement(
-				{
-					type: "querySelector",
-					selector: "div[aria-label='Live Channels']",
-				},
+				() => $("div[aria-label='Live Channels']"),
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
 		case "hide_left_sidebar_viewers_also_watch":
 			updateElement(
-				{
-					type: "querySelector",
-					selector: "div[aria-label='Live Channels']",
-					siblingDirection: "next",
-				},
+				() => $("div[aria-label='Live Channels']").next(),
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
 		case "hide_sticky_footer":
 			updateElement(
-				{
-					type: "id",
-					selector: "twilight-sticky-footer-root",
-				},
+				() => $("#twilight-sticky-footer-root"),
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+
+		case "hide_chat_highlights":
+			updateElement(
+				() => $("div.chat-room__content > div").not("[class='Layout-sc-1xcs6mc-0']").eq(0),
 				withToggle(toggled, toggleElementVisibility)
 			)
 			break
@@ -113,28 +102,15 @@ function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 	}
 }
 
-type SelectorType = {
-	type: "id" | "querySelector"
-	selector: string
-	siblingDirection?: "prev" | "next"
-}
-
-function getElement(options: SelectorType): JQuery<HTMLElement> {
-	let $element = options.type === "id" ? $(`#${options.selector}`) : $(options.selector)
-
-	if (options.siblingDirection === "next") $element = $element.next()
-	else if (options.siblingDirection === "prev") $element = $element.prev()
-
-	return $element
-}
-
-function updateElementAsync(options: SelectorType, action: (element: JQuery<HTMLElement>) => void) {
+function updateElementAsync(
+	getElement: () => JQuery<HTMLElement>,
+	action: (element: JQuery<HTMLElement>) => void
+) {
 	// Create observer to watch for changes
 	const observer = new MutationObserver((mutations, obs) => {
-		const element = getElement(options)
-		console.log(options.selector + options.siblingDirection)
-		if (element.length) {
-			action(element)
+		const $element = getElement()
+		if ($element.length) {
+			action($element)
 			obs.disconnect() // Stop observing once we've found and handled the element
 		}
 	})
@@ -154,10 +130,13 @@ const withToggle =
 	}
 
 // Curry the toggled parameter for element updates
-const updateElement = (options: SelectorType, action: (element: JQuery<HTMLElement>) => void) => {
-	const $element = getElement(options)
+const updateElement = (
+	getElement: () => JQuery<HTMLElement>,
+	action: (element: JQuery<HTMLElement>) => void
+) => {
+	const $element = getElement()
 	if ($element.length) action($element)
-	else updateElementAsync(options, action)
+	else updateElementAsync(getElement, action)
 }
 
 function toggleGreyscale(toggled: boolean) {
