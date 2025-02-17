@@ -2,6 +2,9 @@ import $ from "jquery"
 import { FeatureId, features } from "../pages/popup/types"
 
 $(function () {
+	$(document).ready(function () {
+		console.log("reabdy!")
+	})
 	// Initial setup
 	features.forEach((f) => {
 		chrome.storage.sync.get(f.id).then((result) => {
@@ -33,31 +36,75 @@ $(function () {
 
 function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 	switch (id) {
-		case "block_gql":
-			break
 		case "greyscale_all":
 			toggleGreyscale(toggled)
 			break
-		case "prime_gaming_button":
+		case "hide_prime_gaming_button":
 			hidePrimeGamingButton(toggled)
 			break
 		case "hide_left_sidebar":
 			if (toggled) {
-				// document.getElementById("side-nav")?.setAttribute("style", "display: none !important;")
-				const btn = document.querySelector('button[aria-label="Collapse Side Nav"]') as HTMLElement
-				document
-					.querySelector('div[data-a-target="side-nav-bar"')
-					?.setAttribute("style", "width: 0 !important;")
-
-				btn.click()
+				$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
+				$('div[data-a-target="side-nav-bar-collapsed"').attr("style", "width: 0 !important;")
+				$('button[aria-label="Collapse Side Nav"]').trigger("click")
 			} else {
-				// document.getElementById("side-nav")?.removeAttribute("style")
-				const btn = document.querySelector('button[aria-label="Expand Side Nav"]') as HTMLElement
-				document
-					.querySelector('div[data-a-target="side-nav-bar-collapsed"')
-					?.removeAttribute("style")
-				btn.click()
+				$('div[data-a-target="side-nav-bar"').removeAttr("style")
+				$('div[data-a-target="side-nav-bar-collapsed"').removeAttr("style")
+				$('button[aria-label="Expand Side Nav"]').trigger("click")
 			}
+			break
+		case "hide_left_sidebar_stories":
+			updateElement(
+				{
+					type: "querySelector",
+					selector: "div[aria-label='Followed Channels']",
+
+					siblingDirection: "prev",
+				},
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+		case "hide_left_sidebar_followed_channels":
+			updateElement(
+				{
+					type: "querySelector",
+					selector: "div[aria-label='Followed Channels']",
+				},
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+		case "hide_left_sidebar_live_channels":
+			updateElement(
+				{
+					type: "querySelector",
+					selector: "div[aria-label='Live Channels']",
+				},
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+		case "hide_left_sidebar_viewers_also_watch":
+			updateElement(
+				{
+					type: "querySelector",
+					selector: "div[aria-label='Live Channels']",
+					siblingDirection: "next",
+				},
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+		case "hide_sticky_footer":
+			break
+		case "no_recommendations":
+			updateElement(
+				{
+					type: "id",
+					selector: "twilight-sticky-footer-root",
+				},
+				withToggle(toggled, toggleElementVisibility)
+			)
+			break
+
+		case "block_gql":
 			break
 		case "chat_minimal":
 			break
@@ -65,23 +112,61 @@ function handleToggle(id: FeatureId, onLoad: boolean, toggled: boolean) {
 			break
 		case "no_chat":
 			break
-		case "no_recommendations":
-			break
-		case "hide_left_sidebar_stories":
-			toggleElementVisibility("div[aria-label='Followed Channels']", onLoad, toggled, "prev")
-			break
-		case "hide_left_sidebar_followed_channels":
-			toggleElementVisibility("div[aria-label='Followed Channels']", onLoad, toggled)
-			break
-		case "hide_left_sidebar_live_channels":
-			toggleElementVisibility("div[aria-label='Live Channels']", onLoad, toggled)
-			break
-		case "hide_left_sidebar_viewers_also_watch":
-			toggleElementVisibility("div[aria-label='Live Channels']", onLoad, toggled, "next")
-			break
 		default:
 			return
 	}
+}
+
+type SelectorType = {
+	type: "id" | "querySelector"
+	selector: string
+	siblingDirection?: "prev" | "next"
+}
+
+function getElement(options: SelectorType): Element | null {
+	let element =
+		options.type === "id"
+			? document.getElementById(options.selector)
+			: document.querySelector(options.selector)
+
+	if (options.siblingDirection === "next") {
+		element = element?.nextElementSibling || null
+	} else if (options.siblingDirection === "prev") {
+		element = element?.previousElementSibling || null
+	}
+
+	return element
+}
+
+function updateElementAsync(options: SelectorType, action: (element: Element) => void) {
+	// Create observer to watch for changes
+	const observer = new MutationObserver((mutations, obs) => {
+		const element = getElement(options)
+		console.log(options.selector + options.siblingDirection)
+		if (element) {
+			action(element)
+			obs.disconnect() // Stop observing once we've found and handled the element
+		}
+	})
+
+	// Start observing the document for changes
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true,
+	})
+}
+
+// Curry the toggled parameter
+const withToggle =
+	(toggled: boolean, fn: (el: Element, toggled: boolean) => void) => (el: Element) => {
+		fn(el, toggled)
+	}
+
+// Curry the toggled parameter for element updates
+const updateElement = (options: SelectorType, action: (element: Element) => void) => {
+	const element = getElement(options)
+	if (element) action(element)
+	else updateElementAsync(options, action)
 }
 
 function toggleGreyscale(toggled: boolean) {
@@ -90,29 +175,14 @@ function toggleGreyscale(toggled: boolean) {
 		: document.documentElement.removeAttribute("style")
 }
 
-function toggleElementVisibility(
-	selector: string,
-	onLoad: boolean,
-	toggled: boolean,
-	siblingDirection: "prev" | "next" | null = null
-) {
-	const action = () => {
-		let element = document.querySelector(selector)
+function toggleElementVisibility(element: Element, toggled: boolean) {
+	toggled
+		? element.setAttribute("style", "display: none !important;")
+		: element.removeAttribute("style")
+}
 
-		if (siblingDirection === "next") {
-			element = element?.nextElementSibling || null
-		} else if (siblingDirection === "prev") {
-			element = element?.previousElementSibling || null
-		}
-
-		if (element) {
-			toggled
-				? element.setAttribute("style", "display: none !important;")
-				: element.removeAttribute("style")
-		}
-	}
-
-	onLoad ? setTimeout(action, 3000) : action()
+function toggleElementWidth(element: Element, toggled: boolean) {
+	toggled ? element.setAttribute("style", "width: 0 !important;") : element.removeAttribute("style")
 }
 
 function hidePrimeGamingButton(isHidden: boolean) {

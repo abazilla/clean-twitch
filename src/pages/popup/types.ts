@@ -83,8 +83,14 @@ export const features = [
 		children: [],
 	},
 	{
-		id: "prime_gaming_button",
+		id: "hide_prime_gaming_button",
 		label: 'Hide "Prime Gaming Button"',
+		conflicts: [],
+		children: [],
+	},
+	{
+		id: "hide_sticky_footer",
+		label: 'Remove "TwitchCon" Footer',
 		conflicts: [],
 		children: [],
 	},
