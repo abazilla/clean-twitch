@@ -8,7 +8,8 @@ interface FeatureToggleProps {
 }
 
 export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
-	const [checked, setChecked] = useStorageState(item.id)
+	if (item.hidden) return null
+	const [checked, setChecked] = useStorageState(item.id, false)
 
 	const handleParentToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = e.target.checked
@@ -40,7 +41,7 @@ export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
 				</label>
 			</div>
 
-			{item.children.length > 0 && (
+			{item.children && item.children.length > 0 && (
 				<div className="mb-2">
 					{item.children?.map((child) => (
 						<ChildFeatureToggle

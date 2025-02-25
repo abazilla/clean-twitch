@@ -1,21 +1,16 @@
-// export interface FeatureItem {
-// 	id: string
-// 	label: string
-// 	conflicts: readonly string[]
-// 	children: readonly FeatureItem[]
-// }
+export interface FeatureItem {
+	id: string
+	label: string
+	conflicts: readonly string[]
+	children?: readonly FeatureItem[]
+	hidden?: boolean
+}
 
-// type ExtractFeatureIds<T extends readonly FeatureItem[]> =
-// 	| T[number]["id"]
-// 	| (T[number] extends { children: readonly FeatureItem[] }
-// 			? ExtractFeatureIds<T[number]["children"]>
-// 			: never)
-
-// export type FeatureId = ExtractFeatureIds<typeof features>
-
-export type FeatureItem = (typeof features)[number]
-
-export type FeatureId = FeatureItem["id"] | FeatureItem["children"][number]["id"]
+export type FeatureId =
+	| FeatureItem["id"]
+	| (FeatureItem["children"] extends readonly FeatureItem[]
+			? FeatureItem["children"][number]["id"]
+			: never)
 
 // todo convert FeatureItem to type of features?
 export const features = [
@@ -104,4 +99,24 @@ export const features = [
 		conflicts: [],
 		children: [],
 	},
+	{
+		id: "blocked_channels",
+		label: "Channel Blocking",
+		conflicts: [],
+		children: [],
+		hidden: true,
+	},
 ] as const
+
+export interface BlockedUsername {
+	username: string
+	enabled: boolean
+}
+
+export interface BlockedChannels {
+	enabled: boolean
+	hideFromSidebar: boolean
+	hideFromDirectory: boolean
+	hideFromSearch: boolean
+	usernames: BlockedUsername[]
+}

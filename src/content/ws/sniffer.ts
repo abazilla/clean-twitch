@@ -12,27 +12,34 @@
 
 		const ws = protocols ? new OrigWebSocket(url, protocols) : new OrigWebSocket(url)
 
-		console.log("WebSocket Init:", { url, protocols })
+		// // Safe logging without eval
+		// const safeStringify = (data: any) => {
+		// 	try {
+		// 		return typeof data === "string" ? data : JSON.stringify(data)
+		// 	} catch (e) {
+		// 		return String(data)
+		// 	}
+		// }
 
 		ws.addEventListener("message", (event: MessageEvent) => {
-			// console.log("WebSocket Received:", JSON.parse(event.data))
+			// console.log("WebSocket Received:", safeStringify(event.data))
 		})
 
 		ws.addEventListener("open", (event: Event) => {
-			// console.log("WebSocket Opened:", event)
+			// console.log("WebSocket Opened:", url.toString())
 		})
 
 		ws.addEventListener("close", (event: CloseEvent) => {
-			// console.log("WebSocket Closed:", event)
+			// console.log("WebSocket Closed:", url.toString())
 		})
 
 		ws.addEventListener("error", (event: Event) => {
-			// console.log("WebSocket Error:", event)
+			// console.log("WebSocket Error:", url.toString())
 		})
 
 		const originalSend = ws.send
 		ws.send = function (data: string | ArrayBufferLike | Blob | ArrayBufferView) {
-			// console.log("WebSocket Sending:", data)
+			// console.log("WebSocket Sending:", safeStringify(data))
 			return originalSend.call(ws, data)
 		}
 

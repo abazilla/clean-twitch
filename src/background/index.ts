@@ -119,7 +119,6 @@ async function handleRules() {
 
 // Listen for changes in storage
 chrome.storage.onChanged.addListener((changes, areaName) => {
-	console.log("Storage changed:", changes, areaName)
 	if (areaName !== "sync") return
 
 	const relevantFlags = new Set([
@@ -132,8 +131,6 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 		console.log("Updating rules due to relevant flag change")
 		handleRules()
 	}
-
-	// console.log(window.WebSocket.)
 })
 
 // Initial setup
