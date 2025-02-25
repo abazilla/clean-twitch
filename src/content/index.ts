@@ -1,6 +1,14 @@
 import $ from "jquery"
 import { BlockedChannels, FeatureId, features } from "../pages/popup/types"
 
+const style = document.createElement("style")
+style.textContent = `
+.twitch-declutter-hidden {
+    display: none !important;
+}
+`
+document.head.appendChild(style)
+
 $(function () {
 	// Initial setup
 	features.forEach((f) => {
@@ -143,7 +151,9 @@ function toggleGreyscale(toggled: boolean) {
 }
 
 function toggleElementVisibility($element: JQuery<HTMLElement>, toggled: boolean) {
-	toggled ? $element.attr("style", "display: none !important;") : $element.removeAttr("style")
+	toggled
+		? $element.addClass("twitch-declutter-hidden")
+		: $element.removeClass("twitch-declutter-hidden")
 }
 
 // function toggleElementWidth($element: JQuery<HTMLElement>, toggled: boolean) {
@@ -157,40 +167,32 @@ function hidePrimeGamingButton(isHidden: boolean) {
 	})
 }
 
-// Store observer reference at module level
-let searchObserver: MutationObserver | null = null
-
 function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	const { usernames, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedChannels
 
-	// Cleanup existing observer
-	if (searchObserver) {
-		searchObserver.disconnect()
-		searchObserver = null
-	}
+	// Update global CSS rules for search results
+	// We do this because we can't use a MutationObserver to watch for changes in
+	// the search results after the first render of the results
 
-	// Create new observer for search box
-	if (hideFromSearch) {
-		searchObserver = new MutationObserver(() => {
-			usernames.forEach((blockedUser) => {
-				updateElement(
-					() =>
-						$(`#search-tray__container a[href="/${blockedUser.username}"]`).closest(
-							".search-result"
-						),
-					($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
-				)
-			})
-		})
+	const searchRules = usernames
+		.filter((u) => u.enabled && enabled && hideFromSearch)
+		.map(
+			(u) => `
+			#search-tray__container a[href="/${u.username}"],
+			a[data-tray-item="true"][href="/${u.username}"],
+			a[data-a-target="search-result-live-channel"][href="/${u.username}"] {
+				display: none !important;
+			}
+	 `
+		)
+		.join("\n")
 
-		const searchBox = document.querySelector('[data-a-target="nav-search-box"]')
-		if (searchBox) {
-			searchObserver.observe(searchBox, {
-				childList: true,
-				subtree: true,
-			})
+	style.textContent = `
+		.twitch-declutter-hidden {
+			display: none !important;
 		}
-	}
+		${searchRules}
+	`
 
 	usernames.forEach((blockedUser) => {
 		// Hide from sidebar - recommended channels
@@ -215,6 +217,12 @@ function handleBlockedChannels(blockedChannels: BlockedChannels) {
 				$(`a[href="/${blockedUser.username}"][data-test-selector="followed-channel"]`)
 					.parent()
 					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
+		)
+
+		// Hide from mobile sidebar
+		updateElement(
+			() => $(`a[href="/${blockedUser.username}"].side-nav-card`).parent().parent().parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
 		)
 
