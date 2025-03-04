@@ -39,8 +39,8 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		updateElement(
 			() =>
 				$(`p`)
-					.filter(
-						(_, el) => $(el).text().toLocaleLowerCase() === blockedCategory.name.toLocaleLowerCase()
+					.filter((_, el) =>
+						$(el).text().toLocaleLowerCase().includes(blockedCategory.name.toLocaleLowerCase())
 					)
 					.closest("div.side-nav-card")
 					.parent()
@@ -51,7 +51,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		// Directory section cards
 		updateElement(
 			() =>
-				$(`a[href="/directory/category/${blockedCategory.category}"]`)
+				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
 					.closest(`div[data-target="directory-page__card-container"]`)
 					.parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
@@ -61,9 +61,8 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		updateElement(
 			() =>
 				$(`p`)
-					.filter(
-						(_, el) =>
-							$(el).text().toLocaleLowerCase() === `${blockedCategory.name.toLocaleLowerCase()}`
+					.filter((_, el) =>
+						$(el).text().toLocaleLowerCase().includes(`${blockedCategory.name.toLocaleLowerCase()}`)
 					)
 					.closest(`div.switcher-shell__container--grid`),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
@@ -82,7 +81,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		// Homepage cards
 		updateElement(
 			() =>
-				$(`a[href="/directory/category/${blockedCategory.category}"]`)
+				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
 					.closest(".shelf-card__impression-wrapper")
 					.parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
@@ -92,7 +91,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		updateElement(
 			() =>
 				$(
-					`div.vertical-selector__wrapper > div.vertical-selector > a[href="/directory/${blockedCategory.category}"]`
+					`div.vertical-selector__wrapper > div.vertical-selector > a[href*="/directory/${blockedCategory.category}"]`
 				)
 					.parent()
 					.parent(),
@@ -123,10 +122,13 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		updateElement(
 			() =>
 				$(`h3`)
-					.filter(
-						(_, el) =>
-							$(el).text().toLocaleLowerCase() ===
-							`people searching for "${blockedCategory.name.toLocaleLowerCase()}" also watch:`
+					.filter((_, el) =>
+						$(el)
+							.text()
+							.toLocaleLowerCase()
+							.includes(
+								`people searching for "${blockedCategory.name.toLocaleLowerCase()}" also watch:`
+							)
 					)
 					.closest(`div.search-results`),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
