@@ -1,0 +1,95 @@
+import $ from "jquery"
+import { BlockedChannels } from "../../pages/popup/types"
+import { toggleElementVisibility, updateElement } from "../utils/dom"
+
+let styleElement: HTMLStyleElement
+
+export function initializeBlockedChannels(style: HTMLStyleElement) {
+	styleElement = style
+}
+
+export function handleBlockedChannels(blockedChannels: BlockedChannels) {
+	const { usernames, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedChannels
+
+	// Update global CSS rules for search results
+	const searchRules = usernames
+		.filter((u) => u.enabled && enabled && hideFromSearch)
+		.map(
+			(u) => `
+			#search-tray__container a[href="/${u.username}"],
+			a[data-tray-item="true"][href="/${u.username}"],
+			a[data-a-target="search-result-live-channel"][href="/${u.username}"] {
+				display: none !important;
+			}
+	 `
+		)
+		.join("\n")
+
+	const globalRules = styleElement.textContent?.split("/* Channel Rules */")[0] || ""
+	const categoryRules = styleElement.textContent?.split("/* Category Rules */")[1] || ""
+
+	styleElement.textContent = `
+		${globalRules}
+		/* Channel Rules */
+		${searchRules}
+		/* Category Rules */
+		${categoryRules}
+	`
+
+	usernames.forEach((blockedUser) => {
+		// Hide from sidebar - recommended channels
+		updateElement(
+			() => $(`a[href="/${blockedUser.username}"]`).parent().parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
+		)
+
+		// Hide from mobile sidebar
+		updateElement(
+			() => $(`a[href="/${blockedUser.username}"].side-nav-card`).parent().parent().parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
+		)
+
+		// Hide from homepage
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
+					.closest("div.shelf-card__impression-wrapper")
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+		)
+
+		// Hide from directory
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
+					.closest(`div[data-target="directory-game__card_container"]`)
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+		)
+
+		// Hide from recommended channels
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-test-selector="recommended-channel"]`).closest(
+					"div.recommended-channel"
+				),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+		)
+
+		// Hide from search results
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-tray-item="true"]`).parent().parent().parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
+		)
+
+		// Hide from search dropdown
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-a-target="search-result-live-channel"]`).closest(
+					".search-result"
+				),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
+		)
+	})
+}
