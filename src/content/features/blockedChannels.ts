@@ -58,6 +58,15 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
 		)
 
+		// Hide from directory (/all?)
+		updateElement(
+			() =>
+				$(`a[data-a-target="preview-card-image-link"][href="/${blockedUser.username}"]`)
+					.closest(`div[data-target="directory-game__card_container"]`)
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+		)
+
 		// Hide from directory
 		updateElement(
 			() =>

@@ -13,10 +13,17 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		blockedCategories
 
 	// Update global CSS rules for search results
+	// Used for results that appear when infinite scrolling
 	const categoryRules = categories
 		.filter((c) => c.enabled && enabled && hideFromSearch)
+		// todo support loose matching
+		// todo support whitelist
+		// todo - on initial load, add a data attribute to the parent of the blocked category and manually hide element
+		// then, on subsequent updates, manually unhide element, and rely on css
 		.map(
 			(c) => `
+			div[data-target="directory-first-item"]:has(a[href="/directory/category/${c.category}"]),
+			div[data-target=""]:has(a[href="/directory/category/${c.category}"]),
 			div[data-a-target="search-result-live-channel"]:has(a[href="/directory/category/${c.category}"]),
 			#search-tray__container a[href="/directory/category/${c.category}"],
 			a[data-tray-item="true"][href="/directory/category/${c.category}"],
@@ -67,10 +74,6 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 					.closest(`div.switcher-shell__container--grid`),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
 		)
-
-		if (enabled && hideFromSearch && blockedCategory.enabled) {
-			$('div[aria-label="Play/Pause"]').closest("button").trigger("click")
-		}
 
 		// Homepage sections
 		updateElement(
