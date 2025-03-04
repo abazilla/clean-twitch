@@ -106,6 +106,13 @@ export const features = [
 		children: [],
 		hidden: true,
 	},
+	{
+		id: "blocked_categories",
+		label: "Category Blocking",
+		conflicts: [],
+		children: [],
+		hidden: true,
+	},
 ] as const
 
 export interface BlockedUsername {
@@ -119,4 +126,18 @@ export interface BlockedChannels {
 	hideFromDirectory: boolean
 	hideFromSearch: boolean
 	usernames: BlockedUsername[]
+}
+
+export interface BlockedCategory {
+	category: string // The URL-friendly version
+	name: string // The original user input
+	enabled: boolean
+}
+
+export interface BlockedCategories {
+	enabled: boolean
+	hideFromSidebar: boolean
+	hideFromDirectory: boolean
+	hideFromSearch: boolean
+	categories: BlockedCategory[]
 }

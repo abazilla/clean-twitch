@@ -1,11 +1,14 @@
 import $ from "jquery"
-import { BlockedChannels, FeatureId, features } from "../pages/popup/types"
+import { BlockedCategories, BlockedChannels, FeatureId, features } from "../pages/popup/types"
 
 const style = document.createElement("style")
 style.textContent = `
+/* Global Rules */
 .twitch-declutter-hidden {
     display: none !important;
 }
+/* Category Rules */
+/* Channel Rules */
 `
 document.head.appendChild(style)
 
@@ -14,15 +17,20 @@ $(function () {
 	features.forEach((f) => {
 		chrome.storage.sync.get(f.id).then((result) => {
 			handleToggle(f.id, true, result[f.id])
+			console.log("parent", f.id)
 		})
 		if (f.children.length > 0) {
 			f.children.forEach((cf) => {
 				chrome.storage.sync.get(cf.id).then((result) => {
-					handleToggle(f.id, true, result[f.id])
+					handleToggle(cf.id, true, result[cf.id])
+					console.log("child", cf.id)
 				})
 			})
 		}
 	})
+
+	// Watch for browser back/forward
+	setupUrlChangeListener()
 
 	// Listen for changes
 	chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -32,6 +40,49 @@ $(function () {
 		}
 	})
 })
+
+function setupUrlChangeListener() {
+	// Store initial URL
+	let lastUrl = window.location.href
+
+	// Check for URL changes frequently
+	const observer = new MutationObserver(function (mutations) {
+		if (window.location.href !== lastUrl) {
+			lastUrl = window.location.href
+			handleUrlChange(lastUrl)
+		}
+	})
+
+	// Observe the whole document for changes
+	observer.observe(document, {
+		subtree: true,
+		childList: true,
+	})
+
+	// Also keep the history watchers
+	window.addEventListener("popstate", () => handleUrlChange(lastUrl))
+
+	const originalPushState = history.pushState
+	history.pushState = function (...args) {
+		originalPushState.apply(this, args)
+		handleUrlChange(lastUrl)
+	}
+
+	const originalReplaceState = history.replaceState
+	history.replaceState = function (...args) {
+		originalReplaceState.apply(this, args)
+		handleUrlChange(lastUrl)
+	}
+}
+
+function handleUrlChange(lastUrl: string) {
+	console.log("URL changed to:", window.location.href)
+	// Run URL-dependent code here
+	if (lastUrl.includes("search"))
+		$("div.search-results")?.removeClass("twitch-declutter-hidden") || $()
+	if (lastUrl.includes("/directory/category/"))
+		$("div.switcher-shell__container--grid")?.removeClass("twitch-declutter-hidden") || $()
+}
 
 function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 	switch (id) {
@@ -46,6 +97,7 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 				$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
 				$('div[data-a-target="side-nav-bar-collapsed"').attr("style", "width: 0 !important;")
 				$('button[aria-label="Collapse Side Nav"]').trigger("click")
+				$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
 			} else {
 				$('div[data-a-target="side-nav-bar"').removeAttr("style")
 				$('div[data-a-target="side-nav-bar-collapsed"').removeAttr("style")
@@ -54,7 +106,7 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "hide_left_sidebar_stories":
 			updateElement(
-				() => $("div[aria-label='Followed Channels']").prev(),
+				() => $("div.storiesLeftNavSection--csO9S"),
 				withToggle(value, toggleElementVisibility)
 			)
 			break
@@ -101,6 +153,9 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "blocked_channels":
 			handleBlockedChannels(value)
+			break
+		case "blocked_categories":
+			handleBlockedCategories(value)
 			break
 		default:
 			return
@@ -187,36 +242,21 @@ function handleBlockedChannels(blockedChannels: BlockedChannels) {
 		)
 		.join("\n")
 
+	const globalRules = style.textContent?.split("/* Channel Rules */")[0] || ""
+	const categoryRules = style.textContent?.split("/* Category Rules */")[1] || ""
+
 	style.textContent = `
-		.twitch-declutter-hidden {
-			display: none !important;
-		}
+		${globalRules}
+		/* Channel Rules */
 		${searchRules}
+		/* Category Rules */
+		${categoryRules}
 	`
 
 	usernames.forEach((blockedUser) => {
 		// Hide from sidebar - recommended channels
 		updateElement(
-			() =>
-				$(`a[href="/${blockedUser.username}"][data-test-selector="recommended-channel"]`)
-					.parent()
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
-		)
-		// Hide from sidebar - similar channels
-		updateElement(
-			() =>
-				$(`a[href="/${blockedUser.username}"][data-test-selector="similarity-channel"]`)
-					.parent()
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
-		)
-		// Hide from sidebar - followed channels
-		updateElement(
-			() =>
-				$(`a[href="/${blockedUser.username}"][data-test-selector="followed-channel"]`)
-					.parent()
-					.parent(),
+			() => $(`a[href="/${blockedUser.username}"]`).parent().parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
 		)
 
@@ -265,6 +305,134 @@ function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					".search-result"
 				),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
+		)
+	})
+}
+
+function handleBlockedCategories(blockedCategories: BlockedCategories) {
+	const { categories, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } =
+		blockedCategories
+
+	// Update global CSS rules for search results
+	// We do this because we can't use a MutationObserver to watch for changes in
+	// the search results after the first render of the results
+	const categoryRules = categories
+		.filter((c) => c.enabled && enabled && hideFromSearch)
+		.map(
+			(c) => `
+			div[data-a-target="search-result-live-channel"]:has(a[href="/directory/category/${c.category}"]),
+			#search-tray__container a[href="/directory/category/${c.category}"],
+			a[data-tray-item="true"][href="/directory/category/${c.category}"],
+			a[data-a-target="search-result-live-channel"][href="/directory/category/${c.category}"] {
+				display: none !important;
+			}
+	 `
+		)
+		.join("\n")
+
+	const globalAndChannelRules = style.textContent?.split("/* Category Rules */")[0] || ""
+	style.textContent = `
+		${globalAndChannelRules}
+		/* Category Rules */
+		${categoryRules}
+	`
+
+	categories.forEach((blockedCategory) => {
+		// Hide from left sidebar (desktop, mobile only applies when moving from desktop -> mobile as there is no game data)
+		updateElement(
+			() =>
+				$(`p`)
+					.filter(
+						(_, el) => $(el).text().toLocaleLowerCase() === blockedCategory.name.toLocaleLowerCase()
+					)
+					.closest("div.side-nav-card")
+					.parent()
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
+		)
+
+		// Directory section cards
+		updateElement(
+			() =>
+				$(`a[href="/directory/category/${blockedCategory.category}"]`)
+					.closest(`div[data-target="directory-page__card-container"]`)
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+		)
+
+		// Hide whole directory results page
+		updateElement(
+			() =>
+				$(`p`)
+					.filter(
+						(_, el) =>
+							$(el).text().toLocaleLowerCase() === `${blockedCategory.name.toLocaleLowerCase()}`
+					)
+					.closest(`div.switcher-shell__container--grid`),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+		)
+
+		if (enabled && hideFromSearch && blockedCategory.enabled) {
+			$('div[aria-label="Play/Pause"]').closest("button").trigger("click")
+		}
+
+		// Homepage sections (often merges directories)
+		updateElement(
+			() => $(`div > h2 > a[href*="${blockedCategory.category}"]`).parent().parent().parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+		)
+
+		// Homepage cards
+		updateElement(
+			() =>
+				$(`a[href="/directory/category/${blockedCategory.category}"]`)
+					.closest(".shelf-card__impression-wrapper")
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+		)
+
+		// Purple Homepage buttons
+		updateElement(
+			() =>
+				$(
+					`div.vertical-selector__wrapper > div.vertical-selector > a[href="/directory/${blockedCategory.category}"]`
+				)
+					.parent()
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+		)
+
+		// Search dropdown results
+		updateElement(
+			() =>
+				$(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".search-result"),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+		)
+
+		// Search page results
+		updateElement(
+			() =>
+				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
+					.closest(".search-result-card")
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+		)
+		updateElement(
+			() => $(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".tw-col"),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+		)
+
+		// Hide whole search results page
+		updateElement(
+			() =>
+				$(`h3`)
+					.filter(
+						(_, el) =>
+							$(el).text().toLocaleLowerCase() ===
+							`people searching for "${blockedCategory.name.toLocaleLowerCase()}" also watch:`
+					)
+					.closest(`div.search-results`),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
 		)
 	})
 }

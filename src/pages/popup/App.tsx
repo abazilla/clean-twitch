@@ -1,4 +1,5 @@
 import React, { JSX } from "react"
+import { CategoryBlocker } from "./components/CategoryBlocker"
 import { ChannelBlocker } from "./components/ChannelBlocker"
 import { FeatureToggle } from "./components/FeatureToggle"
 import { features } from "./types"
@@ -12,6 +13,7 @@ const App = (): JSX.Element => {
 				<FeatureToggle key={item.id} item={item} />
 			))}
 			<ChannelBlocker />
+			<CategoryBlocker />
 		</div>
 	)
 }
