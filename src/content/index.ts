@@ -226,17 +226,19 @@ function handleBlockedChannels(blockedChannels: BlockedChannels) {
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
 		)
 
-		// Hide from directory/browse page
+		// Hide from homepage
 		updateElement(
 			() =>
 				$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
-					.parent()
-					.parent()
-					.parent()
-					.parent()
-					.parent()
-					.parent()
-					.parent()
+					.closest("div.shelf-card__impression-wrapper")
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+		)
+		// Hide from directory
+		updateElement(
+			() =>
+				$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
+					.closest(`div[data-target="directory-game__card_container"]`)
 					.parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
 		)
