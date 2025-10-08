@@ -4,15 +4,11 @@ A Chrome extension to hide annoying Twitch stuff. It supports **TypeScript**, **
 
 ## Development
 
-For development with automatic reloading:
+[Parcel's Hot Module Reloading](https://parceljs.org/recipes/web-extension/#hmr) doesn't work with Manifest V3. You will have to run the following, and then refresh in chrome everytime..
 
 ```sh
-npm start
+npm run build
 ```
-
-Open the [Extensions Dashboard](chrome://extensions), enable "Developer mode", click "Load unpacked", and choose the `dist` folder.
-
-When you make changes in `src` the background script and any content script will reload automatically.
 
 ## Production
 
