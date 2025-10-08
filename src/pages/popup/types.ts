@@ -95,7 +95,13 @@ export const features = [
 	},
 	{
 		id: "hide_sticky_footer",
-		label: 'Remove "TwitchCon" Footer',
+		label: "Remove Purple Footer",
+		conflicts: [],
+		children: [],
+	},
+	{
+		id: "featured_stream_play_by_default",
+		label: "Prevent Homepage Stream from Auto-Playing",
 		conflicts: [],
 		children: [],
 	},

@@ -1,4 +1,4 @@
-export function updateElementAsync(
+function updateElementAsync(
 	getElement: () => JQuery<HTMLElement>,
 	action: (element: JQuery<HTMLElement>) => void
 ) {

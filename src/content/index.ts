@@ -5,6 +5,7 @@ import { handleBlockedChannels, initializeBlockedChannels } from "./features/blo
 import {
 	hidePrimeGamingButton,
 	toggleChatHighlights,
+	toggleFeaturedStreamPlayByDefault,
 	toggleGreyscale,
 	toggleLeftSidebar,
 	toggleLeftSidebarFollowedChannels,
@@ -105,6 +106,9 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "blocked_categories":
 			handleBlockedCategories(value)
+			break
+		case "featured_stream_play_by_default":
+			toggleFeaturedStreamPlayByDefault(value)
 			break
 		default:
 			return

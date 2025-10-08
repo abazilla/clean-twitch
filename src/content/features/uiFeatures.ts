@@ -68,3 +68,29 @@ export function toggleStickyFooter(value: boolean) {
 		($el) => toggleElementVisibility($el, value)
 	)
 }
+
+export function toggleFeaturedStreamPlayByDefault(value: boolean) {
+	if (value) {
+		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
+		const observer = new MutationObserver((mutations, obs) => {
+			const $element = $('[data-a-target="player-play-pause-button"]')
+			if ($element.length) {
+				if ($element.attr("data-a-player-state") === "paused") {
+					if (foundPlaying >= 2) {
+						observer.disconnect()
+					}
+				} else {
+					foundPlaying++
+					$element.trigger("click")
+				}
+			}
+		})
+
+		observer.observe(document.body, {
+			attributeFilter: ["data-a-player-state", "data-a-target"],
+			attributes: true,
+			subtree: true,
+			childList: true,
+		})
+	}
+}

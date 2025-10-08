@@ -9,9 +9,9 @@ export function initializeBlockedCategories(style: HTMLStyleElement) {
 }
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {
-	const { categories, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } =
-		blockedCategories
+	const { enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedCategories
 
+	const categories = blockedCategories.categories || [] // sometimes causes an error in console (i think before categories are stored)
 	// Update global CSS rules for search results
 	// Used for results that appear when infinite scrolling
 	const categoryRules = categories
