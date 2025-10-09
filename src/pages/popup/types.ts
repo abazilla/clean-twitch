@@ -4,6 +4,7 @@ export interface FeatureItem {
 	conflicts: readonly string[]
 	children?: readonly FeatureItem[]
 	hidden?: boolean
+	hideToggle?: boolean
 }
 
 export type FeatureId =
@@ -90,8 +91,24 @@ export const features = [
 	{
 		id: "hide_topbar",
 		label: "Hide Top Bar",
+		hideToggle: true,
 		conflicts: [],
 		children: [
+			{
+				id: "hide_topbar_following_button",
+				label: 'Hide "Following" Button',
+				conflicts: [],
+			},
+			{
+				id: "hide_topbar_browse_button",
+				label: 'Hide "Browse" Button',
+				conflicts: [],
+			},
+			{
+				id: "hide_topbar_dots_button",
+				label: 'Hide "Dots" Button',
+				conflicts: [],
+			},
 			{
 				id: "hide_prime_gaming_button",
 				label: 'Hide "Prime Gaming" Button',

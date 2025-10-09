@@ -3,7 +3,14 @@ import { FeatureId, features } from "../pages/popup/types"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
 import {
+	hideBrowseButton,
+	hideDotsButton,
+	hideFollowingButton,
+	hideNotificationsButton,
 	hidePrimeGamingButton,
+	hideTopBitsButton,
+	hideTopTurboButton,
+	hideWhispersButton,
 	toggleChatHighlights,
 	toggleFeaturedStreamPlayByDefault,
 	toggleGreyscale,
@@ -67,8 +74,31 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 		case "greyscale_all":
 			toggleGreyscale(value)
 			break
+		// case "hide_topbar":
+		// 	break
+		case "hide_topbar_following_button":
+			hideFollowingButton(value)
+			break
+		case "hide_topbar_browse_button":
+			hideBrowseButton(value)
+			break
+		case "hide_topbar_dots_button":
+			hideDotsButton(value)
+			break
 		case "hide_prime_gaming_button":
 			hidePrimeGamingButton(value)
+			break
+		case "hide_notifications_button":
+			hideNotificationsButton(value)
+			break
+		case "hide_whispers_button":
+			hideWhispersButton(value)
+			break
+		case "hide_top_bits_button":
+			hideTopBitsButton(value)
+			break
+		case "hide_top_turbo_button":
+			hideTopTurboButton(value)
 			break
 		case "hide_left_sidebar":
 			toggleLeftSidebar(value)

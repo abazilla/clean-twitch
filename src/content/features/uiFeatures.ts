@@ -7,13 +7,61 @@ export function toggleGreyscale(toggled: boolean) {
 		: $("html").removeAttr("style")
 }
 
-export function hidePrimeGamingButton(isHidden: boolean) {
-	const $primeButton = $(".top-nav__prime")
-	$primeButton.each(function () {
-		$(this).toggle(!isHidden)
-	})
+// NOTE: Elements that use updateElement are elements that load after a delay, or load on certain pages
+
+// TOP BAR
+export function hideFollowingButton(isHidden: boolean) {
+	const $followingButton = $('a[data-a-target="following-link"]').parents().eq(1)
+	toggleElementVisibility($followingButton, isHidden)
 }
 
+export function hideBrowseButton(isHidden: boolean) {
+	const $browseButton = $('a[data-a-target="browse-link"]').parents().eq(1)
+	toggleElementVisibility($browseButton, isHidden)
+}
+
+export function hideDotsButton(isHidden: boolean) {
+	const $dotsButton = $('button[aria-label="More Options"]').parents().eq(3)
+	toggleElementVisibility($dotsButton, isHidden)
+}
+
+export function hidePrimeGamingButton(isHidden: boolean) {
+	const $primeButton = $(".top-nav__prime")
+	toggleElementVisibility($primeButton, isHidden)
+}
+
+export function hideNotificationsButton(isHidden: boolean) {
+	updateElement(
+		() => $(".onsite-notifications").parent(),
+		($el) => toggleElementVisibility($el, isHidden)
+	)
+}
+
+export function hideWhispersButton(isHidden: boolean) {
+	updateElement(
+		() => $('button[data-a-target="whisper-box-button"]').parents().eq(3),
+		($el) => toggleElementVisibility($el, isHidden)
+	)
+}
+
+export function hideTopBitsButton(isHidden: boolean) {
+	updateElement(
+		() => $('button[data-a-target="top-nav-get-bits-button"]').parents().eq(5),
+		($el) => toggleElementVisibility($el, isHidden)
+	)
+}
+
+export function hideTopTurboButton(isHidden: boolean) {
+	updateElement(
+		() =>
+			$('div[data-a-target="tw-core-button-label-text"]:contains("Go Ad-Free for Free")')
+				.parents()
+				.eq(4),
+		($el) => toggleElementVisibility($el, isHidden)
+	)
+}
+
+// LEFT SIDEBAR
 export function toggleLeftSidebar(value: boolean) {
 	if (value) {
 		$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
@@ -27,6 +75,7 @@ export function toggleLeftSidebar(value: boolean) {
 	}
 }
 
+// TODO: check which can just use jquery toggle to hide
 export function toggleLeftSidebarStories(value: boolean) {
 	updateElement(
 		() => $("div.storiesLeftNavSection--csO9S"),
@@ -55,6 +104,7 @@ export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
 	)
 }
 
+// RIGHT SIDEBAR
 export function toggleChatHighlights(value: boolean) {
 	updateElement(
 		() => $("div.chat-room__content > div").not("[class='Layout-sc-1xcs6mc-0']").eq(0),
@@ -62,13 +112,7 @@ export function toggleChatHighlights(value: boolean) {
 	)
 }
 
-export function toggleStickyFooter(value: boolean) {
-	updateElement(
-		() => $("#twilight-sticky-footer-root"),
-		($el) => toggleElementVisibility($el, value)
-	)
-}
-
+// HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	if (value) {
 		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
@@ -100,4 +144,12 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 			observer.disconnect()
 		}, 10000)
 	}
+}
+
+// FOOTER
+export function toggleStickyFooter(value: boolean) {
+	updateElement(
+		() => $("#twilight-sticky-footer-root"),
+		($el) => toggleElementVisibility($el, value)
+	)
 }
