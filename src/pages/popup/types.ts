@@ -70,33 +70,52 @@ export const features = [
 		],
 	},
 	{
-		id: "no_chat",
-		label: "Hide Chat",
-		conflicts: ["chat_only"],
-		children: [],
-	},
-	{
-		id: "chat_only",
-		label: "Chat Only Mode",
-		conflicts: ["no_chat"],
+		id: "no_chat_section",
+		label: "Chat Section",
+		conflicts: [],
+		hideToggle: true,
 		children: [
 			{
-				id: "chat_minimal",
-				label: "Minimal Chat",
+				id: "hide_chat_monetization",
+				label: "Hide Chat Monetization",
 				conflicts: [],
+				children: [],
 			},
 			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights (predictions, pinned messages, etc)",
 				conflicts: [],
 			},
-			// {
-			// 	id: "hide_chat_community_highlight",
-			// 	label: "Hide chat Community Highlights (Predictions etc.)",
-			// 	conflicts: [],
-			// },
 		],
 	},
+	{
+		id: "no_chat",
+		label: "Hide Chat",
+		conflicts: ["chat_only"],
+		children: [],
+	},
+	// {
+	// 	id: "chat_only",
+	// 	label: "Chat Only Mode",
+	// 	conflicts: ["no_chat"],
+	// 	children: [
+	// 		{
+	// 			id: "chat_minimal",
+	// 			label: "Minimal Chat",
+	// 			conflicts: [],
+	// 		},
+	// 		{
+	// 			id: "hide_chat_highlights",
+	// 			label: "Hide Chat Highlights (predictions, pinned messages, etc)",
+	// 			conflicts: [],
+	// 		},
+	// 		// {
+	// 		// 	id: "hide_chat_community_highlight",
+	// 		// 	label: "Hide chat Community Highlights (Predictions etc.)",
+	// 		// 	conflicts: [],
+	// 		// },
+	// 	],
+	// },
 	// {
 	// 	id: "no_recommendations",
 	// 	label: 'Hide "Recommendations"',
@@ -105,7 +124,7 @@ export const features = [
 	// },
 	{
 		id: "hide_topbar",
-		label: "Hide Top Bar",
+		label: "Top Bar Section",
 		hideToggle: true,
 		conflicts: [],
 		children: [
@@ -161,6 +180,20 @@ export const features = [
 		label: "Remove Purple Footer",
 		conflicts: [],
 		children: [],
+	},
+	{
+		id: "hide_info",
+		label: "Below Video Section",
+		hideToggle: true,
+		conflicts: [],
+		children: [
+			{
+				id: "hide_monetization_buttons",
+				label: "Remove Monetization Buttons",
+				conflicts: [],
+				children: [],
+			},
+		],
 	},
 	{
 		id: "featured_stream_play_by_default",

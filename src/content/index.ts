@@ -12,8 +12,10 @@ import {
 	hideTopTurboButton,
 	hideWhispersButton,
 	toggleChatHighlights,
+	toggleChatMonetizationButtons,
 	toggleFeaturedStreamPlayByDefault,
 	toggleGreyscale,
+	toggleInfoMonetizationButtons,
 	toggleLeftSidebar,
 	toggleLeftSidebarAlwaysShowMore,
 	toggleLeftSidebarFollowedChannels,
@@ -132,6 +134,12 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "hide_sticky_footer":
 			toggleStickyFooter(value)
+			break
+		case "hide_monetization_buttons":
+			toggleInfoMonetizationButtons(value)
+			break
+		case "hide_chat_monetization":
+			toggleChatMonetizationButtons(value)
 			break
 		case "no_recommendations":
 			break

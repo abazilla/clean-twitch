@@ -46,7 +46,10 @@ export function hideWhispersButton(isHidden: boolean) {
 
 export function hideTopBitsButton(isHidden: boolean) {
 	updateElement(
-		() => $('button[data-a-target="top-nav-get-bits-button"]').parents().eq(5),
+		() =>
+			$("nav[data-a-target='top-nav-container'] button[data-a-target='top-nav-get-bits-button']")
+				.parents()
+				.eq(5),
 		($el) => toggleElementVisibility($el, isHidden)
 	)
 }
@@ -189,6 +192,37 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 			"always_on"
 		)
 	}
+}
+
+// OTHER
+export function toggleInfoMonetizationButtons(value: boolean) {
+	updateElement(
+		() =>
+			$(
+				"div[data-target='channel-header-right'] button[data-test-selector='subscribe-button__dropdown']"
+			)
+				.parents()
+				.eq(6),
+		($el) => toggleElementVisibility($el, value)
+	)
+	updateElement(
+		() =>
+			$("div[data-target='channel-header-right'] button[data-a-target='top-nav-get-bits-button']")
+				.parents()
+				.eq(5),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleChatMonetizationButtons(value: boolean) {
+	updateElement(
+		() => $('div.chat-input button[aria-label="Bits and Points Balances"]').parent(),
+		($el) => toggleElementVisibility($el, value)
+	)
+	updateElement(
+		() => $('div.chat-input button[data-a-target="bits-button"]').parents().eq(1),
+		($el) => toggleElementVisibility($el, value)
+	)
 }
 
 // FOOTER
