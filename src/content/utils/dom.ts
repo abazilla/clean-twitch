@@ -1,12 +1,14 @@
 function updateElementAsync(
 	getElement: () => JQuery<HTMLElement>,
-	action: (element: JQuery<HTMLElement>) => void
+	action: (element: JQuery<HTMLElement>) => void,
+	timeoutMs: number | "no_timeout"
 ) {
 	const observer = new MutationObserver((mutations, obs) => {
 		const $element = getElement()
 		if ($element.length) {
 			action($element)
 			obs.disconnect()
+			console.log("disconnecting observer for", $element)
 		}
 	})
 
@@ -14,6 +16,13 @@ function updateElementAsync(
 		childList: true,
 		subtree: true,
 	})
+
+	if (timeoutMs !== "no_timeout" && timeoutMs > 0) {
+		setTimeout(() => {
+			console.log("timing out observer")
+			observer.disconnect()
+		}, timeoutMs)
+	}
 }
 
 export const withToggle =
@@ -24,11 +33,12 @@ export const withToggle =
 
 export const updateElement = (
 	getElement: () => JQuery<HTMLElement>,
-	action: (element: JQuery<HTMLElement>) => void
+	action: (element: JQuery<HTMLElement>) => void,
+	timeoutMs: number | "no_timeout" = 10000
 ) => {
 	const $element = getElement()
 	if ($element.length) action($element)
-	else updateElementAsync(getElement, action)
+	else updateElementAsync(getElement, action, timeoutMs)
 }
 
 export function toggleElementVisibility($element: JQuery<HTMLElement>, toggled: boolean) {

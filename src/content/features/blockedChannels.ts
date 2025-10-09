@@ -64,7 +64,8 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 				$(`a[data-a-target="preview-card-image-link"][href="/${blockedUser.username}"]`)
 					.closest(`div[data-target="directory-game__card_container"]`)
 					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
+			"no_timeout"
 		)
 
 		// Hide from directory
@@ -89,7 +90,8 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 		updateElement(
 			() =>
 				$(`a[href="/${blockedUser.username}"][data-tray-item="true"]`).parent().parent().parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
+			"no_timeout"
 		)
 
 		// Hide from search dropdown
@@ -98,7 +100,8 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 				$(`a[href="/${blockedUser.username}"][data-a-target="search-result-live-channel"]`).closest(
 					".search-result"
 				),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
+			"no_timeout"
 		)
 	})
 }

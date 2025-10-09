@@ -105,7 +105,8 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 		updateElement(
 			() =>
 				$(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".search-result"),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+			"no_timeout"
 		)
 
 		// Search page results
@@ -114,11 +115,13 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
 					.closest(".search-result-card")
 					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+			"no_timeout"
 		)
 		updateElement(
 			() => $(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".tw-col"),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+			"no_timeout"
 		)
 
 		// Hide whole search results page

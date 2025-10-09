@@ -73,7 +73,9 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	if (value) {
 		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
 		const observer = new MutationObserver((mutations, obs) => {
-			const $element = $('[data-a-target="player-play-pause-button"]')
+			const $element = $(
+				'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
+			)
 			if ($element.length) {
 				if ($element.attr("data-a-player-state") === "paused") {
 					if (foundPlaying >= 2) {
@@ -92,5 +94,10 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 			subtree: true,
 			childList: true,
 		})
+
+		setTimeout(() => {
+			console.log("timing out observer")
+			observer.disconnect()
+		}, 10000)
 	}
 }

@@ -81,17 +81,48 @@ export const features = [
 			// },
 		],
 	},
+	// {
+	// 	id: "no_recommendations",
+	// 	label: 'Hide "Recommendations"',
+	// 	conflicts: [],
+	// 	children: [],
+	// },
 	{
-		id: "no_recommendations",
-		label: 'Hide "Recommendations"',
+		id: "hide_topbar",
+		label: "Hide Top Bar",
 		conflicts: [],
-		children: [],
-	},
-	{
-		id: "hide_prime_gaming_button",
-		label: 'Hide "Prime Gaming Button"',
-		conflicts: [],
-		children: [],
+		children: [
+			{
+				id: "hide_prime_gaming_button",
+				label: 'Hide "Prime Gaming" Button',
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_notifications_button",
+				label: 'Hide "Notifications" Button',
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_whispers_button",
+				label: 'Hide "Whispers" Button',
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_top_bits_button",
+				label: 'Hide "Bits" Button',
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_top_turbo_button",
+				label: 'Hide "Turbo" Button',
+				conflicts: [],
+				children: [],
+			},
+		],
 	},
 	{
 		id: "hide_sticky_footer",
