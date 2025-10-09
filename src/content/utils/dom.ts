@@ -3,7 +3,7 @@ function updateElementAsync(
 	action: (element: JQuery<HTMLElement>) => void,
 	timeoutMs: number | "no_timeout",
 	persistenceSetting: "always_on" | "stop_on_found"
-) {
+): MutationObserver {
 	const observer = new MutationObserver((mutations, obs) => {
 		const $element = getElement()
 		if ($element.length) {
@@ -28,6 +28,8 @@ function updateElementAsync(
 			}, timeoutMs)
 		}
 	}
+
+	return observer
 }
 
 export const withToggle =

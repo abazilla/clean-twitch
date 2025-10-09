@@ -15,6 +15,7 @@ import {
 	toggleFeaturedStreamPlayByDefault,
 	toggleGreyscale,
 	toggleLeftSidebar,
+	toggleLeftSidebarAlwaysShowMore,
 	toggleLeftSidebarFollowedChannels,
 	toggleLeftSidebarLiveChannels,
 	toggleLeftSidebarOfflineChannels,
@@ -122,6 +123,9 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "hide_left_sidebar_recommended_categories":
 			toggleLeftSidebarRecommendedCategories(value)
+			break
+		case "left_sidebar_always_show_more":
+			toggleLeftSidebarAlwaysShowMore(value)
 			break
 		case "hide_chat_highlights":
 			toggleChatHighlights(value)

@@ -163,6 +163,34 @@ export function toggleLeftSidebarOfflineChannels(value: boolean) {
 	)
 }
 
+export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
+	if (!value) {
+		toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+		toggleElementVisibility($('[data-a-target="side-nav-show-more-button"]'), value)
+	} else {
+		updateElement(
+			() => {
+				const $buttons = $('[data-a-target="side-nav-show-more-button"]')
+				if ($buttons.length > 0) {
+					$buttons.each(function () {
+						$(this).trigger("click")
+					})
+					setTimeout(() => {
+						toggleLeftSidebarAlwaysShowMore(value)
+						toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+					}, 100)
+				} else {
+					toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+				}
+				return $buttons
+			},
+			() => {},
+			undefined,
+			"always_on"
+		)
+	}
+}
+
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
 	updateElement(

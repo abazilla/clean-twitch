@@ -62,6 +62,11 @@ export const features = [
 				label: 'Hide "Recommended Categories"',
 				conflicts: [],
 			},
+			{
+				id: "left_sidebar_always_show_more",
+				label: 'Automatically "Show More"',
+				conflicts: [],
+			},
 		],
 	},
 	{
