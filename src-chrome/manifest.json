@@ -15,22 +15,15 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.twitch.tv/*"],
-			"js": ["content/index.ts"]
+			"js": ["../src/content/index.ts"]
 		},
 		{
-			"all_frames": true,
+			"world": "MAIN",
 			"run_at": "document_start",
-			// "contentScriptWhen": "start", // ff friendly
 			"matches": ["https://*.twitch.tv/*"],
-			"js": ["content/ws-setup.ts"]
+			"js": ["../src/content/ws/sniffer.ts"]
 		}
 	],
-	"web_accessible_resources": [
-		{
-			"resources": ["content/ws-setup.ts"],
-			"matches": ["https://*.twitch.tv/*"]
-		}
-	],
-	"background": { "service_worker": "background/index.ts" },
-	"action": { "default_popup": "pages/popup/index.html" }
+	"background": { "service_worker": "../src/background/chrome.ts" },
+	"action": { "default_popup": "../src/pages/popup/index.html" }
 }

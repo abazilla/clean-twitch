@@ -5,22 +5,12 @@
 	"description": "Hide annoying twitch stuff",
 	"author": "aba",
 	"source": "src/pages/popup/index.html",
-	"targets": {
-		"chrome": {
-			"engines": {
-				"browsers": "> 0.5%, last 5 Chrome version"
-			}
-		},
-		"firefox": {
-			"engines": {
-				"browsers": "last 5 firefox version"
-			}
-		}
-	},
 	"scripts": {
-		"start": "parcel watch src/manifest.json --host localhost",
-		"build": "rm -rf dist && parcel build src/manifest.json && rm -rf releases && mkdir releases && zip -r releases/hide-twitch-2-chrome-$(jq -r .version < package.json).zip dist/chrome",
-		"build-firefox": "rm -rf dist && parcel build src/manifest.json && rm -rf releases && mkdir releases && zip -r releases/hide-twitch-2-firefox-$(jq -r .version < package.json).zip dist/firefox",
+		"start": "parcel watch chrome/manifest.json --host localhost",
+		"start-firefox": "parcel watch firefox/manifest.json --host localhost",
+		"build": "npm run build-chrome && npm run build-firefox",
+		"build-chrome": "rm -rf dist/chrome && parcel build src-chrome/manifest.json --dist-dir dist/chrome && mkdir -p releases && zip -r releases/hide-twitch-2-chrome-$(jq -r .version < package.json).zip dist/chrome",
+		"build-firefox": "rm -rf dist/firefox && parcel build src-firefox/manifest.json --dist-dir dist/firefox && mkdir -p releases && zip -r releases/hide-twitch-2-firefox-$(jq -r .version < package.json).zip dist/firefox",
 		"test": "jest"
 	},
 	"dependencies": {

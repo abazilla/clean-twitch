@@ -3,6 +3,11 @@
 	"description": "Hide unwanted sections of twitch",
 	"version": "0.1.0",
 	"manifest_version": 2,
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "hide-twitch-2@example.com"
+		}
+	},
 	"permissions": [
 		"tabs",
 		"storage",
@@ -13,21 +18,21 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.twitch.tv/*"],
-			"js": ["content/index.ts"]
+			"js": ["../src/content/index.ts"]
 		},
 		{
 			"all_frames": true,
 			"run_at": "document_start",
 			"matches": ["https://*.twitch.tv/*"],
-			"js": ["content/ws/sniffer.ts"]
+			"js": ["../src/content/ws/sniffer.ts"]
 		}
 	],
-	"web_accessible_resources": ["content/ws/sniffer.ts"],
+	"web_accessible_resources": ["../src/content/ws/sniffer.ts"],
 	"background": {
-		"scripts": ["background/firefox.ts"],
+		"scripts": ["../src/background/firefox.ts"],
 		"persistent": false
 	},
 	"browser_action": {
-		"default_popup": "pages/popup/index.html"
+		"default_popup": "../src/pages/popup/index.html"
 	}
 }
