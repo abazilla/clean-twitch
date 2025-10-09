@@ -153,6 +153,16 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	}
 }
 
+export function toggleLeftSidebarOfflineChannels(value: boolean) {
+	updateElement(
+		() =>
+			$('a[data-test-selector="followed-channel"]:has(span:contains("Offline"))').parent().parent(),
+		($el) => toggleElementVisibility($el, value),
+		"no_timeout",
+		"always_on"
+	)
+}
+
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
 	updateElement(

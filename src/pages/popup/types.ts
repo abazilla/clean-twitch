@@ -43,6 +43,11 @@ export const features = [
 				conflicts: [],
 			},
 			{
+				id: "hide_left_sidebar_offline_channels",
+				label: 'Hide "Offline Channels"',
+				conflicts: [],
+			},
+			{
 				id: "hide_left_sidebar_live_channels",
 				label: 'Hide "Live Channels"',
 				conflicts: [],

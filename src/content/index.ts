@@ -17,6 +17,7 @@ import {
 	toggleLeftSidebar,
 	toggleLeftSidebarFollowedChannels,
 	toggleLeftSidebarLiveChannels,
+	toggleLeftSidebarOfflineChannels,
 	toggleLeftSidebarRecommendedCategories,
 	toggleLeftSidebarStories,
 	toggleLeftSidebarViewersAlsoWatch,
@@ -109,6 +110,9 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			break
 		case "hide_left_sidebar_followed_channels":
 			toggleLeftSidebarFollowedChannels(value)
+			break
+		case "hide_left_sidebar_offline_channels":
+			toggleLeftSidebarOfflineChannels(value)
 			break
 		case "hide_left_sidebar_live_channels":
 			toggleLeftSidebarLiveChannels(value)
