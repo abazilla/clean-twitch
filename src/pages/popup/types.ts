@@ -52,6 +52,11 @@ export const features = [
 				label: 'Hide "Viewers Also Watch"',
 				conflicts: [],
 			},
+			{
+				id: "hide_left_sidebar_recommended_categories",
+				label: 'Hide "Recommended Categories"',
+				conflicts: [],
+			},
 		],
 	},
 	{

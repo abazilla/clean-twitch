@@ -64,13 +64,13 @@ export function hideTopTurboButton(isHidden: boolean) {
 // LEFT SIDEBAR
 export function toggleLeftSidebar(value: boolean) {
 	if (value) {
-		$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
-		$('div[data-a-target="side-nav-bar-collapsed"').attr("style", "width: 0 !important;")
+		$('div[data-a-target="side-nav-bar"]').attr("style", "width: 0 !important;")
+		$('div[data-a-target="side-nav-bar-collapsed"]').attr("style", "width: 0 !important;")
 		$('button[aria-label="Collapse Side Nav"]').trigger("click")
-		$('div[data-a-target="side-nav-bar"').attr("style", "width: 0 !important;")
+		$('div[data-a-target="side-nav-bar"]').attr("style", "width: 0 !important;")
 	} else {
-		$('div[data-a-target="side-nav-bar"').removeAttr("style")
-		$('div[data-a-target="side-nav-bar-collapsed"').removeAttr("style")
+		$('div[data-a-target="side-nav-bar"]').removeAttr("style")
+		$('div[data-a-target="side-nav-bar-collapsed"]').removeAttr("style")
 		$('button[aria-label="Expand Side Nav"]').trigger("click")
 	}
 }
@@ -99,7 +99,14 @@ export function toggleLeftSidebarLiveChannels(value: boolean) {
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
 	updateElement(
-		() => $("div[aria-label='Live Channels']").next(),
+		() => $("div[aria-label*='Viewers Also Watch']"),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleLeftSidebarRecommendedCategories(value: boolean) {
+	updateElement(
+		() => $("div[aria-label='Recommended Categories']"),
 		($el) => toggleElementVisibility($el, value)
 	)
 }
