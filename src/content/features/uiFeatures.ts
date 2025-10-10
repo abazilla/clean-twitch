@@ -117,7 +117,12 @@ export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 // RIGHT SIDEBAR
 export function toggleChatHighlights(value: boolean) {
 	updateElement(
-		() => $("div.chat-room__content > div").not("[class='Layout-sc-1xcs6mc-0']").eq(0),
+		() => $("div[aria-label='Expand Top Gifters Leaderboard']").parents().eq(9),
+		($el) => toggleElementVisibility($el, value)
+	)
+
+	updateElement(
+		() => $("div.bits-leaderboard-expanded-top-three-entry").parents().eq(13),
 		($el) => toggleElementVisibility($el, value)
 	)
 }
