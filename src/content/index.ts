@@ -11,11 +11,14 @@ import {
 	hideTopBitsButton,
 	hideTopTurboButton,
 	hideWhispersButton,
-	toggleChatHighlights,
 	toggleChatMonetizationButtons,
+	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
 	toggleGreyscale,
+	toggleInfoAboutSection,
+	toggleInfoChannelPanelSection,
 	toggleInfoMonetizationButtons,
+	toggleInfoViralClipSection,
 	toggleLeftSidebar,
 	toggleLeftSidebarAlwaysShowMore,
 	toggleLeftSidebarFollowedChannels,
@@ -25,6 +28,7 @@ import {
 	toggleLeftSidebarStories,
 	toggleLeftSidebarViewersAlsoWatch,
 	toggleStickyFooter,
+	toggleTopGifters,
 } from "./features/uiFeatures"
 import { setupUrlChangeListener } from "./observers/urlObserver"
 
@@ -130,13 +134,25 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			toggleLeftSidebarAlwaysShowMore(value)
 			break
 		case "hide_chat_highlights":
-			toggleChatHighlights(value)
+			toggleCommunityHighlightStack(value)
+			break
+		case "hide_top_gifters":
+			toggleTopGifters(value)
 			break
 		case "hide_sticky_footer":
 			toggleStickyFooter(value)
 			break
-		case "hide_monetization_buttons":
+		case "hide_info_monetization_buttons":
 			toggleInfoMonetizationButtons(value)
+			break
+		case "hide_info_viral_clip_section":
+			toggleInfoViralClipSection(value)
+			break
+		case "hide_info_about_section":
+			toggleInfoAboutSection(value)
+			break
+		case "hide_info_channel_panel_section":
+			toggleInfoChannelPanelSection(value)
 			break
 		case "hide_chat_monetization":
 			toggleChatMonetizationButtons(value)
@@ -160,6 +176,7 @@ function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 		case "featured_stream_play_by_default":
 			toggleFeaturedStreamPlayByDefault(value)
 			break
+
 		default:
 			return
 	}

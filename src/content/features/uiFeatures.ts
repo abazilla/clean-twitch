@@ -115,7 +115,7 @@ export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 }
 
 // RIGHT SIDEBAR
-export function toggleChatHighlights(value: boolean) {
+export function toggleTopGifters(value: boolean) {
 	updateElement(
 		() => $("div[aria-label='Expand Top Gifters Leaderboard']").parents().eq(9),
 		($el) => toggleElementVisibility($el, value)
@@ -123,6 +123,24 @@ export function toggleChatHighlights(value: boolean) {
 
 	updateElement(
 		() => $("div.bits-leaderboard-expanded-top-three-entry").parents().eq(13),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleChatMonetizationButtons(value: boolean) {
+	updateElement(
+		() => $('div.chat-input button[aria-label="Bits and Points Balances"]').parent(),
+		($el) => toggleElementVisibility($el, value)
+	)
+	updateElement(
+		() => $('div.chat-input button[data-a-target="bits-button"]').parents().eq(1),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleCommunityHighlightStack(value: boolean) {
+	updateElement(
+		() => $(".community-highlight-stack__scroll-area--disable").parents().eq(1),
 		($el) => toggleElementVisibility($el, value)
 	)
 }
@@ -199,7 +217,14 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	}
 }
 
-// OTHER
+// BELOW VIDEO PLAYER
+export function toggleInfoViralClipSection(value: boolean) {
+	updateElement(
+		() => $("div[style*='social-sharing-badge-promo-banner']").parents().eq(2),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
 export function toggleInfoMonetizationButtons(value: boolean) {
 	updateElement(
 		() =>
@@ -219,14 +244,21 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 	)
 }
 
-export function toggleChatMonetizationButtons(value: boolean) {
+export function toggleInfoAboutSection(value: boolean) {
 	updateElement(
-		() => $('div.chat-input button[aria-label="Bits and Points Balances"]').parent(),
+		() => $("section#live-channel-about-panel").parent(),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleInfoChannelPanelSection(value: boolean) {
+	updateElement(
+		() => $("div.channel-panels").parent(),
 		($el) => toggleElementVisibility($el, value)
 	)
 	updateElement(
-		() => $('div.chat-input button[data-a-target="bits-button"]').parents().eq(1),
-		($el) => toggleElementVisibility($el, value)
+		() => $('div[style="transform: scale(2); opacity: 1; background-color: rgb(0, 0, 0);"]'),
+		($el) => $el.attr("style", "transform: scale(2);opacity: 1;background-color: inherit")
 	)
 }
 

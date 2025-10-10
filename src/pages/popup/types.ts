@@ -82,8 +82,13 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "hide_top_gifters",
+				label: "Hide Top Gifters",
+				conflicts: [],
+			},
+			{
 				id: "hide_chat_highlights",
-				label: "Hide Chat Highlights (predictions, pinned messages, etc)",
+				label: "Hide Chat Highlights",
 				conflicts: [],
 			},
 		],
@@ -188,8 +193,26 @@ export const features = [
 		conflicts: [],
 		children: [
 			{
-				id: "hide_monetization_buttons",
-				label: "Remove Monetization Buttons",
+				id: "hide_info_monetization_buttons",
+				label: "Hide Monetization Buttons",
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_info_viral_clip_section",
+				label: "Hide Viral Clip Section",
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_info_about_section",
+				label: "Hide About Section",
+				conflicts: [],
+				children: [],
+			},
+			{
+				id: "hide_info_channel_panel_section",
+				label: "Hide Channel Panel Section",
 				conflicts: [],
 				children: [],
 			},
