@@ -1,5 +1,5 @@
 import React from "react"
-import { useStorageState } from "../hooks/useStorageState"
+import { isChrome, isFirefox, useStorageState } from "../hooks/useStorageState"
 import { FeatureItem } from "../types"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
 
@@ -18,7 +18,11 @@ export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
 		if (newValue && item.conflicts.length > 0) {
 			// Update conflicts first
 			await Promise.all(
-				item.conflicts.map((conflictId) => chrome.storage.sync.set({ [conflictId]: false }))
+				item.conflicts.map((conflictId) => {
+					if (isChrome) return chrome.storage.sync.set({ [conflictId]: false })
+					if (isFirefox) return browser.storage.local.set({ [conflictId]: false })
+					return
+				})
 			)
 		}
 
