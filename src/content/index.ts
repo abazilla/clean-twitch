@@ -3,7 +3,7 @@ import { isChrome, storage } from "../utils/storage"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
 import { setupUrlChangeListener } from "./observers/urlObserver"
-import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./types"
+import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./toggles"
 
 // Initialize global styles
 const style = document.createElement("style")

@@ -1,5 +1,5 @@
 import React, { JSX } from "react"
-import { getPresetLabels, SimplePresetMode } from "../../../content/types"
+import { getPresetLabels, SimplePresetMode } from "../../../content/toggles"
 import { useStorageState } from "../../../utils/storage"
 import { CategoryBlocker } from "./CategoryBlocker"
 import { ChannelBlocker } from "./ChannelBlocker"

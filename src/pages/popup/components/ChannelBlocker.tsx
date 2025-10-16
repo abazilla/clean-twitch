@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { BlockedChannels } from "../../../content/types"
+import { BlockedChannels } from "../../../content/toggles"
 import { useStorageState } from "../../../utils/storage"
 
 export const ChannelBlocker: React.FC = () => {

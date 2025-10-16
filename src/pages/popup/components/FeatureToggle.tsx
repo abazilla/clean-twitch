@@ -1,5 +1,5 @@
 import React from "react"
-import { FeatureItem } from "../../../content/types"
+import { FeatureItem } from "../../../content/toggles"
 import { storage, useStorageState } from "../../../utils/storage"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
 

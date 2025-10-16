@@ -1,5 +1,5 @@
 import React, { JSX } from "react"
-import { features } from "../../../content/types"
+import { features } from "../../../content/toggles"
 import { CategoryBlocker } from "./CategoryBlocker"
 import { ChannelBlocker } from "./ChannelBlocker"
 import { FeatureToggle } from "./FeatureToggle"

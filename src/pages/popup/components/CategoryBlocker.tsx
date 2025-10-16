@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { BlockedCategories } from "../../../content/types"
+import { BlockedCategories } from "../../../content/toggles"
 import { parseCategoryName } from "../../../utils/categoryParser"
 import { useStorageState } from "../../../utils/storage"
 
