@@ -9,6 +9,7 @@ import {
 	hideTopBitsButton,
 	hideTopTurboButton,
 	hideWhispersButton,
+	toggleBelowVideoAdSection,
 	toggleChatMonetizationButtons,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
@@ -254,7 +255,10 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleVideoAdWrapper(value),
+				on_toggle: (value: boolean) => {
+					toggleVideoAdWrapper(value)
+					toggleBelowVideoAdSection(value)
+				},
 			},
 		],
 	},

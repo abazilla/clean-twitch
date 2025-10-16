@@ -240,7 +240,7 @@ export function toggleVideoAdWrapper(value: boolean) {
 }
 
 // TODO: ensure it works
-export function toggleChanSdaUpsellThirdView(value: boolean) {
+export function toggleBelowVideoAdSection(value: boolean) {
 	updateElement(
 		() => $('div[aria-label="chan-sda-upsell-third-view"]'),
 		($el) => toggleElementVisibility($el, value)
