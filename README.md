@@ -4,7 +4,7 @@ A Chrome extension to hide annoying Twitch stuff. It supports **TypeScript**, **
 
 ## Development
 
-[Parcel's Hot Module Reloading](https://parceljs.org/recipes/web-extension/#hmr) doesn't work with Manifest V3. You will have to run the following, and then refresh in chrome everytime..
+[Parcel's Hot Module Reloading](https://parceljs.org/recipes/web-extension/#hmr) doesn't work with Manifest V3. You will have to run the following, and then refresh/update in chrome/firefox everytime..
 
 ```sh
 npm run build

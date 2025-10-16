@@ -7,7 +7,24 @@ import { setupUrlChangeListener } from "./utils/urlObserver"
 
 // Initialize global styles
 const style = document.createElement("style")
-style.textContent = `
+
+// Function to update styles based on test mode
+async function updateStyles() {
+	const testMode = await storage.get<boolean>("test_mode")
+
+	if (testMode) {
+		style.textContent = `
+/* Global Rules - Test Mode */
+.twitch-declutter-hidden {
+    background-color: red !important;
+    border: 1px solid yellow !important;
+    opacity: 0.5 !important;
+}
+/* Category Rules */
+/* Channel Rules */
+`
+	} else {
+		style.textContent = `
 /* Global Rules */
 .twitch-declutter-hidden {
     display: none !important;
@@ -15,6 +32,11 @@ style.textContent = `
 /* Category Rules */
 /* Channel Rules */
 `
+	}
+}
+
+// Initial style setup
+updateStyles()
 document.head.appendChild(style)
 
 // Initialize feature handlers
@@ -95,6 +117,9 @@ async function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 			return
 		case "is_simple_mode":
 			await handleModeSwitch(value as boolean)
+			return
+		case "test_mode":
+			await updateStyles()
 			return
 	}
 

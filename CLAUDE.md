@@ -8,22 +8,19 @@ Hide Twitch 2 is a Chrome/Firefox browser extension that hides unwanted sections
 
 ## Commands
 
-**Development (with auto-reload):**
+**Development:**
 
-```bash
-npm start
-```
-
-This starts Parcel in watch mode. Load the extension from the `dist/` folder in Chrome's Extensions Dashboard with Developer mode enabled.
+Currently broken - must re-build using `npm run build` to test new changes.
 
 **Build for production:**
 
 ```bash
-npm run build          # Chrome extension
-npm run build-firefox  # Firefox extension
+npm run build          # Builds both Chrome and Firefox extensions
+npm run build-chrome   # Chrome extension only
+npm run build-firefox  # Firefox extension only
 ```
 
-Creates a ZIP file in the `releases/` folder ready for store submission.
+Creates ZIP files in the `releases/` folder ready for store submission with version numbers.
 
 **Testing:**
 
@@ -45,15 +42,15 @@ Uses ESLint with TypeScript and React configurations.
 
 ### Extension Structure
 
-- **Content Scripts**: Two content scripts run on Twitch pages
+- **Content Scripts**: Main content script runs on Twitch pages
   - `content/index.ts`: Main content script with DOM manipulation and feature toggles
-  - `content/ws/sniffer.ts`: Runs in MAIN world to intercept WebSocket traffic
-- **Background Script**: `background/index.ts` manages declarative net request rules for blocking network requests
-- **Popup UI**: React-based popup (`pages/popup/`) for extension settings
+  - `content/features/`: Feature-specific implementations (UI features, blocked categories/channels)
+  - `content/utils/`: Utility functions for DOM manipulation, URL observation, and category parsing
+- **Popup UI**: React-based popup (`pages/popup/`) for extension settings with Simple/Advanced modes
 
 ### Key Components
 
-**Feature System**: Feature definitions in `src/pages/popup/types.ts` drive both the UI and content script behavior. Features can have child features and conflict rules.
+**Feature System**: The popup provides both Simple and Advanced modes for user interaction. Simple mode shows basic toggles, while Advanced mode provides granular control over individual features.
 
 **Content Script Flow**:
 
@@ -62,7 +59,11 @@ Uses ESLint with TypeScript and React configurations.
 3. Set up URL change observer for SPA navigation
 4. Listen for storage changes and toggle features accordingly
 
-**Network Request Blocking**: Background script uses Chrome's Declarative Net Request API to block GraphQL requests, WebSocket connections, and stylesheets based on feature flags.
+**Modular Features**: Features are organized into separate modules:
+
+- `uiFeatures.ts`: UI element hiding functionality
+- `blockedCategories.ts`: Category-based content blocking
+- `blockedChannels.ts`: Channel-based content blocking
 
 **Element Hiding**: Uses a combination of:
 
@@ -89,3 +90,10 @@ Uses ESLint with TypeScript and React configurations.
 **Build System**: Parcel handles TypeScript compilation, bundling, and extension packaging. Supports both Chrome and Firefox targets.
 
 **Code Style**: Uses Prettier with import organization and Tailwind CSS formatting plugins.
+
+**File Structure**:
+
+- `src-chrome/` and `src-firefox/`: Browser-specific manifest files
+- `src/content/`: Content script functionality split into features and utilities
+- `src/pages/popup/`: React popup UI with Simple/Advanced mode components
+- Test files are co-located with source files using `__tests__/` directories
