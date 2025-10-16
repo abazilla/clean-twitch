@@ -32,12 +32,6 @@ function updateElementAsync(
 	return observer
 }
 
-export const withToggle =
-	(toggled: boolean, fn: ($el: JQuery<HTMLElement>, toggled: boolean) => void) =>
-	($el: JQuery<HTMLElement>) => {
-		fn($el, toggled)
-	}
-
 export const updateElement = (
 	getElement: () => JQuery<HTMLElement>,
 	action: (element: JQuery<HTMLElement>) => void,
