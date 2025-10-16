@@ -1,9 +1,9 @@
 import $ from "jquery"
-import { isChrome, storage } from "../utils/storage"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
-import { setupUrlChangeListener } from "./observers/urlObserver"
+import { isChrome, storage } from "./storage"
 import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./toggles"
+import { setupUrlChangeListener } from "./utils/urlObserver"
 
 // Initialize global styles
 const style = document.createElement("style")

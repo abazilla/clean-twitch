@@ -1,5 +1,5 @@
 import React from "react"
-import { useStorageState } from "../../../utils/storage"
+import { useStorageState } from "../../../content/storage"
 
 interface ChildFeatureToggleProps {
 	id: string

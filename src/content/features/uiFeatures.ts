@@ -239,7 +239,7 @@ export function toggleVideoAdWrapper(value: boolean) {
 	)
 }
 
-// TODO: ensure it works
+// TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	updateElement(
 		() => $('div[aria-label="chan-sda-upsell-third-view"]'),

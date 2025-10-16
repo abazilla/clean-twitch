@@ -16,14 +16,7 @@
 		{
 			"matches": ["https://*.twitch.tv/*"],
 			"js": ["../src/content/index.ts"]
-		},
-		{
-			"world": "MAIN",
-			"run_at": "document_start",
-			"matches": ["https://*.twitch.tv/*"],
-			"js": ["../src/content/ws/sniffer.ts"]
 		}
 	],
-	"background": { "service_worker": "../src/background/chrome.ts" },
 	"action": { "default_popup": "../src/pages/popup/index.html" }
 }

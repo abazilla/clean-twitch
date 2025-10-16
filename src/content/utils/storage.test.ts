@@ -1,5 +1,5 @@
-import { renderHook, act, waitFor } from "@testing-library/react"
-import { storage, useStorageState, isChrome, isFirefox } from "../storage"
+import { act, renderHook, waitFor } from "@testing-library/react"
+import { isChrome, isFirefox, storage, useStorageState } from "../storage"
 
 // Mock chrome and browser APIs
 const mockChrome = {
@@ -212,9 +212,7 @@ describe("useStorageState hook", () => {
 		mockChrome.storage.sync.get.mockResolvedValue({ testKey: mockStorageValue })
 		mockBrowser.storage.local.get.mockResolvedValue({ testKey: mockStorageValue })
 
-		const { result } = renderHook(() => 
-			useStorageState("testKey", "initialValue")
-		)
+		const { result } = renderHook(() => useStorageState("testKey", "initialValue"))
 
 		await waitFor(() => {
 			expect(result.current[2]).toBe(true) // isInitialized
@@ -227,9 +225,7 @@ describe("useStorageState hook", () => {
 		mockChrome.storage.sync.get.mockResolvedValue({})
 		mockBrowser.storage.local.get.mockResolvedValue({})
 
-		const { result } = renderHook(() => 
-			useStorageState("testKey", "initialValue")
-		)
+		const { result } = renderHook(() => useStorageState("testKey", "initialValue"))
 
 		await waitFor(() => {
 			expect(result.current[2]).toBe(true) // isInitialized
@@ -238,16 +234,16 @@ describe("useStorageState hook", () => {
 		// Simulate storage change
 		const expectedArea = isChrome ? "sync" : "local"
 		const mockChanges = {
-			testKey: { newValue: "newValue" }
+			testKey: { newValue: "newValue" },
 		}
 
 		// Get the callback that was registered
-		const addListenerMock = isChrome 
-			? mockChrome.storage.onChanged.addListener 
+		const addListenerMock = isChrome
+			? mockChrome.storage.onChanged.addListener
 			: mockBrowser.storage.onChanged.addListener
-		
+
 		const callback = addListenerMock.mock.calls[0][0]
-		
+
 		act(() => {
 			callback(mockChanges, expectedArea)
 		})
@@ -261,9 +257,7 @@ describe("useStorageState hook", () => {
 		mockChrome.storage.sync.set.mockResolvedValue(undefined)
 		mockBrowser.storage.local.set.mockResolvedValue(undefined)
 
-		const { result } = renderHook(() => 
-			useStorageState("testKey", "initialValue")
-		)
+		const { result } = renderHook(() => useStorageState("testKey", "initialValue"))
 
 		await waitFor(() => {
 			expect(result.current[2]).toBe(true) // isInitialized
@@ -274,7 +268,7 @@ describe("useStorageState hook", () => {
 		})
 
 		expect(result.current[0]).toBe("newValue")
-		
+
 		if (isChrome) {
 			expect(mockChrome.storage.sync.set).toHaveBeenCalledWith({ testKey: "newValue" })
 		} else if (isFirefox) {
@@ -285,14 +279,12 @@ describe("useStorageState hook", () => {
 	it("should handle errors when updating value", async () => {
 		mockChrome.storage.sync.get.mockResolvedValue({})
 		mockBrowser.storage.local.get.mockResolvedValue({})
-		
+
 		const error = new Error("Storage error")
 		mockChrome.storage.sync.set.mockRejectedValue(error)
 		mockBrowser.storage.local.set.mockRejectedValue(error)
 
-		const { result } = renderHook(() => 
-			useStorageState("testKey", "initialValue")
-		)
+		const { result } = renderHook(() => useStorageState("testKey", "initialValue"))
 
 		await waitFor(() => {
 			expect(result.current[2]).toBe(true) // isInitialized
@@ -311,9 +303,7 @@ describe("useStorageState hook", () => {
 		mockChrome.storage.sync.get.mockResolvedValue({})
 		mockBrowser.storage.local.get.mockResolvedValue({})
 
-		const { unmount, result } = renderHook(() => 
-			useStorageState("testKey", "initialValue")
-		)
+		const { unmount, result } = renderHook(() => useStorageState("testKey", "initialValue"))
 
 		await waitFor(() => {
 			expect(result.current[2]).toBe(true) // isInitialized

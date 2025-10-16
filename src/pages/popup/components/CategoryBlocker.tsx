@@ -1,7 +1,7 @@
 import React, { useState } from "react"
+import { useStorageState } from "../../../content/storage"
 import { BlockedCategories } from "../../../content/toggles"
-import { parseCategoryName } from "../../../utils/categoryParser"
-import { useStorageState } from "../../../utils/storage"
+import { parseCategoryName } from "../../../content/utils/categoryParser"
 
 export const CategoryBlocker: React.FC = () => {
 	const [categoryInput, setCategoryInput] = useState<string>("")
