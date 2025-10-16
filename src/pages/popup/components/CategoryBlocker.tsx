@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import { JSX } from "preact/compat"
+import { useState } from "preact/hooks"
 import { useStorageState } from "../../../content/storage"
 import { BlockedCategories } from "../../../content/toggles"
 import { parseCategoryName } from "../../../content/utils/categoryParser"
 
-export const CategoryBlocker: React.FC = () => {
+export const CategoryBlocker = (): JSX.Element => {
 	const [categoryInput, setCategoryInput] = useState<string>("")
 	const [blockedCategories, setBlockedCategories] = useStorageState<BlockedCategories>(
 		"blocked_categories",
@@ -68,7 +69,7 @@ export const CategoryBlocker: React.FC = () => {
 		})
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: Event) => {
 		e.preventDefault()
 		handleAddCategory()
 	}
@@ -123,7 +124,7 @@ export const CategoryBlocker: React.FC = () => {
 				<input
 					type="text"
 					value={categoryInput || ""}
-					onChange={(e) => setCategoryInput(e.target.value)}
+					onChange={(e) => setCategoryInput((e.target as HTMLInputElement).value)}
 					placeholder="Category name"
 					className="w-full rounded border border-purple-300 p-1 text-black"
 				/>
@@ -162,3 +163,5 @@ export const CategoryBlocker: React.FC = () => {
 		</div>
 	)
 }
+
+export default CategoryBlocker

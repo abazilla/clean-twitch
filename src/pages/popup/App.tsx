@@ -1,4 +1,5 @@
-import React, { JSX, useEffect, useState } from "react"
+import { JSX } from "preact/compat"
+import { useEffect, useState } from "preact/hooks"
 import { useStorageState } from "../../content/storage"
 import AdvancedMode from "./components/AdvancedMode"
 import SimpleMode from "./components/SimpleMode"
@@ -37,7 +38,7 @@ const App = (): JSX.Element => {
 					id="test_mode"
 					checked={testMode}
 					onChange={(e) => {
-						setTestMode(e.target.checked)
+						setTestMode((e.target as HTMLInputElement).checked)
 						// Refresh the current tab
 						chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 							if (tabs[0]?.id) {
@@ -47,7 +48,9 @@ const App = (): JSX.Element => {
 					}}
 					className="h-4 w-4 rounded border-gray-300 text-purple-800 focus:ring-purple-500"
 				/>
-				<label htmlFor="test_mode" className="select-none text-sm font-medium">Test mode</label>
+				<label htmlFor="test_mode" className="select-none text-sm font-medium">
+					Test mode
+				</label>
 			</div>
 			{isAdvancedMode ? <AdvancedMode /> : <SimpleMode />}
 		</div>

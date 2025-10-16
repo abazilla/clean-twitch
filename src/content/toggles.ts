@@ -1,38 +1,4 @@
-// This file contains all feature definitions and their toggle functions
-// Import the actual toggle functions from uiFeatures
-import {
-	hideBrowseButton,
-	hideDotsButton,
-	hideFollowingButton,
-	hideNotificationsButton,
-	hidePrimeGamingButton,
-	hideTopBitsButton,
-	hideTopTurboButton,
-	hideWhispersButton,
-	toggleBelowVideoAdSection,
-	toggleChatMonetizationButtons,
-	toggleCommunityHighlightStack,
-	toggleFeaturedStreamPlayByDefault,
-	toggleGreyscale,
-	toggleInfoAboutSection,
-	toggleInfoChannelPanelSection,
-	toggleInfoMonetizationButtons,
-	toggleInfoViralClipSection,
-	toggleLeftSidebar,
-	toggleLeftSidebarAlwaysShowMore,
-	toggleLeftSidebarFollowedChannels,
-	toggleLeftSidebarLiveChannels,
-	toggleLeftSidebarOfflineChannels,
-	toggleLeftSidebarRecommendedCategories,
-	toggleLeftSidebarStories,
-	toggleLeftSidebarStoriesXS,
-	toggleLeftSidebarViewersAlsoWatch,
-	toggleStickyFooter,
-	toggleTopGifters,
-	toggleVideoAdWrapper,
-	toggleVideoGiftButtonSection,
-} from "./features/uiFeatures"
-
+// This file contains all feature definitions without toggle functions
 export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist"
 
 export interface FeatureItem {
@@ -43,25 +9,17 @@ export interface FeatureItem {
 	hidden?: boolean
 	hideToggle?: boolean
 	mode?: readonly SimplePresetMode[]
-	on_toggle?: (enabled: boolean) => void
 }
 
 export type FeatureId = string
 
-// todo convert FeatureItem to type of features?
+// Feature definitions without toggle functions - lightweight for popup imports
 export const features = [
-	// {
-	// 	id: "block_gql",
-	// 	label: "Block GQL Requests",
-	// 	conflicts: [],
-	// 	children: [],
-	// },
 	{
 		id: "greyscale_all",
 		label: "Grayscale Site",
 		conflicts: [],
 		children: [],
-		on_toggle: (value: boolean) => toggleGreyscale(value),
 	},
 	{
 		id: "hide_topbar",
@@ -74,20 +32,17 @@ export const features = [
 				label: 'Hide "Following" Button',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => hideFollowingButton(value),
 			},
 			{
 				id: "hide_topbar_browse_button",
 				label: 'Hide "Browse" Button',
 				conflicts: [],
-				on_toggle: (value: boolean) => hideBrowseButton(value),
 			},
 			{
 				id: "hide_topbar_dots_button",
 				label: 'Hide "Dots" Button',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => hideDotsButton(value),
 			},
 			{
 				id: "hide_prime_gaming_button",
@@ -95,7 +50,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => hidePrimeGamingButton(value),
 			},
 			{
 				id: "hide_notifications_button",
@@ -103,7 +57,6 @@ export const features = [
 				conflicts: [],
 				mode: ["minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => hideNotificationsButton(value),
 			},
 			{
 				id: "hide_whispers_button",
@@ -111,7 +64,6 @@ export const features = [
 				conflicts: [],
 				mode: ["minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => hideWhispersButton(value),
 			},
 			{
 				id: "hide_top_bits_button",
@@ -119,7 +71,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => hideTopBitsButton(value),
 			},
 			{
 				id: "hide_top_turbo_button",
@@ -127,7 +78,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => hideTopTurboButton(value),
 			},
 		],
 	},
@@ -136,58 +86,47 @@ export const features = [
 		label: "Left sidebar",
 		conflicts: [],
 		mode: [],
-		on_toggle: (value: boolean) => toggleLeftSidebar(value),
 		children: [
 			{
 				id: "hide_left_sidebar_stories",
 				label: 'Hide "Stories"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => {
-					toggleLeftSidebarStories(value)
-					toggleLeftSidebarStoriesXS(value)
-				},
 			},
 			{
 				id: "hide_left_sidebar_followed_channels",
 				label: 'Hide "Followed Channels"',
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarFollowedChannels(value),
 			},
 			{
 				id: "hide_left_sidebar_offline_channels",
 				label: 'Hide "Offline Channels"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarOfflineChannels(value),
 			},
 			{
 				id: "hide_left_sidebar_live_channels",
 				label: 'Hide "Live Channels"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarLiveChannels(value),
 			},
 			{
 				id: "hide_left_sidebar_viewers_also_watch",
 				label: 'Hide "Viewers Also Watch"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarViewersAlsoWatch(value),
 			},
 			{
 				id: "hide_left_sidebar_recommended_categories",
 				label: 'Hide "Recommended Categories"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarRecommendedCategories(value),
 			},
 			{
 				id: "left_sidebar_always_show_more",
 				label: 'Automatically "Show More"',
 				mode: ["minimalist"],
 				conflicts: [],
-				on_toggle: (value: boolean) => toggleLeftSidebarAlwaysShowMore(value),
 			},
 		],
 	},
@@ -209,21 +148,18 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleChatMonetizationButtons(value),
 			},
 			{
 				id: "hide_top_gifters",
 				label: "Hide Top Gifters",
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
-				on_toggle: (value: boolean) => toggleTopGifters(value),
 			},
 			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights",
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
-				on_toggle: (value: boolean) => toggleCommunityHighlightStack(value),
 			},
 		],
 	},
@@ -239,7 +175,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleFeaturedStreamPlayByDefault(value),
 			},
 			{
 				id: "hide_video_gift_section",
@@ -247,7 +182,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleVideoGiftButtonSection(value),
 			},
 			{
 				id: "hide_video_ad_wrapper",
@@ -255,10 +189,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => {
-					toggleVideoAdWrapper(value)
-					toggleBelowVideoAdSection(value)
-				},
 			},
 		],
 	},
@@ -274,7 +204,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleInfoMonetizationButtons(value),
 			},
 			{
 				id: "hide_info_viral_clip_section",
@@ -282,7 +211,6 @@ export const features = [
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleInfoViralClipSection(value),
 			},
 			{
 				id: "hide_info_about_section",
@@ -290,7 +218,6 @@ export const features = [
 				conflicts: [],
 				mode: ["minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleInfoAboutSection(value),
 			},
 			{
 				id: "hide_info_channel_panel_section",
@@ -298,7 +225,6 @@ export const features = [
 				conflicts: [],
 				mode: ["minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleInfoChannelPanelSection(value),
 			},
 			{
 				id: "hide_sticky_footer",
@@ -306,7 +232,6 @@ export const features = [
 				conflicts: [],
 				mode: ["minimalist"],
 				children: [],
-				on_toggle: (value: boolean) => toggleStickyFooter(value),
 			},
 		],
 	},

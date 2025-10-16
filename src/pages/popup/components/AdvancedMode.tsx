@@ -1,8 +1,8 @@
-import React, { JSX } from "react"
+import { JSX } from "preact/compat"
 import { features } from "../../../content/toggles"
-import { CategoryBlocker } from "./CategoryBlocker"
-import { ChannelBlocker } from "./ChannelBlocker"
 import { FeatureToggle } from "./FeatureToggle"
+import CategoryBlocker from "./CategoryBlocker"
+import ChannelBlocker from "./ChannelBlocker"
 
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-3">

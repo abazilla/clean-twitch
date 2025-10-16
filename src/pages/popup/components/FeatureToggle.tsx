@@ -1,4 +1,4 @@
-import React from "react"
+import { JSX } from "preact/compat"
 import { storage, useStorageState } from "../../../content/storage"
 import { FeatureItem } from "../../../content/toggles"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
@@ -7,12 +7,13 @@ interface FeatureToggleProps {
 	item: FeatureItem
 }
 
-export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
+export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 	if (item.hidden) return null
 	const [checked, setChecked] = useStorageState(item.id, false)
 
-	const handleParentToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = e.target.checked
+	const handleParentToggle = async (e: Event) => {
+		const target = e.target as HTMLInputElement
+		const newValue = target.checked
 		console.log(`Toggling ${item.id} to:`, newValue)
 
 		if (newValue && item.conflicts.length > 0) {

@@ -1,8 +1,8 @@
-import React, { JSX } from "react"
+import { JSX } from "preact/compat"
 import { useStorageState } from "../../../content/storage"
 import { getPresetLabels, SimplePresetMode } from "../../../content/toggles"
-import { CategoryBlocker } from "./CategoryBlocker"
-import { ChannelBlocker } from "./ChannelBlocker"
+import CategoryBlocker from "./CategoryBlocker"
+import ChannelBlocker from "./ChannelBlocker"
 
 const SimpleMode = (): JSX.Element => {
 	const [currentPreset, setCurrentPreset] = useStorageState<SimplePresetMode>(

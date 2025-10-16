@@ -3,6 +3,7 @@ import { handleBlockedCategories, initializeBlockedCategories } from "./features
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
 import { isChrome, storage } from "./storage"
 import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./toggles"
+import { toggleMap } from "./toggleMap"
 import { setupUrlChangeListener } from "./utils/urlObserver"
 
 // Initialize global styles
@@ -130,16 +131,16 @@ async function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
 		return
 	}
 
-	// Find the feature and call its on_toggle function
-	const feature = findFeatureById(id)
-	if (feature?.on_toggle) {
+	// Find the toggle function in the map and call it
+	const toggleFunction = toggleMap[id]
+	if (toggleFunction) {
 		try {
-			feature.on_toggle(value)
+			toggleFunction(value)
 		} catch (error) {
-			console.error(`Error calling on_toggle for ${id}:`, error)
+			console.error(`Error calling toggle function for ${id}:`, error)
 		}
 	} else {
-		console.warn(`No on_toggle function found for feature: ${id}`)
+		console.warn(`No toggle function found for feature: ${id}`)
 	}
 }
 
@@ -195,11 +196,11 @@ async function applySimpleModeFeatures(preset: SimplePresetMode) {
 
 	// Apply preset: disable all, then enable selected features
 	allFeatureIds.forEach((featureId) => {
-		const feature = findFeatureById(featureId)
-		if (feature?.on_toggle) {
+		const toggleFunction = toggleMap[featureId]
+		if (toggleFunction) {
 			try {
 				const shouldEnable = featuresToEnable.includes(featureId)
-				feature.on_toggle(shouldEnable)
+				toggleFunction(shouldEnable)
 			} catch (error) {
 				console.error(`Error toggling feature ${featureId}:`, error)
 			}
@@ -225,10 +226,10 @@ async function restoreAdvancedModeSettings() {
 	// Apply each feature's stored setting
 	for (const featureId of allFeatureIds) {
 		const storedValue = await storage.get(featureId)
-		const feature = findFeatureById(featureId)
-		if (feature?.on_toggle && storedValue !== undefined && storedValue !== null) {
+		const toggleFunction = toggleMap[featureId]
+		if (toggleFunction && storedValue !== undefined && storedValue !== null) {
 			try {
-				feature.on_toggle(Boolean(storedValue))
+				toggleFunction(Boolean(storedValue))
 			} catch (error) {
 				console.error(`Error restoring feature ${featureId}:`, error)
 			}

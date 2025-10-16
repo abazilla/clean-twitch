@@ -1,4 +1,4 @@
-import React from "react"
+import { JSX } from "preact/compat"
 import { useStorageState } from "../../../content/storage"
 
 interface ChildFeatureToggleProps {
@@ -7,11 +7,11 @@ interface ChildFeatureToggleProps {
 	parentEnabled: boolean
 }
 
-export const ChildFeatureToggle: React.FC<ChildFeatureToggleProps> = ({
+export const ChildFeatureToggle = ({
 	id,
 	label,
 	parentEnabled,
-}) => {
+}: ChildFeatureToggleProps): JSX.Element => {
 	const [checked, setChecked] = useStorageState<boolean>(id, false)
 
 	return (
@@ -23,7 +23,7 @@ export const ChildFeatureToggle: React.FC<ChildFeatureToggleProps> = ({
 					className="mt-0.5 h-4 w-4 place-self-start rounded border-gray-300 text-purple-800 focus:ring-purple-500"
 					checked={checked}
 					disabled={parentEnabled}
-					onChange={(e) => setChecked(e.target.checked)}
+					onChange={(e) => setChecked((e.target as HTMLInputElement).checked)}
 				/>
 				<label htmlFor={id} className="select-none text-sm font-medium">
 					{label}

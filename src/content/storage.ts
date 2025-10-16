@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "preact/hooks"
 
 export const isFirefox = typeof browser !== "undefined"
 export const isChrome = typeof chrome !== "undefined" && !isFirefox
@@ -63,8 +63,8 @@ export const storage = {
 			} else if (isFirefox) {
 				browser.storage.onChanged.removeListener(callback)
 			}
-		}
-	}
+		},
+	},
 }
 
 /**
@@ -87,10 +87,7 @@ export function useStorageState<T>(key: string, initialValue: T) {
 
 	// Listen for changes
 	useEffect(() => {
-		const handleStorageChange = (
-			changes: Record<string, any>,
-			areaName: string
-		) => {
+		const handleStorageChange = (changes: Record<string, any>, areaName: string) => {
 			const expectedArea = isChrome ? "sync" : "local"
 			if (areaName === expectedArea && key in changes) {
 				console.log(`Storage change for ${key}:`, changes, areaName)

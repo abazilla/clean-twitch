@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import { JSX } from "preact/compat"
+import { useState } from "preact/hooks"
 import { useStorageState } from "../../../content/storage"
 import { BlockedChannels } from "../../../content/toggles"
 
-export const ChannelBlocker: React.FC = () => {
+export const ChannelBlocker = (): JSX.Element => {
 	const [channelInput, setChannelInput] = useState<string>("")
 	const [blockedChannels, setBlockedChannels] = useStorageState<BlockedChannels>(
 		"blocked_channels",
@@ -66,7 +67,7 @@ export const ChannelBlocker: React.FC = () => {
 		})
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: Event) => {
 		e.preventDefault()
 		handleAddChannel()
 	}
@@ -121,7 +122,7 @@ export const ChannelBlocker: React.FC = () => {
 				<input
 					type="text"
 					value={channelInput || ""}
-					onChange={(e) => setChannelInput(e.target.value)}
+					onChange={(e) => setChannelInput((e.target as HTMLInputElement).value)}
 					placeholder="Channel name"
 					className="w-full rounded border border-purple-300 p-1 text-black"
 				/>
@@ -160,3 +161,5 @@ export const ChannelBlocker: React.FC = () => {
 		</div>
 	)
 }
+
+export default ChannelBlocker
