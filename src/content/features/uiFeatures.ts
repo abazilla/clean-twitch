@@ -86,6 +86,13 @@ export function toggleLeftSidebarStories(value: boolean) {
 	)
 }
 
+export function toggleLeftSidebarStoriesXS(value: boolean) {
+	updateElement(
+		() => $("div.storiesLeftNavSectionCollapsedButton--txKvw").parents().eq(2),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
 	updateElement(
 		() => $("div[aria-label='Followed Channels']"),
