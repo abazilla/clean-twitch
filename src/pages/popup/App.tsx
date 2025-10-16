@@ -1,8 +1,10 @@
 import { JSX } from "preact/compat"
 import { useEffect, useState } from "preact/hooks"
+import { lazy, Suspense } from "preact/compat"
 import { useStorageState } from "../../content/storage"
-import AdvancedMode from "./components/AdvancedMode"
 import SimpleMode from "./components/SimpleMode"
+
+const AdvancedMode = lazy(() => import("./components/AdvancedMode"))
 
 const App = (): JSX.Element => {
 	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
@@ -52,7 +54,13 @@ const App = (): JSX.Element => {
 					Test mode
 				</label>
 			</div>
-			{isAdvancedMode ? <AdvancedMode /> : <SimpleMode />}
+			{isAdvancedMode ? (
+				<Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
+					<AdvancedMode />
+				</Suspense>
+			) : (
+				<SimpleMode />
+			)}
 		</div>
 	)
 }
