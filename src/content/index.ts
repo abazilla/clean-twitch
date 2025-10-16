@@ -1,38 +1,9 @@
 import $ from "jquery"
-import { FeatureId, features } from "../pages/popup/types"
 import { isChrome, storage } from "../utils/storage"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
-import {
-	hideBrowseButton,
-	hideDotsButton,
-	hideFollowingButton,
-	hideNotificationsButton,
-	hidePrimeGamingButton,
-	hideTopBitsButton,
-	hideTopTurboButton,
-	hideWhispersButton,
-	toggleChatMonetizationButtons,
-	toggleCommunityHighlightStack,
-	toggleFeaturedStreamPlayByDefault,
-	toggleGreyscale,
-	toggleInfoAboutSection,
-	toggleInfoChannelPanelSection,
-	toggleInfoMonetizationButtons,
-	toggleInfoViralClipSection,
-	toggleLeftSidebar,
-	toggleLeftSidebarAlwaysShowMore,
-	toggleLeftSidebarFollowedChannels,
-	toggleLeftSidebarLiveChannels,
-	toggleLeftSidebarOfflineChannels,
-	toggleLeftSidebarRecommendedCategories,
-	toggleLeftSidebarStories,
-	toggleLeftSidebarStoriesXS,
-	toggleLeftSidebarViewersAlsoWatch,
-	toggleStickyFooter,
-	toggleTopGifters,
-} from "./features/uiFeatures"
 import { setupUrlChangeListener } from "./observers/urlObserver"
+import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./types"
 
 // Initialize global styles
 const style = document.createElement("style")
@@ -52,18 +23,33 @@ initializeBlockedCategories(style)
 
 // Main initialization
 $(function () {
-	// Initial setup
-	features.forEach((f) => {
-		storage.get(f.id).then((result) => {
-			// console.log("parent", f.id)
-			handleToggle(f.id, true, result)
-		})
-		if (f.children.length > 0) {
-			f.children.forEach((cf) => {
-				storage.get(cf.id).then((result) => {
-					// console.log("child", cf.id)
-					handleToggle(cf.id, true, result)
+	// Check if we're in simple mode first
+	storage.get<boolean>("is_simple_mode").then(async (isSimpleMode) => {
+		// If not set, default to simple mode (first time use)
+		if (isSimpleMode === undefined || isSimpleMode === null) {
+			await storage.set("is_simple_mode", true)
+			isSimpleMode = true
+		}
+		
+		if (isSimpleMode) {
+			// We're in simple mode - apply the preset
+			const preset = (await storage.get<SimplePresetMode>("simple_mode_preset")) || "show_all"
+			await handleSimpleModePreset(preset)
+		} else {
+			// We're in advanced mode - load individual feature settings
+			features.forEach((f) => {
+				storage.get(f.id).then((result) => {
+					// console.log("parent", f.id)
+					handleToggle(f.id, true, result)
 				})
+				if (f.children && f.children.length > 0) {
+					f.children.forEach((cf) => {
+						storage.get(cf.id).then((result) => {
+							// console.log("child", cf.id)
+							handleToggle(cf.id, true, result)
+						})
+					})
+				}
 			})
 		}
 	})
@@ -81,107 +67,146 @@ $(function () {
 	})
 })
 
-function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
+function findFeatureById(id: FeatureId): FeatureItem | undefined {
+	const findInItems = (items: readonly FeatureItem[]): FeatureItem | undefined => {
+		for (const item of items) {
+			if (item.id === id) return item
+			if (item.children) {
+				const found = findInItems(item.children)
+				if (found) return found
+			}
+		}
+		return undefined
+	}
+	return findInItems(features)
+}
+
+async function handleToggle(id: FeatureId, onLoad: boolean, value: any) {
+	// Handle special cases that don't have on_toggle functions
 	switch (id) {
-		case "greyscale_all":
-			toggleGreyscale(value)
-			break
-		// case "hide_topbar":
-		// 	break
-		case "hide_topbar_following_button":
-			hideFollowingButton(value)
-			break
-		case "hide_topbar_browse_button":
-			hideBrowseButton(value)
-			break
-		case "hide_topbar_dots_button":
-			hideDotsButton(value)
-			break
-		case "hide_prime_gaming_button":
-			hidePrimeGamingButton(value)
-			break
-		case "hide_notifications_button":
-			hideNotificationsButton(value)
-			break
-		case "hide_whispers_button":
-			hideWhispersButton(value)
-			break
-		case "hide_top_bits_button":
-			hideTopBitsButton(value)
-			break
-		case "hide_top_turbo_button":
-			hideTopTurboButton(value)
-			break
-		case "hide_left_sidebar":
-			toggleLeftSidebar(value)
-			break
-		case "hide_left_sidebar_stories":
-			toggleLeftSidebarStories(value)
-			toggleLeftSidebarStoriesXS(value)
-			break
-		case "hide_left_sidebar_followed_channels":
-			toggleLeftSidebarFollowedChannels(value)
-			break
-		case "hide_left_sidebar_offline_channels":
-			toggleLeftSidebarOfflineChannels(value)
-			break
-		case "hide_left_sidebar_live_channels":
-			toggleLeftSidebarLiveChannels(value)
-			break
-		case "hide_left_sidebar_viewers_also_watch":
-			toggleLeftSidebarViewersAlsoWatch(value)
-			break
-		case "hide_left_sidebar_recommended_categories":
-			toggleLeftSidebarRecommendedCategories(value)
-			break
-		case "left_sidebar_always_show_more":
-			toggleLeftSidebarAlwaysShowMore(value)
-			break
-		case "hide_chat_highlights":
-			toggleCommunityHighlightStack(value)
-			break
-		case "hide_top_gifters":
-			toggleTopGifters(value)
-			break
-		case "hide_sticky_footer":
-			toggleStickyFooter(value)
-			break
-		case "hide_info_monetization_buttons":
-			toggleInfoMonetizationButtons(value)
-			break
-		case "hide_info_viral_clip_section":
-			toggleInfoViralClipSection(value)
-			break
-		case "hide_info_about_section":
-			toggleInfoAboutSection(value)
-			break
-		case "hide_info_channel_panel_section":
-			toggleInfoChannelPanelSection(value)
-			break
-		case "hide_chat_monetization":
-			toggleChatMonetizationButtons(value)
-			break
-		case "no_recommendations":
-			break
-		case "block_gql":
-			break
-		case "chat_minimal":
-			break
-		case "chat_only":
-			break
-		case "no_chat":
-			break
 		case "blocked_channels":
 			handleBlockedChannels(value)
-			break
+			return
 		case "blocked_categories":
 			handleBlockedCategories(value)
-			break
-		case "featured_stream_play_by_default":
-			toggleFeaturedStreamPlayByDefault(value)
-			break
-
-		default:
 			return
+		case "simple_mode_preset":
+			await handleSimpleModePreset(value as SimplePresetMode)
+			return
+		case "is_simple_mode":
+			await handleModeSwitch(value as boolean)
+			return
+	}
+
+	// Check if we're in simple mode - if so, ignore individual feature toggles
+	const isInSimpleMode = await storage.get<boolean>("is_simple_mode")
+	if (isInSimpleMode) {
+		console.log(`Ignoring individual feature toggle for ${id} - in simple mode`)
+		return
+	}
+
+	// Find the feature and call its on_toggle function
+	const feature = findFeatureById(id)
+	if (feature?.on_toggle) {
+		try {
+			feature.on_toggle(value)
+		} catch (error) {
+			console.error(`Error calling on_toggle for ${id}:`, error)
+		}
+	} else {
+		console.warn(`No on_toggle function found for feature: ${id}`)
+	}
+}
+
+async function handleModeSwitch(isSimpleMode: boolean) {
+	console.log(`Switching to ${isSimpleMode ? "simple" : "advanced"} mode`)
+
+	if (isSimpleMode) {
+		// Switched to simple mode - apply the current preset
+		const preset = (await storage.get<SimplePresetMode>("simple_mode_preset")) || "show_all"
+		await applySimpleModeFeatures(preset)
+	} else {
+		// Switched to advanced mode - restore individual settings
+		await restoreAdvancedModeSettings()
+	}
+}
+
+async function handleSimpleModePreset(preset: SimplePresetMode) {
+	console.log(`Applying simple mode preset: ${preset}`)
+
+	// Only apply if we're actually in simple mode (or if not set, assume simple mode)
+	const isInSimpleMode = await storage.get<boolean>("is_simple_mode")
+	if (isInSimpleMode === false) {
+		console.log("Ignoring preset change - not in simple mode")
+		return
+	}
+
+	if (preset === "show_all") {
+		// When switching to "show_all", restore individual feature settings
+		await restoreAdvancedModeSettings()
+	} else {
+		// Apply simple mode features
+		await applySimpleModeFeatures(preset)
+	}
+}
+
+async function applySimpleModeFeatures(preset: SimplePresetMode) {
+	// Get all features that should be enabled for this preset
+	const featuresToEnable = getFeaturesForMode(preset)
+
+	// Get all possible feature IDs
+	const allFeatureIds: string[] = []
+	const collectAllIds = (items: readonly FeatureItem[]) => {
+		for (const item of items) {
+			if (!item.hidden) {
+				allFeatureIds.push(item.id)
+				if (item.children) {
+					collectAllIds(item.children)
+				}
+			}
+		}
+	}
+	collectAllIds(features)
+
+	// Apply preset: disable all, then enable selected features
+	allFeatureIds.forEach((featureId) => {
+		const feature = findFeatureById(featureId)
+		if (feature?.on_toggle) {
+			try {
+				const shouldEnable = featuresToEnable.includes(featureId)
+				feature.on_toggle(shouldEnable)
+			} catch (error) {
+				console.error(`Error toggling feature ${featureId}:`, error)
+			}
+		}
+	})
+}
+
+async function restoreAdvancedModeSettings() {
+	// Restore individual feature settings from storage
+	const allFeatureIds: string[] = []
+	const collectAllIds = (items: readonly FeatureItem[]) => {
+		for (const item of items) {
+			if (!item.hidden) {
+				allFeatureIds.push(item.id)
+				if (item.children) {
+					collectAllIds(item.children)
+				}
+			}
+		}
+	}
+	collectAllIds(features)
+
+	// Apply each feature's stored setting
+	for (const featureId of allFeatureIds) {
+		const storedValue = await storage.get(featureId)
+		const feature = findFeatureById(featureId)
+		if (feature?.on_toggle && storedValue !== undefined && storedValue !== null) {
+			try {
+				feature.on_toggle(Boolean(storedValue))
+			} catch (error) {
+				console.error(`Error restoring feature ${featureId}:`, error)
+			}
+		}
 	}
 }
