@@ -1,15 +1,15 @@
 import React, { JSX } from "react"
+import { features } from "../../../content/types"
 import { CategoryBlocker } from "./CategoryBlocker"
 import { ChannelBlocker } from "./ChannelBlocker"
 import { FeatureToggle } from "./FeatureToggle"
-import { features } from "../../../content/types"
 
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-3">
 		{features.map((item) => (
 			<FeatureToggle key={item.id} item={item} />
 		))}
-		<div className="border-t border-purple-400 pt-3">
+		<div>
 			<ChannelBlocker />
 			<CategoryBlocker />
 		</div>

@@ -1,11 +1,14 @@
 import React, { JSX } from "react"
+import { getPresetLabels, SimplePresetMode } from "../../../content/types"
+import { useStorageState } from "../../../utils/storage"
 import { CategoryBlocker } from "./CategoryBlocker"
 import { ChannelBlocker } from "./ChannelBlocker"
-import { useStorageState } from "../../../utils/storage"
-import { SimplePresetMode, getPresetLabels } from "../../../content/types"
 
 const SimpleMode = (): JSX.Element => {
-	const [currentPreset, setCurrentPreset] = useStorageState<SimplePresetMode>("simple_mode_preset", "show_all")
+	const [currentPreset, setCurrentPreset] = useStorageState<SimplePresetMode>(
+		"simple_mode_preset",
+		"show_all"
+	)
 	const presetLabels = getPresetLabels()
 
 	const applyPreset = async (preset: SimplePresetMode) => {
@@ -16,7 +19,12 @@ const SimpleMode = (): JSX.Element => {
 		<div className="space-y-4">
 			<div className="space-y-3">
 				<h3 className="text-sm font-medium">Choose a preset:</h3>
-				{(Object.entries(presetLabels) as [SimplePresetMode, typeof presetLabels[SimplePresetMode]][]).map(([key, config]) => (
+				{(
+					Object.entries(presetLabels) as [
+						SimplePresetMode,
+						(typeof presetLabels)[SimplePresetMode],
+					][]
+				).map(([key, config]) => (
 					<label key={key} className="flex cursor-pointer items-start gap-3">
 						<input
 							type="radio"
@@ -34,7 +42,7 @@ const SimpleMode = (): JSX.Element => {
 				))}
 			</div>
 
-			<div className="border-t border-purple-400 pt-3">
+			<div>
 				<ChannelBlocker />
 				<CategoryBlocker />
 			</div>
