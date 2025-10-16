@@ -224,6 +224,29 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	}
 }
 
+// VIDEO PLAYER
+export function toggleVideoGiftButtonSection(value: boolean) {
+	updateElement(
+		() => $('div.theatre-social-panel:has(button[data-a-target="gift-button"])'),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+export function toggleVideoAdWrapper(value: boolean) {
+	updateElement(
+		() => $("div.stream-display-ad__wrapper"),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
+// TODO: ensure it works
+export function toggleChanSdaUpsellThirdView(value: boolean) {
+	updateElement(
+		() => $('div[aria-label="chan-sda-upsell-third-view"]'),
+		($el) => toggleElementVisibility($el, value)
+	)
+}
+
 // BELOW VIDEO PLAYER
 export function toggleInfoViralClipSection(value: boolean) {
 	updateElement(
