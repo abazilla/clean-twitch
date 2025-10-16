@@ -20,6 +20,8 @@
 	},
 	"devDependencies": {
 		"@parcel/config-webextension": "^2.13.3",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.0",
 		"@types/chrome": "^0.0.193",
 		"@types/firefox-webext-browser": "^82.0.0",
 		"@types/jest": "^26.0.19",
