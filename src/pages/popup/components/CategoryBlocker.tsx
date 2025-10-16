@@ -1,17 +1,20 @@
 import React, { useState } from "react"
+import { BlockedCategories } from "../../../content/types"
 import { parseCategoryName } from "../../../utils/categoryParser"
 import { useStorageState } from "../../../utils/storage"
-import { BlockedCategories } from "../../../content/types"
 
 export const CategoryBlocker: React.FC = () => {
 	const [categoryInput, setCategoryInput] = useState<string>("")
-	const [blockedCategories, setBlockedCategories] = useStorageState<BlockedCategories>("blocked_categories", {
-		enabled: true,
-		hideFromSidebar: true,
-		hideFromDirectory: true,
-		hideFromSearch: true,
-		categories: [],
-	})
+	const [blockedCategories, setBlockedCategories] = useStorageState<BlockedCategories>(
+		"blocked_categories",
+		{
+			enabled: true,
+			hideFromSidebar: true,
+			hideFromDirectory: true,
+			hideFromSearch: true,
+			categories: [],
+		}
+	)
 
 	const handleAddCategory = () => {
 		const categoryName = categoryInput.trim()

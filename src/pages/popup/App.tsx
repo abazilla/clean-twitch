@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from "react"
+import React, { JSX, useEffect, useState } from "react"
 import { useStorageState } from "../../utils/storage"
 import AdvancedMode from "./components/AdvancedMode"
 import SimpleMode from "./components/SimpleMode"

@@ -1,6 +1,6 @@
 import React from "react"
-import { useStorageState, storage } from "../../../utils/storage"
 import { FeatureItem } from "../../../content/types"
+import { storage, useStorageState } from "../../../utils/storage"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
 
 interface FeatureToggleProps {
@@ -17,9 +17,7 @@ export const FeatureToggle: React.FC<FeatureToggleProps> = ({ item }) => {
 
 		if (newValue && item.conflicts.length > 0) {
 			// Update conflicts first
-			await Promise.all(
-				item.conflicts.map((conflictId) => storage.set(conflictId, false))
-			)
+			await Promise.all(item.conflicts.map((conflictId) => storage.set(conflictId, false)))
 		}
 
 		// Then update this toggle

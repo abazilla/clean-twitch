@@ -30,7 +30,7 @@ $(function () {
 			await storage.set("is_simple_mode", true)
 			isSimpleMode = true
 		}
-		
+
 		if (isSimpleMode) {
 			// We're in simple mode - apply the preset
 			const preset = (await storage.get<SimplePresetMode>("simple_mode_preset")) || "show_all"
