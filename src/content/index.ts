@@ -1,6 +1,6 @@
 import $ from "jquery"
-import { isChrome, isFirefox } from "../pages/popup/hooks/useStorageState"
 import { FeatureId, features } from "../pages/popup/types"
+import { isChrome, storage } from "../utils/storage"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
 import {
@@ -53,30 +53,16 @@ initializeBlockedCategories(style)
 $(function () {
 	// Initial setup
 	features.forEach((f) => {
-		if (isChrome) {
-			chrome.storage.sync.get(f.id).then((result) => {
-				// console.log("parent", f.id)
-				handleToggle(f.id, true, result[f.id])
-			})
-		} else if (isFirefox) {
-			browser.storage.local.get(f.id).then((result) => {
-				// console.log("parent", f.id)
-				handleToggle(f.id, true, result[f.id])
-			})
-		}
+		storage.get(f.id).then((result) => {
+			// console.log("parent", f.id)
+			handleToggle(f.id, true, result)
+		})
 		if (f.children.length > 0) {
 			f.children.forEach((cf) => {
-				if (isChrome) {
-					chrome.storage.sync.get(cf.id).then((result) => {
-						// console.log("child", cf.id)
-						handleToggle(cf.id, true, result[cf.id])
-					})
-				} else if (isFirefox) {
-					browser.storage.local.get(cf.id).then((result) => {
-						// console.log("child", cf.id)
-						handleToggle(cf.id, true, result[cf.id])
-					})
-				}
+				storage.get(cf.id).then((result) => {
+					// console.log("child", cf.id)
+					handleToggle(cf.id, true, result)
+				})
 			})
 		}
 	})
@@ -85,21 +71,13 @@ $(function () {
 	setupUrlChangeListener()
 
 	// Listen for changes
-	if (isChrome) {
-		chrome.storage.onChanged.addListener((changes, areaName) => {
-			if (areaName === "sync") {
-				const key = Object.keys(changes)[0] as FeatureId
-				handleToggle(key, false, changes[key].newValue)
-			}
-		})
-	} else if (isFirefox) {
-		browser.storage.onChanged.addListener((changes, areaName) => {
-			if (areaName === "local") {
-				const key = Object.keys(changes)[0] as FeatureId
-				handleToggle(key, false, changes[key].newValue)
-			}
-		})
-	}
+	storage.onChanged.addListener((changes, areaName) => {
+		const expectedArea = isChrome ? "sync" : "local"
+		if (areaName === expectedArea) {
+			const key = Object.keys(changes)[0] as FeatureId
+			handleToggle(key, false, changes[key].newValue)
+		}
+	})
 })
 
 function handleToggle(id: FeatureId, onLoad: boolean, value: any) {

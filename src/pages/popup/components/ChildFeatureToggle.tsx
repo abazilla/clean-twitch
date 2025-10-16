@@ -1,5 +1,5 @@
 import React from "react"
-import { useStorageState } from "../hooks/useStorageState"
+import { useStorageState } from "../../../utils/storage"
 
 interface ChildFeatureToggleProps {
 	id: string
@@ -12,7 +12,7 @@ export const ChildFeatureToggle: React.FC<ChildFeatureToggleProps> = ({
 	label,
 	parentEnabled,
 }) => {
-	const [checked, setChecked] = useStorageState(id)
+	const [checked, setChecked] = useStorageState<boolean>(id, false)
 
 	return (
 		<div className="ml-4 mt-0.5">

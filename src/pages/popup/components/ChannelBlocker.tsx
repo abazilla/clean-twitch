@@ -1,19 +1,10 @@
 import React, { useState } from "react"
-import { useStorageState } from "../hooks/useStorageState"
+import { useStorageState } from "../../../utils/storage"
 import { BlockedChannels } from "../types"
 
 export const ChannelBlocker: React.FC = () => {
 	const [channelInput, setChannelInput] = useState<string>("")
-	const [
-		blockedChannels = {
-			enabled: true,
-			hideFromSidebar: true,
-			hideFromDirectory: true,
-			hideFromSearch: true,
-			usernames: [],
-		},
-		setBlockedChannels,
-	] = useStorageState<BlockedChannels>("blocked_channels", {
+	const [blockedChannels, setBlockedChannels] = useStorageState<BlockedChannels>("blocked_channels", {
 		enabled: true,
 		hideFromSidebar: true,
 		hideFromDirectory: true,
