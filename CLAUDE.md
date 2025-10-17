@@ -14,11 +14,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm compile` - TypeScript compilation check (no emit)
 
 ### Testing
-The project uses a simple test setup without a dedicated test runner configured in package.json. Tests exist in:
-- `entrypoints/content/utils/__tests__/` - Contains test files using `describe` and `expect` syntax
-- Individual `.test.ts` files scattered throughout the codebase
+The project uses **Vitest** as the test runner with the following setup:
 
-To run tests, you'll need to identify the test framework being used by examining the test files and node_modules.
+**Commands:**
+- `pnpm test` - Run all tests
+- `pnpm test:ui` - Run tests with Vitest UI
+
+**Test Structure:**
+- `entrypoints/content/utils/__tests__/` - Contains test files using Vitest syntax
+- Test files use `describe`, `test`, `expect`, `vi` (mocking) from Vitest
+- Global setup in `test-setup.ts` includes MutationObserver mocking for DOM tests
+
+**Configuration:**
+- `vitest.config.ts` - Vitest configuration with jsdom environment
+- `test-setup.ts` - Global test setup file for mocks and utilities
 
 ## Project Architecture
 
@@ -72,3 +81,13 @@ This is a **WXT-based browser extension** for Twitch that provides content filte
 - **Styling:** Tailwind CSS 4.x
 - **Permissions:** tabs, scripting, storage, host_permissions for twitch.tv
 - **External:** jQuery for DOM manipulation in content scripts
+
+## WXT Documentation References
+
+When working with WXT-specific features, Claude can access the following documentation:
+
+- **General Documentation**: https://wxt.dev/knowledge/docs.txt
+- **API Reference**: https://wxt.dev/knowledge/api-reference.txt
+- **Blog/Updates**: https://wxt.dev/knowledge/blog.txt
+
+These references provide comprehensive information about WXT configuration, APIs, and best practices for browser extension development.
