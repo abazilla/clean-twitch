@@ -2,98 +2,73 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Development Commands
 
-Hide Twitch 2 is a Chrome/Firefox browser extension that hides unwanted sections of Twitch. It's built with TypeScript, React, and jQuery, using Parcel for bundling. The extension uses Chrome Extensions Manifest V3 and supports automatic reloading during development.
+### Core Development
+- `pnpm dev` - Start development server for Chrome
+- `pnpm dev:firefox` - Start development server for Firefox
+- `pnpm build` - Build extension for production (Chrome)
+- `pnpm build:firefox` - Build extension for Firefox
+- `pnpm zip` - Create zip package for Chrome store
+- `pnpm zip:firefox` - Create zip package for Firefox addon store
+- `pnpm compile` - TypeScript compilation check (no emit)
 
-## Commands
+### Testing
+The project uses a simple test setup without a dedicated test runner configured in package.json. Tests exist in:
+- `entrypoints/content/utils/__tests__/` - Contains test files using `describe` and `expect` syntax
+- Individual `.test.ts` files scattered throughout the codebase
 
-**Development:**
+To run tests, you'll need to identify the test framework being used by examining the test files and node_modules.
 
-Currently broken - must re-build using `npm run build` to test new changes.
+## Project Architecture
 
-**Build for production:**
+This is a **WXT-based browser extension** for Twitch that provides content filtering and UI customization. The extension operates in two modes:
 
-```bash
-npm run build          # Builds both Chrome and Firefox extensions
-npm run build-chrome   # Chrome extension only
-npm run build-firefox  # Firefox extension only
-```
+### Extension Entry Points
+- **Content Script** (`entrypoints/content/index.ts`) - Main logic injected into Twitch pages
+- **Popup** (`entrypoints/popup/`) - React-based extension popup interface
 
-Creates ZIP files in the `releases/` folder ready for store submission with version numbers.
+### Core Architecture Patterns
 
-**Testing:**
+**Dual Mode System:**
+- **Simple Mode** - Preset-based feature toggles (show_all, no_monetization, minimalist)
+- **Advanced Mode** - Individual feature control
 
-```bash
-npm test
-```
+**Feature System:**
+- Features defined in `entrypoints/content/toggles.ts` with metadata (conflicts, modes, children)
+- Toggle functions mapped in `entrypoints/content/toggleMap.ts`
+- UI implementations in `entrypoints/content/features/uiFeatures.ts`
 
-Runs Jest tests with TypeScript support.
+**Storage & State:**
+- Uses WXT storage API (`entrypoints/content/storage.ts`)
+- Custom React hook `useStorageState` for popup state management
+- Storage changes trigger content script updates via `storage.onChanged`
 
-**Linting:**
+**Content Filtering:**
+- Channel blocking (`entrypoints/content/features/blockedChannels.ts`)
+- Category blocking (`entrypoints/content/features/blockedCategories.ts`)
+- DOM manipulation utilities (`entrypoints/content/utils/dom.ts`)
 
-```bash
-npx eslint .
-```
+### Key Architectural Concepts
 
-Uses ESLint with TypeScript and React configurations.
+**Toggle System:** Each feature has an ID that maps to a toggle function. Features can have parent-child relationships and conflict definitions.
 
-## Architecture
+**CSS Injection:** The extension injects styles with `.twitch-declutter-hidden` class. Test mode shows elements with red background instead of hiding them.
 
-### Extension Structure
+**URL Monitoring:** Uses `setupUrlChangeListener` to detect navigation changes on Twitch's SPA.
 
-- **Content Scripts**: Main content script runs on Twitch pages
-  - `content/index.ts`: Main content script with DOM manipulation and feature toggles
-  - `content/features/`: Feature-specific implementations (UI features, blocked categories/channels)
-  - `content/utils/`: Utility functions for DOM manipulation, URL observation, and category parsing
-- **Popup UI**: React-based popup (`pages/popup/`) for extension settings with Simple/Advanced modes
+**Component Structure:** React popup uses component composition with `SimpleMode` and `AdvancedMode` components.
 
-### Key Components
+## Configuration Files
 
-**Feature System**: The popup provides both Simple and Advanced modes for user interaction. Simple mode shows basic toggles, while Advanced mode provides granular control over individual features.
+- `wxt.config.ts` - WXT framework configuration with React module and Tailwind
+- `tsconfig.json` - TypeScript configuration extending WXT defaults
+- Package manager: **pnpm** (uses pnpm-lock.yaml)
 
-**Content Script Flow**:
+## Technology Stack
 
-1. Initialize global CSS styles for hiding elements
-2. Load feature states from Chrome storage
-3. Set up URL change observer for SPA navigation
-4. Listen for storage changes and toggle features accordingly
-
-**Modular Features**: Features are organized into separate modules:
-
-- `uiFeatures.ts`: UI element hiding functionality
-- `blockedCategories.ts`: Category-based content blocking
-- `blockedChannels.ts`: Channel-based content blocking
-
-**Element Hiding**: Uses a combination of:
-
-- Dynamic CSS injection for scalable hiding
-- jQuery-based DOM manipulation for complex selectors
-- CSS classes like `.twitch-declutter-hidden` for consistent styling
-
-### Storage & State
-
-- Uses Chrome's `chrome.storage.sync` for cross-device settings sync
-- Feature states are stored by feature ID
-- Blocked channels/categories stored as structured data with enable flags
-
-### Category/Channel Blocking
-
-- **Category Parser**: `utils/categoryParser.ts` converts user input to URL-friendly category names
-- **Dynamic CSS**: Generates CSS rules for hiding elements based on href attributes
-- **Multi-target Hiding**: Supports hiding from sidebar, directory, and search results independently
-
-## Development Notes
-
-**Testing Setup**: Jest configured with `ts-jest` transformer and Chrome extension mocks via `jest-chrome`.
-
-**Build System**: Parcel handles TypeScript compilation, bundling, and extension packaging. Supports both Chrome and Firefox targets.
-
-**Code Style**: Uses Prettier with import organization and Tailwind CSS formatting plugins.
-
-**File Structure**:
-
-- `src-chrome/` and `src-firefox/`: Browser-specific manifest files
-- `src/content/`: Content script functionality split into features and utilities
-- `src/pages/popup/`: React popup UI with Simple/Advanced mode components
-- Test files are co-located with source files using `__tests__/` directories
+- **Framework:** WXT (Web Extension Toolkit)
+- **Frontend:** React 19 with TypeScript
+- **Styling:** Tailwind CSS 4.x
+- **Permissions:** tabs, scripting, storage, host_permissions for twitch.tv
+- **External:** jQuery for DOM manipulation in content scripts

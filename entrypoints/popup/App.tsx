@@ -1,10 +1,9 @@
-import { JSX } from "preact/compat"
-import { useEffect, useState } from "preact/hooks"
-import { lazy, Suspense } from "preact/compat"
-import { useStorageState } from "../../content/storage"
+import { JSX } from "react"
+import AdvancedMode from "./components/AdvancedMode"
 import SimpleMode from "./components/SimpleMode"
+import { useStorageState } from "./storage"
 
-const AdvancedMode = lazy(() => import("./components/AdvancedMode"))
+// const AdvancedMode = lazy(() => import("./components/AdvancedMode"))
 
 const App = (): JSX.Element => {
 	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
@@ -42,23 +41,23 @@ const App = (): JSX.Element => {
 					onChange={(e) => {
 						setTestMode((e.target as HTMLInputElement).checked)
 						// Refresh the current tab
-						chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+						browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 							if (tabs[0]?.id) {
-								chrome.tabs.reload(tabs[0].id)
+								browser.tabs.reload(tabs[0].id)
 							}
 						})
 					}}
 					className="h-4 w-4 rounded border-gray-300 text-purple-800 focus:ring-purple-500"
 				/>
-				<label htmlFor="test_mode" className="select-none text-sm font-medium">
+				<label htmlFor="test_mode" className="text-sm font-medium select-none">
 					Test mode
 				</label>
 			</div>
 			{isAdvancedMode ? (
-				<Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
-					<AdvancedMode />
-				</Suspense>
+				// <Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
+				<AdvancedMode />
 			) : (
+				// </Suspense>
 				<SimpleMode />
 			)}
 		</div>

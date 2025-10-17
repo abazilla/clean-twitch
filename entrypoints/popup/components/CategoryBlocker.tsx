@@ -1,8 +1,7 @@
-import { JSX } from "preact/compat"
-import { useState } from "preact/hooks"
-import { useStorageState } from "../../../content/storage"
-import { BlockedCategories } from "../../../content/toggles"
-import { parseCategoryName } from "../../../content/utils/categoryParser"
+import { BlockedCategories } from "@/entrypoints/content/toggles"
+import { parseCategoryName } from "@/entrypoints/content/utils/categoryParser"
+import { JSX } from "react"
+import { useStorageState } from "../storage"
 
 export const CategoryBlocker = (): JSX.Element => {
 	const [categoryInput, setCategoryInput] = useState<string>("")
@@ -69,7 +68,7 @@ export const CategoryBlocker = (): JSX.Element => {
 		})
 	}
 
-	const handleSubmit = (e: Event) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		handleAddCategory()
 	}
@@ -86,7 +85,7 @@ export const CategoryBlocker = (): JSX.Element => {
 				/>
 				<label
 					htmlFor="block-categories-toggle"
-					className="cursor-pointer select-none text-lg font-bold"
+					className="cursor-pointer text-lg font-bold select-none"
 				>
 					Block Categories
 				</label>
@@ -153,7 +152,7 @@ export const CategoryBlocker = (): JSX.Element => {
 						<button
 							type="button"
 							onClick={() => handleRemoveCategory(blockedCategory.category)}
-							className="relative top-[-1px] text-xl font-bold leading-none text-red-400 hover:text-red-500"
+							className="relative top-[-1px] text-xl leading-none font-bold text-red-400 hover:text-red-500"
 						>
 							×
 						</button>

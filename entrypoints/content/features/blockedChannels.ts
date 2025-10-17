@@ -1,17 +1,24 @@
 import $ from "jquery"
-import { BlockedChannels } from "../../pages/popup/types"
+import { BlockedChannels } from "../toggles"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
 
 let styleElement: HTMLStyleElement
 
-export function initializeBlockedChannels(style: HTMLStyleElement) {
+export async function initializeBlockedChannels(style: HTMLStyleElement) {
 	styleElement = style
+
+	// Load and apply initial blocked channels
+	const { storage } = await import("../storage")
+	const blockedChannels = (await storage.get("blocked_channels")) as BlockedChannels
+	if (blockedChannels && blockedChannels.usernames) {
+		handleBlockedChannels(blockedChannels)
+	}
 }
 
 export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	const { usernames, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedChannels
 
-	// Update global CSS rules for search results
+	// Update global CSS rules for search results (under where you type)
 	const searchRules = usernames
 		.filter((u) => u.enabled && enabled && hideFromSearch)
 		.map(
@@ -39,13 +46,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	usernames.forEach((blockedUser) => {
 		// Hide from sidebar - recommended channels
 		updateElement(
-			() => $(`a[href="/${blockedUser.username}"]`).parent().parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
-		)
-
-		// Hide from mobile sidebar
-		updateElement(
-			() => $(`a[href="/${blockedUser.username}"].side-nav-card`).parent().parent().parent(),
+			() => $(`div.side-nav-card:has(a[href="/${blockedUser.username}"])`).parent().parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
 		)
 
@@ -86,10 +87,22 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
 		)
 
-		// Hide from search results
+		// Hide from search results (online)
 		updateElement(
 			() =>
-				$(`a[href="/${blockedUser.username}"][data-tray-item="true"]`).parent().parent().parent(),
+				$(
+					`div[data-a-target="search-results-live-channel"]:has(a[href="/${blockedUser.username}"])`
+				),
+			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
+			"no_timeout"
+		)
+
+		// Hide from search results (offline)
+		updateElement(
+			() =>
+				$(`div.search-result-offline_channel--body:has(a[href="/${blockedUser.username}"])`)
+					.parents()
+					.eq(1),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
 			"no_timeout"
 		)

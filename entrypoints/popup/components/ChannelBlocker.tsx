@@ -1,7 +1,6 @@
-import { JSX } from "preact/compat"
-import { useState } from "preact/hooks"
-import { useStorageState } from "../../../content/storage"
-import { BlockedChannels } from "../../../content/toggles"
+import { BlockedChannels } from "@/entrypoints/content/toggles"
+import { JSX } from "react"
+import { useStorageState } from "../storage"
 
 export const ChannelBlocker = (): JSX.Element => {
 	const [channelInput, setChannelInput] = useState<string>("")
@@ -67,7 +66,7 @@ export const ChannelBlocker = (): JSX.Element => {
 		})
 	}
 
-	const handleSubmit = (e: Event) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		handleAddChannel()
 	}
@@ -84,7 +83,7 @@ export const ChannelBlocker = (): JSX.Element => {
 				/>
 				<label
 					htmlFor="block-channels-toggle"
-					className="cursor-pointer select-none text-lg font-bold"
+					className="cursor-pointer text-lg font-bold select-none"
 				>
 					Block Channels
 				</label>
@@ -151,7 +150,7 @@ export const ChannelBlocker = (): JSX.Element => {
 						<button
 							type="button"
 							onClick={() => handleRemoveChannel(blockedUser.username)}
-							className="relative top-[-1px] text-xl font-bold leading-none text-red-400 hover:text-red-500"
+							className="relative top-[-1px] text-xl leading-none font-bold text-red-400 hover:text-red-500"
 						>
 							×
 						</button>

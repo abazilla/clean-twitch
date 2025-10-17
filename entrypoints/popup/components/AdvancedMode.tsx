@@ -1,8 +1,8 @@
-import { JSX } from "preact/compat"
-import { features } from "../../../content/toggles"
-import { FeatureToggle } from "./FeatureToggle"
+import { features } from "@/entrypoints/content/toggles"
+import { JSX } from "react"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
+import { FeatureToggle } from "./FeatureToggle"
 
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-3">

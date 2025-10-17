@@ -1,6 +1,6 @@
-import { JSX } from "preact/compat"
-import { useStorageState } from "../../../content/storage"
-import { getPresetLabels, SimplePresetMode } from "../../../content/toggles"
+import { getPresetLabels, SimplePresetMode } from "@/entrypoints/content/toggles"
+import { JSX } from "react"
+import { useStorageState } from "../storage"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
 

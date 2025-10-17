@@ -1,11 +1,18 @@
 import $ from "jquery"
-import { BlockedCategories } from "../../pages/popup/types"
+import { BlockedCategories } from "../toggles"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
 
 let styleElement: HTMLStyleElement
 
-export function initializeBlockedCategories(style: HTMLStyleElement) {
+export async function initializeBlockedCategories(style: HTMLStyleElement) {
 	styleElement = style
+
+	// Load and apply initial blocked categories
+	const { storage } = await import("../storage")
+	const blockedCategories = (await storage.get("blocked_categories")) as BlockedCategories
+	if (blockedCategories && blockedCategories.categories) {
+		handleBlockedCategories(blockedCategories)
+	}
 }
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {

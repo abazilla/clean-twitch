@@ -178,7 +178,7 @@ export const features = [
 			},
 			{
 				id: "hide_video_gift_section",
-				label: 'Hide Theatre "Gift"/"Subscribe" Buttons',
+				label: 'Hide Theatre Mode "Gift"/"Subscribe" Buttons',
 				conflicts: [],
 				mode: ["no_monetization", "minimalist"],
 				children: [],
@@ -235,20 +235,6 @@ export const features = [
 			},
 		],
 	},
-	// {
-	// 	id: "blocked_channels",
-	// 	label: "Channel Blocking",
-	// 	conflicts: [],
-	// 	children: [],
-	// 	hidden: true,
-	// },
-	// {
-	// 	id: "blocked_categories",
-	// 	label: "Category Blocking",
-	// 	conflicts: [],
-	// 	children: [],
-	// 	hidden: true,
-	// },
 ] as const
 
 export interface BlockedUsername {

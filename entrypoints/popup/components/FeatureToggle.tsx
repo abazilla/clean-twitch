@@ -1,6 +1,7 @@
-import { JSX } from "preact/compat"
-import { storage, useStorageState } from "../../../content/storage"
-import { FeatureItem } from "../../../content/toggles"
+import { storage } from "@/entrypoints/content/storage"
+import { FeatureItem } from "@/entrypoints/content/toggles"
+import { JSX } from "react"
+import { useStorageState } from "../storage"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
 
 interface FeatureToggleProps {
@@ -8,10 +9,10 @@ interface FeatureToggleProps {
 }
 
 export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
-	if (item.hidden) return null
+	if (item.hidden) return <></>
 	const [checked, setChecked] = useStorageState(item.id, false)
 
-	const handleParentToggle = async (e: Event) => {
+	const handleParentToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const target = e.target as HTMLInputElement
 		const newValue = target.checked
 		console.log(`Toggling ${item.id} to:`, newValue)
@@ -37,7 +38,7 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 						onChange={handleParentToggle}
 					/>
 				)}
-				<label htmlFor={item.id} className="select-none text-sm font-medium">
+				<label htmlFor={item.id} className="text-sm font-medium select-none">
 					{item.label}
 				</label>
 			</div>
