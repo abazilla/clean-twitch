@@ -37,7 +37,7 @@ const App = (): JSX.Element => {
 				<input
 					type="checkbox"
 					id="test_mode"
-					checked={testMode}
+					// checked={testMode}
 					onChange={(e) => {
 						setTestMode((e.target as HTMLInputElement).checked)
 						// Refresh the current tab
