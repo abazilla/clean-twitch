@@ -10,16 +10,9 @@ export default defineConfig({
 		}) as WxtViteConfig,
 	manifest: {
 		// action: {
-		// 	default_title: "Hide Twitch BS",
 		// 	default_popup: "/entrypoints/popup/index.html",
 		// },
 		host_permissions: ["https://*.twitch.tv/*"],
-		content_scripts: [
-			{
-				matches: ["https://*.twitch.tv/*"],
-				js: ["/entrypoints/content/index.ts"],
-			},
-		],
 		permissions: ["tabs", "scripting", "storage"],
 	},
 	webExt: {

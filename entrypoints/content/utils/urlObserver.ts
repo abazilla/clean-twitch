@@ -1,4 +1,5 @@
 import $ from "jquery"
+import { UNIVERSAL_CLASS_NAME } from "../features/uiFeatures"
 
 export function setupUrlChangeListener() {
 	let lastUrl = window.location.href
@@ -32,8 +33,7 @@ export function setupUrlChangeListener() {
 
 export function handleUrlChange(lastUrl: string) {
 	// console.log("URL changed to:", window.location.href)
-	if (lastUrl.includes("search"))
-		$("div.search-results")?.removeClass("twitch-declutter-hidden") || $()
+	if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 	if (lastUrl.includes("/directory/category/"))
-		$("div.switcher-shell__container--grid")?.removeClass("twitch-declutter-hidden") || $()
+		$("div.switcher-shell__container--grid")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 }

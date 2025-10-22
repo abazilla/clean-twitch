@@ -285,14 +285,14 @@ export const getFeaturesForMode = (mode: SimplePresetMode): string[] => {
 export const getPresetLabels = () => ({
 	show_all: {
 		label: "Show All",
-		description: "Show everything (default)",
+		description: "Show everything",
 	},
 	no_monetization: {
 		label: "No Monetization",
-		description: "Hide ads, bits, subs, donations",
+		description: "Keep your money",
 	},
 	minimalist: {
 		label: "Minimalist",
-		description: "Clean, distraction-free viewing",
+		description: "No distractions",
 	},
 })

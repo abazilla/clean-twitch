@@ -1,4 +1,5 @@
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
+import { UNIVERSAL_CLASS_NAME } from "../../features/uiFeatures"
 import { toggleElementVisibility, updateElement } from "../dom"
 
 // Mock jQuery for testing
@@ -26,7 +27,7 @@ describe("DOM utilities", () => {
 
 			toggleElementVisibility($element, true)
 
-			expect($element.addClass).toHaveBeenCalledWith("twitch-declutter-hidden")
+			expect($element.addClass).toHaveBeenCalledWith(UNIVERSAL_CLASS_NAME)
 		})
 
 		test("should remove hidden class when toggled is false", () => {
@@ -34,7 +35,7 @@ describe("DOM utilities", () => {
 
 			toggleElementVisibility($element, false)
 
-			expect($element.removeClass).toHaveBeenCalledWith("twitch-declutter-hidden")
+			expect($element.removeClass).toHaveBeenCalledWith(UNIVERSAL_CLASS_NAME)
 		})
 	})
 
@@ -107,7 +108,7 @@ describe("DOM utilities", () => {
 
 			// Should use default timeout of 10000ms and 'stop_on_found'
 			vi.advanceTimersByTime(10000)
-			
+
 			const observerInstance = (MutationObserver as any).mock.results[0].value
 			expect(observerInstance.disconnect).toHaveBeenCalled()
 		})
@@ -126,7 +127,7 @@ describe("DOM utilities", () => {
 			// Get the observer callback and simulate it
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]
 			const observerInstance = (MutationObserver as any).mock.results[0].value
-			
+
 			observerCallback([], observerInstance)
 
 			expect(mockAction).toHaveBeenCalledWith(foundElement)
@@ -147,7 +148,7 @@ describe("DOM utilities", () => {
 			// Get the observer callback and simulate it
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]
 			const observerInstance = (MutationObserver as any).mock.results[0].value
-			
+
 			observerCallback([], observerInstance)
 
 			expect(mockAction).toHaveBeenCalledWith(foundElement)
@@ -164,7 +165,7 @@ describe("DOM utilities", () => {
 			// Get the observer callback and simulate it when element is still not found
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]
 			const observerInstance = (MutationObserver as any).mock.results[0].value
-			
+
 			observerCallback([], observerInstance)
 
 			expect(mockAction).not.toHaveBeenCalled()

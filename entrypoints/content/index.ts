@@ -2,6 +2,7 @@ import { ContentScriptContext } from "#imports"
 import $ from "jquery"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
+import { NORMAL_CSS, toggleTestMode, UNIVERSAL_STYLE_ID } from "./features/uiFeatures"
 import { storage } from "./storage"
 import { toggleMap } from "./toggleMap"
 import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./toggles"
@@ -12,35 +13,10 @@ export default defineContentScript({
 	cssInjectionMode: "ui",
 
 	async main(_ctx: ContentScriptContext) {
-		const TEST_MODE_CSS = `
-/* Global Rules - Test Mode */
-.twitch-declutter-hidden {
-    background-color: red !important;
-    border: 1px solid yellow !important;
-    opacity: 0.5 !important;
-}
-/* Category Rules */
-/* Channel Rules */
-`
-
-		const NORMAL_CSS = `
-/* Global Rules */
-.twitch-declutter-hidden {
-    display: none !important;
-}
-/* Category Rules */
-/* Channel Rules */
-`
-
-		const style = document.createElement("style")
-
-		async function updateStyles() {
-			const testMode = await storage.get<boolean>("test_mode")
-			style.textContent = testMode ? TEST_MODE_CSS : NORMAL_CSS
-		}
-
 		// Initial style setup
-		updateStyles()
+		const style = document.createElement("style")
+		style.id = UNIVERSAL_STYLE_ID
+		style.textContent = NORMAL_CSS
 		document.head.appendChild(style)
 
 		// Initialize feature handlers
@@ -116,7 +92,7 @@ export default defineContentScript({
 					await handleModeSwitch(value as boolean)
 					return
 				case "test_mode":
-					await updateStyles()
+					await toggleTestMode(value)
 					return
 			}
 

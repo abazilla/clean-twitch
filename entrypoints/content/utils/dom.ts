@@ -1,3 +1,5 @@
+import { UNIVERSAL_CLASS_NAME } from "../features/uiFeatures"
+
 function updateElementAsync(
 	getElement: () => JQuery<HTMLElement>,
 	action: (element: JQuery<HTMLElement>) => void,
@@ -44,7 +46,5 @@ export const updateElement = (
 }
 
 export function toggleElementVisibility($element: JQuery<HTMLElement>, toggled: boolean) {
-	toggled
-		? $element.addClass("twitch-declutter-hidden")
-		: $element.removeClass("twitch-declutter-hidden")
+	toggled ? $element.addClass(UNIVERSAL_CLASS_NAME) : $element.removeClass(UNIVERSAL_CLASS_NAME)
 }

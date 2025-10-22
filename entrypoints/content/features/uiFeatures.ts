@@ -1,6 +1,18 @@
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
 
+export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
+export const UNIVERSAL_STYLE_ID = "clean-twitch-id"
+export const TEST_MODE_CSS = `.${UNIVERSAL_CLASS_NAME} { background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important; } `
+export const NORMAL_CSS = `.${UNIVERSAL_CLASS_NAME} { display: none !important; } `
+
+export function toggleTestMode(toggled: boolean) {
+	const style = document.getElementById(UNIVERSAL_STYLE_ID)
+	if (style) {
+		toggled ? (style.textContent = TEST_MODE_CSS) : (style.textContent = NORMAL_CSS)
+	}
+}
+
 export function toggleGreyscale(toggled: boolean) {
 	toggled
 		? $("html").attr("style", "filter: grayscale(1) !important;")
