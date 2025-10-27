@@ -1,3 +1,4 @@
+import { parseCategory } from "@/entrypoints/content/utils/categoryParser"
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
 import { storageHandler } from "../utils/storageHandler"
@@ -17,7 +18,7 @@ export async function initializeBlockedCategories(style: HTMLStyleElement) {
 }
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {
-	const { enabled, hideFromDirectory, hideFromSearch } = blockedCategories
+	const { enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedCategories
 	const url = window.location.pathname
 
 	const categories = blockedCategories.categories || [] // sometimes causes an error in console (i think before categories are stored)
@@ -52,17 +53,15 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 
 	categories.forEach((blockedCategory) => {
 		// Hide from left sidebar
-		// updateElement(
-		// 	() =>
-		// 		$(`p`)
-		// 			.filter((_, el) =>
-		// 				$(el).text().toLocaleLowerCase().includes(blockedCategory.name.toLocaleLowerCase())
-		// 			)
-		// 			.closest("div.side-nav-card")
-		// 			.parent()
-		// 			.parent(),
-		// 	($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
-		// )
+		updateElement(
+			() =>
+				$("p")
+					.filter((_, el) => parseCategory($(el).text()) === blockedCategory.category)
+					.closest("div.side-nav-card")
+					.parent()
+					.parent(),
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
+		)
 
 		// Directory section cards
 		if (url === TwitchURLs.Directory || url === TwitchURLs.DirectoryGaming) {

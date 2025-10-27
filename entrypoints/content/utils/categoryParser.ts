@@ -9,7 +9,7 @@
  * - Remove accents
  * - Convert & to "and"
  */
-export function parseCategoryName(input: string): string {
+export function parseCategory(input: string): string {
 	// Early return for empty input
 	if (!input.trim()) return ""
 

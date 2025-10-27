@@ -1,5 +1,5 @@
 import { BlockedCategories } from "@/entrypoints/content/features/definitions"
-import { parseCategoryName } from "@/entrypoints/content/utils/categoryParser"
+import { parseCategory } from "@/entrypoints/content/utils/categoryParser"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 
@@ -17,17 +17,18 @@ export const CategoryBlocker = (): JSX.Element => {
 	)
 
 	const handleAddCategory = () => {
-		const categoryName = parseCategoryName(categoryInput)
+		const category = parseCategory(categoryInput)
+		const name = categoryInput.trim()
 		setCategoryInput("")
-		if (blockedCategories.categories.map((c) => c.name).includes(categoryName)) return
-		if (!categoryName) return
+		if (blockedCategories.categories.map((c) => c.category).includes(category)) return
+		if (!category) return
 
 		setBlockedCategories({
 			...blockedCategories,
 			categories: [
 				{
-					category: categoryName,
-					name: categoryName,
+					category,
+					name,
 					enabled: true,
 				},
 				...blockedCategories.categories,
