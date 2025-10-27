@@ -1,5 +1,4 @@
-import $ from "jquery"
-import { UNIVERSAL_CLASS_NAME } from "../features/domManipulators"
+import { initializeStylesAndFeatures } from "../featureController"
 
 export function setupUrlChangeListener() {
 	let lastUrl = window.location.href
@@ -31,10 +30,13 @@ export function setupUrlChangeListener() {
 	}
 }
 
-export function handleUrlChange(lastUrl: string) {
+export async function handleUrlChange(lastUrl: string) {
+	// TODO: check for possible optimizations
+	await initializeStylesAndFeatures()
+
 	// console.log("URL changed to:", window.location.href)
 	// if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 	// TODO: which component is this
-	if (lastUrl.includes("/directory/category/"))
-		$("div.switcher-shell__container--grid")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
+	// if (lastUrl.includes("/directory/category/"))
+	// 	$("div.switcher-shell__container--grid")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 }

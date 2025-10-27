@@ -1,12 +1,17 @@
-import { handleBlockedCategories } from "./features/blockedCategories"
-import { handleBlockedChannels } from "./features/blockedChannels"
+import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
+import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
 import {
 	FeatureID,
 	getFeaturesForMode,
 	SimplePresetMode,
 	toggleableFeatureIDs,
 } from "./features/definitions"
-import { toggleGreyscale, toggleTestMode } from "./features/domManipulators"
+import {
+	NORMAL_CSS,
+	toggleGreyscale,
+	toggleTestMode,
+	UNIVERSAL_STYLE_ID,
+} from "./features/domManipulators"
 import { featureToggleMap } from "./features/toggleMap"
 import { storageHandler } from "./utils/storageHandler"
 
@@ -85,4 +90,25 @@ export async function applyAdvancedModeFeatures() {
 			console.error(`Error restoring feature ${featureId}:`, error)
 		}
 	}
+}
+
+export async function initializeStylesAndFeatures() {
+	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
+
+	// First time setup
+	if (isSimpleMode === undefined || isSimpleMode === null) {
+		await storageHandler.set("is_simple_mode", true)
+		isSimpleMode = true
+	}
+
+	// Apply correct mode on load
+	await handleModeSwitch(isSimpleMode)
+
+	const style = document.createElement("style")
+	style.id = UNIVERSAL_STYLE_ID
+	style.textContent = NORMAL_CSS
+	document.head.appendChild(style)
+
+	await initializeBlockedChannels(style)
+	await initializeBlockedCategories(style)
 }
