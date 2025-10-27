@@ -9,7 +9,6 @@ interface FeatureToggleProps {
 }
 
 export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
-	if (item.hidden) return <></>
 	const [checked, setChecked] = useStorageState(item.id, false)
 
 	const handleParentToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {

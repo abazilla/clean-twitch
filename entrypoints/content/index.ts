@@ -2,7 +2,12 @@ import { ContentScriptContext } from "#imports"
 import $ from "jquery"
 import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
-import { NORMAL_CSS, toggleTestMode, UNIVERSAL_STYLE_ID } from "./features/uiFeatures"
+import {
+	NORMAL_CSS,
+	toggleGreyscale,
+	toggleTestMode,
+	UNIVERSAL_STYLE_ID,
+} from "./features/uiFeatures"
 import { storage } from "./storage"
 import { toggleMap } from "./toggleMap"
 import { FeatureId, FeatureItem, features, getFeaturesForMode, SimplePresetMode } from "./toggles"
@@ -94,6 +99,9 @@ export default defineContentScript({
 				case "test_mode":
 					await toggleTestMode(value)
 					return
+				case "greyscale_all":
+					await toggleGreyscale(value)
+					return
 			}
 
 			// Check if we're in simple mode - if so, ignore individual feature toggles
@@ -147,11 +155,9 @@ export default defineContentScript({
 			const allFeatureIds: string[] = []
 			const collectAllIds = (items: readonly FeatureItem[]) => {
 				for (const item of items) {
-					if (!item.hidden) {
-						allFeatureIds.push(item.id)
-						if (item.children) {
-							collectAllIds(item.children)
-						}
+					allFeatureIds.push(item.id)
+					if (item.children) {
+						collectAllIds(item.children)
 					}
 				}
 			}

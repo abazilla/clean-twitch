@@ -1,14 +1,19 @@
-import { features } from "@/entrypoints/content/toggles"
+import { FeatureItem, features } from "@/entrypoints/content/toggles"
 import { JSX } from "react"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
 import { FeatureToggle } from "./FeatureToggle"
 
 const AdvancedMode = (): JSX.Element => (
-	<div className="space-y-3">
-		{features.map((item) => (
-			<FeatureToggle key={item.id} item={item} />
-		))}
+	<div className="space-y-4">
+		{features.map((item: FeatureItem) =>
+			item.renderSimpleOrAdvanced === "always_hide" ||
+			item.renderSimpleOrAdvanced === "always_show" ? (
+				<></>
+			) : (
+				<FeatureToggle key={item.id} item={item} />
+			)
+		)}
 		<div>
 			<ChannelBlocker />
 			<CategoryBlocker />

@@ -12,7 +12,6 @@ import {
 	toggleChatMonetizationButtons,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
-	toggleGreyscale,
 	toggleInfoAboutSection,
 	toggleInfoChannelPanelSection,
 	toggleInfoMonetizationButtons,
@@ -33,7 +32,6 @@ import {
 } from "./features/uiFeatures"
 
 export const toggleMap: Record<string, (enabled: boolean) => void> = {
-	greyscale_all: (value: boolean) => toggleGreyscale(value),
 	hide_topbar_following_button: (value: boolean) => hideFollowingButton(value),
 	hide_topbar_browse_button: (value: boolean) => hideBrowseButton(value),
 	hide_topbar_dots_button: (value: boolean) => hideDotsButton(value),

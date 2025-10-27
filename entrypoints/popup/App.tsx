@@ -1,5 +1,7 @@
 import { JSX } from "react"
+import { FeatureItem, features } from "../content/toggles"
 import AdvancedMode from "./components/AdvancedMode"
+import { FeatureToggle } from "./components/FeatureToggle"
 import SimpleMode from "./components/SimpleMode"
 import { useStorageState } from "./storage"
 
@@ -8,7 +10,6 @@ import { useStorageState } from "./storage"
 const App = (): JSX.Element => {
 	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
 	const [isSimpleMode, setIsSimpleMode] = useStorageState<boolean>("is_simple_mode", true)
-	const [testMode, setTestMode] = useStorageState<boolean>("test_mode", false)
 
 	// Initialize mode from storage
 	useEffect(() => {
@@ -23,7 +24,7 @@ const App = (): JSX.Element => {
 	}
 
 	return (
-		<div className="w-80 border border-white bg-purple-600 p-4 text-white">
+		<div className="w-80 bg-purple-600 p-4 text-white">
 			<div className="mb-4 flex items-center justify-between">
 				<h1 className="m-0 p-0 text-lg">Clean Twitch</h1>
 				<button
@@ -33,26 +34,14 @@ const App = (): JSX.Element => {
 					{isAdvancedMode ? "Simple" : "Advanced"}
 				</button>
 			</div>
-			<div className="mb-4 flex items-center gap-1">
-				<input
-					type="checkbox"
-					id="test_mode"
-					// checked={testMode}
-					onChange={(e) => {
-						setTestMode((e.target as HTMLInputElement).checked)
-						// Refresh the current tab
-						// browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-						// 	if (tabs[0]?.id) {
-						// 		browser.tabs.reload(tabs[0].id)
-						// 	}
-						// })
-					}}
-					className="h-4 w-4 rounded border-gray-300 text-purple-800 focus:ring-purple-500"
-				/>
-				<label htmlFor="test_mode" className="text-sm font-medium select-none">
-					Test mode
-				</label>
-			</div>
+
+			{features.map((item: FeatureItem) =>
+				item.renderSimpleOrAdvanced === "always_show" ? (
+					<FeatureToggle key={item.id} item={item} />
+				) : (
+					<></>
+				)
+			)}
 			{isAdvancedMode ? (
 				// <Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
 				<AdvancedMode />

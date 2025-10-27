@@ -6,9 +6,9 @@ export interface FeatureItem {
 	label: string
 	conflicts: readonly string[]
 	children?: readonly FeatureItem[]
-	hidden?: boolean
 	hideToggle?: boolean
-	mode?: readonly SimplePresetMode[]
+	renderSimpleOrAdvanced?: "always_show" | "always_hide" | "advanced_only"
+	simpleModeActive?: readonly SimplePresetMode[]
 }
 
 export type FeatureId = string
@@ -16,10 +16,18 @@ export type FeatureId = string
 // Feature definitions without toggle functions - lightweight for popup imports
 export const features = [
 	{
+		id: "test_mode",
+		label: "Test Mode (for debugging)",
+		conflicts: [],
+		children: [],
+		hidden: "always_show",
+	},
+	{
 		id: "greyscale_all",
 		label: "Grayscale Site",
 		conflicts: [],
 		children: [],
+		hidden: "always_show",
 	},
 	{
 		id: "hide_topbar",
@@ -269,7 +277,7 @@ export const getFeaturesForMode = (mode: SimplePresetMode): string[] => {
 
 	const collectFeatures = (items: readonly FeatureItem[]) => {
 		for (const item of items) {
-			if (item.mode?.includes(mode)) {
+			if (item.simpleModeActive?.includes(mode)) {
 				featureIds.push(item.id)
 			}
 			if (item.children) {

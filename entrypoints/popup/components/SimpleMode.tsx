@@ -16,7 +16,7 @@ const SimpleMode = (): JSX.Element => {
 	}
 
 	return (
-		<div className="space-y-4">
+		<div className="mt-1 space-y-4">
 			<div className="space-y-3">
 				<h3 className="text-sm font-medium">Choose a preset:</h3>
 				{(
