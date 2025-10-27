@@ -1,4 +1,4 @@
-import { BlockedChannels } from "@/entrypoints/content/toggles"
+import { BlockedChannels } from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 

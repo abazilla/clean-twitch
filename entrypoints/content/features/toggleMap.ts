@@ -1,4 +1,5 @@
 // Map of feature IDs to their toggle functions
+import { FeatureID } from "./definitions"
 import {
 	hideBrowseButton,
 	hideDotsButton,
@@ -29,9 +30,20 @@ import {
 	toggleTopGifters,
 	toggleVideoAdWrapper,
 	toggleVideoGiftButtonSection,
-} from "./features/uiFeatures"
+} from "./domManipulators"
 
-export const toggleMap: Record<string, (enabled: boolean) => void> = {
+export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
+	no_chat: () => {},
+	test_mode: () => {},
+	greyscale_all: () => {},
+	blocked_categories: () => {},
+	blocked_channels: () => {},
+	simple_mode_preset: () => {},
+	is_simple_mode: () => {},
+	hide_info: () => {},
+	hide_topbar: () => {},
+	hide_video_section: () => {},
+	no_chat_section: () => {},
 	hide_topbar_following_button: (value: boolean) => hideFollowingButton(value),
 	hide_topbar_browse_button: (value: boolean) => hideBrowseButton(value),
 	hide_topbar_dots_button: (value: boolean) => hideDotsButton(value),

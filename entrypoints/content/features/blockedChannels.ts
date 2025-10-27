@@ -1,6 +1,7 @@
 import $ from "jquery"
-import { BlockedChannels } from "../toggles"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
+import { storageHandler } from "../utils/storageHandler"
+import { BlockedChannels } from "./definitions"
 
 let styleElement: HTMLStyleElement
 
@@ -8,8 +9,7 @@ export async function initializeBlockedChannels(style: HTMLStyleElement) {
 	styleElement = style
 
 	// Load and apply initial blocked channels
-	const { storage } = await import("../storage")
-	const blockedChannels = (await storage.get("blocked_channels")) as BlockedChannels
+	const blockedChannels = (await storageHandler.get("blocked_channels")) as BlockedChannels
 	if (blockedChannels && blockedChannels.usernames) {
 		handleBlockedChannels(blockedChannels)
 	}

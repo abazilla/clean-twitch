@@ -3,7 +3,7 @@ import { browser } from "wxt/browser"
 /**
  * Unified storage API that works across Chrome and Firefox
  */
-export const storage = {
+export const storageHandler = {
 	async get<T>(key: string): Promise<T | undefined> {
 		try {
 			const result = await browser.storage.local.get(key)

@@ -1,12 +1,20 @@
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig, type WxtViteConfig } from "wxt"
+import checker from "vite-plugin-checker"
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
 	modules: ["@wxt-dev/module-react"],
 	vite: () =>
 		({
-			plugins: [tailwindcss()],
+			plugins: [
+				tailwindcss(),
+				checker({ 
+					typescript: true,
+					enableBuild: false,
+					overlay: { initialIsOpen: false }
+				})
+			],
 		}) as WxtViteConfig,
 	manifest: {
 		// action: {

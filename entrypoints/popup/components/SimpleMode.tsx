@@ -1,15 +1,29 @@
-import { getPresetLabels, SimplePresetMode } from "@/entrypoints/content/toggles"
+import { SimplePresetMode } from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
+
+const presetLabels = {
+	show_all: {
+		label: "Show All",
+		description: "Show everything",
+	},
+	no_monetization: {
+		label: "No Monetization",
+		description: "Keep your money",
+	},
+	minimalist: {
+		label: "Minimalist",
+		description: "No distractions",
+	},
+}
 
 const SimpleMode = (): JSX.Element => {
 	const [currentPreset, setCurrentPreset] = useStorageState<SimplePresetMode>(
 		"simple_mode_preset",
 		"show_all"
 	)
-	const presetLabels = getPresetLabels()
 
 	const applyPreset = async (preset: SimplePresetMode) => {
 		await setCurrentPreset(preset)

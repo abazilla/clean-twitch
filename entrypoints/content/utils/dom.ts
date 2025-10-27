@@ -1,4 +1,4 @@
-import { UNIVERSAL_CLASS_NAME } from "../features/uiFeatures"
+import { UNIVERSAL_CLASS_NAME } from "../features/domManipulators"
 
 function updateElementAsync(
 	getElement: () => JQuery<HTMLElement>,

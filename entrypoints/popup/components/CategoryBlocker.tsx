@@ -1,4 +1,4 @@
-import { BlockedCategories } from "@/entrypoints/content/toggles"
+import { BlockedCategories } from "@/entrypoints/content/features/definitions"
 import { parseCategoryName } from "@/entrypoints/content/utils/categoryParser"
 import { JSX } from "react"
 import { useStorageState } from "../storage"

@@ -1,5 +1,5 @@
 import { JSX } from "react"
-import { FeatureItem, features } from "../content/toggles"
+import { FeatureItem, features } from "../content/features/definitions"
 import AdvancedMode from "./components/AdvancedMode"
 import { FeatureToggle } from "./components/FeatureToggle"
 import SimpleMode from "./components/SimpleMode"

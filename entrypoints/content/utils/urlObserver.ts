@@ -1,10 +1,10 @@
 import $ from "jquery"
-import { UNIVERSAL_CLASS_NAME } from "../features/uiFeatures"
+import { UNIVERSAL_CLASS_NAME } from "../features/domManipulators"
 
 export function setupUrlChangeListener() {
 	let lastUrl = window.location.href
 
-	const observer = new MutationObserver(function (mutations) {
+	const observer = new MutationObserver(function () {
 		if (window.location.href !== lastUrl) {
 			lastUrl = window.location.href
 			handleUrlChange(lastUrl)
@@ -33,7 +33,8 @@ export function setupUrlChangeListener() {
 
 export function handleUrlChange(lastUrl: string) {
 	// console.log("URL changed to:", window.location.href)
-	if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
+	// if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
+	// TODO: which component is this
 	if (lastUrl.includes("/directory/category/"))
 		$("div.switcher-shell__container--grid")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 }

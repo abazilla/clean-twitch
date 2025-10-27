@@ -1,4 +1,4 @@
-import { FeatureItem, features } from "@/entrypoints/content/toggles"
+import { FeatureItem, features } from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
