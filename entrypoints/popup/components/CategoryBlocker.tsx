@@ -17,21 +17,22 @@ export const CategoryBlocker = (): JSX.Element => {
 	)
 
 	const handleAddCategory = () => {
-		const categoryName = categoryInput.trim()
+		const categoryName = parseCategoryName(categoryInput)
+		setCategoryInput("")
+		if (blockedCategories.categories.map((c) => c.name).includes(categoryName)) return
 		if (!categoryName) return
 
 		setBlockedCategories({
 			...blockedCategories,
 			categories: [
 				{
-					category: parseCategoryName(categoryName),
+					category: categoryName,
 					name: categoryName,
 					enabled: true,
 				},
 				...blockedCategories.categories,
 			],
 		})
-		setCategoryInput("")
 	}
 
 	const handleRemoveCategory = (categoryName: string) => {

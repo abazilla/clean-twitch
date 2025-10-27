@@ -1,7 +1,7 @@
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
 import { storageHandler } from "../utils/storageHandler"
-import { BlockedCategories } from "./definitions"
+import { BlockedCategories, TwitchURLs } from "./definitions"
 
 let styleElement: HTMLStyleElement
 
@@ -18,6 +18,7 @@ export async function initializeBlockedCategories(style: HTMLStyleElement) {
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 	const { enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedCategories
+	const url = window.location.href
 
 	const categories = blockedCategories.categories || [] // sometimes causes an error in console (i think before categories are stored)
 	// Update global CSS rules for search results
@@ -51,63 +52,93 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 
 	categories.forEach((blockedCategory) => {
 		// Hide from left sidebar
-		updateElement(
-			() =>
-				$(`p`)
-					.filter((_, el) =>
-						$(el).text().toLocaleLowerCase().includes(blockedCategory.name.toLocaleLowerCase())
-					)
-					.closest("div.side-nav-card")
-					.parent()
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
-		)
+		// updateElement(
+		// 	() =>
+		// 		$(`p`)
+		// 			.filter((_, el) =>
+		// 				$(el).text().toLocaleLowerCase().includes(blockedCategory.name.toLocaleLowerCase())
+		// 			)
+		// 			.closest("div.side-nav-card")
+		// 			.parent()
+		// 			.parent(),
+		// 	($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
+		// )
 
 		// Directory section cards
-		updateElement(
-			() =>
-				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
-					.closest(`div[data-target="directory-page__card-container"]`)
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
-		)
+		if (url === TwitchURLs.Directory || url === TwitchURLs.DirectoryGaming) {
+			updateElement(
+				() =>
+					$(`a[href*="/directory/category/${blockedCategory.category}"]`)
+						.closest(`div[data-target="directory-page__card-container"]`)
+						.parent(),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
+		}
+
+		if (url.includes(TwitchURLs.DirectoryFollowingGames)) {
+			updateElement(
+				() =>
+					$(`div.game-card:has(a[href="/directory/category/${blockedCategory.category}"])`)
+						.parents()
+						.eq(1),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
+		}
+
+		if (url.includes(TwitchURLs.DirectoryGaming)) {
+			updateElement(
+				() =>
+					$(
+						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${blockedCategory.category}"])`
+					).parent(),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
+		}
 
 		// Hide whole directory results page
-		updateElement(
-			() =>
-				$(`p`)
-					.filter((_, el) =>
-						$(el).text().toLocaleLowerCase().includes(`${blockedCategory.name.toLocaleLowerCase()}`)
-					)
-					.closest(`div.switcher-shell__container--grid`),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
-		)
+		// updateElement(
+		// 	() =>
+		// 		$(`p`)
+		// 			.filter((_, el) =>
+		// 				$(el).text().toLocaleLowerCase().includes(`${blockedCategory.name.toLocaleLowerCase()}`)
+		// 			)
+		// 			.closest(`div.switcher-shell__container--grid`),
+		// 	($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+		// )
 
 		// Homepage sections
-		updateElement(
-			() => $(`div > h2 > a[href*="${blockedCategory.category}"]`).parent().parent().parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
-		)
+		if (url === TwitchURLs.Home) {
+			updateElement(
+				() => $(`div > h2 > a[href*="${blockedCategory.category}"]`).parent().parent().parent(),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
 
-		// Homepage cards
-		updateElement(
-			() =>
-				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
-					.closest(".shelf-card__impression-wrapper")
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
-		)
+			// Homepage cards
+			updateElement(
+				() =>
+					$(`a[href*="/directory/category/${blockedCategory.category}"]`)
+						.closest(".shelf-card__impression-wrapper")
+						.parent(),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
 
-		// Purple Homepage buttons
-		updateElement(
-			() =>
-				$(
-					`div.vertical-selector__wrapper > div.vertical-selector > a[href*="/directory/${blockedCategory.category}"]`
-				)
-					.parent()
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
-		)
+			// Purple Homepage buttons
+			updateElement(
+				() =>
+					$(
+						`div.vertical-selector__wrapper > div.vertical-selector > a[href*="/directory/${blockedCategory.category}"]`
+					)
+						.parent()
+						.parent(),
+				($el) =>
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+			)
+		}
 
 		// Search dropdown results
 		updateElement(
@@ -117,35 +148,37 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 			"no_timeout"
 		)
 
-		// Search page results
-		updateElement(
-			() =>
-				$(`a[href*="/directory/category/${blockedCategory.category}"]`)
-					.closest(".search-result-card")
-					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-			"no_timeout"
-		)
-		updateElement(
-			() => $(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".tw-col"),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-			"no_timeout"
-		)
+		if (url.includes(TwitchURLs.Search)) {
+			// Search page results
+			updateElement(
+				() =>
+					$(`a[href*="/directory/category/${blockedCategory.category}"]`)
+						.closest(".search-result-card")
+						.parent(),
+				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+				"no_timeout"
+			)
+			updateElement(
+				() => $(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".tw-col"),
+				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+				"no_timeout"
+			)
 
-		// Hide whole search results page
-		updateElement(
-			() =>
-				$(`h3`)
-					.filter((_, el) =>
-						$(el)
-							.text()
-							.toLocaleLowerCase()
-							.includes(
-								`people searching for "${blockedCategory.name.toLocaleLowerCase()}" also watch:`
-							)
-					)
-					.closest(`div.search-results`),
-			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
-		)
+			// Hide whole search results page
+			updateElement(
+				() =>
+					$(`h3`)
+						.filter((_, el) =>
+							$(el)
+								.text()
+								.toLocaleLowerCase()
+								.includes(
+									`people searching for "${blockedCategory.name.toLocaleLowerCase()}" also watch:`
+								)
+						)
+						.closest(`div.search-results`),
+				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+			)
+		}
 	})
 }

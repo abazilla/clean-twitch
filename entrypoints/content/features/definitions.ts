@@ -1,6 +1,27 @@
 // This file contains all feature definitions without toggle functions
 export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist"
 
+const TwitchRootURL = "https://www.twitch.tv"
+export enum TwitchURLs {
+	Home = TwitchRootURL + "/",
+	DirectoryFollowing = TwitchRootURL + "/directory/following",
+	DirectoryFollowingLive = TwitchRootURL + "/directory/following/live",
+	DirectoryFollowingGames = TwitchRootURL + "/directory/following/games",
+	Directory = TwitchRootURL + "/directory",
+	DirectoryAll = TwitchRootURL + "/directory/all",
+	DirectoryCategory = TwitchRootURL + "/directory/category/",
+	DirectoryGaming = TwitchRootURL + "/directory/gaming",
+	Search = TwitchRootURL + "/search",
+	Channel = TwitchRootURL + "/channel",
+	Videos = TwitchRootURL + "/videos",
+	Clips = TwitchRootURL + "/clips",
+	// About = "/about",
+	Squad = TwitchRootURL + "/squad",
+	Collections = TwitchRootURL + "/collections",
+	Schedule = TwitchRootURL + "/schedule",
+	Settings = TwitchRootURL + "/settings",
+}
+
 export interface FeatureItem {
 	id: string
 	label: string

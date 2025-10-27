@@ -17,6 +17,8 @@ export const ChannelBlocker = (): JSX.Element => {
 
 	const handleAddChannel = () => {
 		const channelName = channelInput.toLowerCase().trim()
+		setChannelInput("")
+		if (blockedChannels.usernames.map((c) => c.username).includes(channelName)) return
 		if (!channelName) return
 
 		setBlockedChannels({
@@ -29,7 +31,6 @@ export const ChannelBlocker = (): JSX.Element => {
 				...blockedChannels.usernames,
 			],
 		})
-		setChannelInput("")
 	}
 
 	const handleRemoveChannel = (channelName: string) => {
