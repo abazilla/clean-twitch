@@ -17,7 +17,7 @@ export async function initializeBlockedChannels(style: HTMLStyleElement) {
 
 export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	const { usernames, enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedChannels
-	const url = window.location.href
+	const url = window.location.pathname
 
 	// Update global CSS rules for search results (under where you type)
 	const searchRules = usernames

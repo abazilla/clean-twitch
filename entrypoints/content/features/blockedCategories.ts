@@ -17,8 +17,8 @@ export async function initializeBlockedCategories(style: HTMLStyleElement) {
 }
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {
-	const { enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedCategories
-	const url = window.location.href
+	const { enabled, hideFromDirectory, hideFromSearch } = blockedCategories
+	const url = window.location.pathname
 
 	const categories = blockedCategories.categories || [] // sometimes causes an error in console (i think before categories are stored)
 	// Update global CSS rules for search results

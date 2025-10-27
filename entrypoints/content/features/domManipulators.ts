@@ -1,5 +1,6 @@
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
+import { TwitchURLs } from "./definitions"
 
 export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
 export const UNIVERSAL_STYLE_ID = "clean-twitch-id"
@@ -166,6 +167,9 @@ export function toggleCommunityHighlightStack(value: boolean) {
 
 // HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
+	const url = window.location.pathname
+	if (url !== TwitchURLs.Home) return
+
 	if (value) {
 		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
 		const observer = new MutationObserver((mutations, obs) => {
@@ -238,6 +242,8 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 
 // VIDEO PLAYER
 export function toggleVideoGiftButtonSection(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $('div.theatre-social-panel:has(button[data-a-target="gift-button"])'),
 		($el) => toggleElementVisibility($el, value)
@@ -245,6 +251,8 @@ export function toggleVideoGiftButtonSection(value: boolean) {
 }
 
 export function toggleVideoAdWrapper(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div.stream-display-ad__wrapper"),
 		($el) => toggleElementVisibility($el, value)
@@ -253,6 +261,8 @@ export function toggleVideoAdWrapper(value: boolean) {
 
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $('div[aria-label="chan-sda-upsell-third-view"]'),
 		($el) => toggleElementVisibility($el, value)
@@ -261,6 +271,8 @@ export function toggleBelowVideoAdSection(value: boolean) {
 
 // BELOW VIDEO PLAYER
 export function toggleInfoViralClipSection(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div[style*='social-sharing-badge-promo-banner']").parents().eq(2),
 		($el) => toggleElementVisibility($el, value)
@@ -268,6 +280,8 @@ export function toggleInfoViralClipSection(value: boolean) {
 }
 
 export function toggleInfoMonetizationButtons(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() =>
 			$(
@@ -287,6 +301,8 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 }
 
 export function toggleInfoAboutSection(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("section#live-channel-about-panel").parent(),
 		($el) => toggleElementVisibility($el, value)
@@ -294,6 +310,8 @@ export function toggleInfoAboutSection(value: boolean) {
 }
 
 export function toggleInfoChannelPanelSection(value: boolean) {
+	const url = window.location.pathname
+	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div.channel-panels").parent(),
 		($el) => toggleElementVisibility($el, value)
