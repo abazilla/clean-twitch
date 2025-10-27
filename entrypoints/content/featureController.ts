@@ -1,10 +1,10 @@
 import { handleBlockedCategories } from "./features/blockedCategories"
 import { handleBlockedChannels } from "./features/blockedChannels"
 import {
-	allFeatureIDs,
 	FeatureID,
 	getFeaturesForMode,
 	SimplePresetMode,
+	toggleableFeatureIDs,
 } from "./features/definitions"
 import { toggleGreyscale, toggleTestMode } from "./features/domManipulators"
 import { featureToggleMap } from "./features/toggleMap"
@@ -63,7 +63,7 @@ export async function handleModeSwitch(isSimpleMode: boolean) {
 
 export async function applySimpleModeFeatures(preset: SimplePresetMode) {
 	const featuresToEnable = getFeaturesForMode(preset)
-	allFeatureIDs.forEach((featureId) => {
+	toggleableFeatureIDs.forEach((featureId) => {
 		try {
 			const shouldEnable = featuresToEnable.includes(featureId)
 			handleFeatureOnToggle(featureId, shouldEnable)
@@ -74,7 +74,7 @@ export async function applySimpleModeFeatures(preset: SimplePresetMode) {
 }
 
 export async function applyAdvancedModeFeatures() {
-	for (const featureId of allFeatureIDs) {
+	for (const featureId of toggleableFeatureIDs) {
 		const storedValue = await storageHandler.get(featureId)
 		try {
 			// Use stored value if it exists, otherwise default to false (disabled)

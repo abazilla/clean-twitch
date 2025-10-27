@@ -30,7 +30,7 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 	return (
 		<div className="mt-1">
 			<div className="flex items-center gap-1">
-				{item.hideToggle ? null : (
+				{item.hideToggleButton ? null : (
 					<input
 						type="checkbox"
 						id={item.id}

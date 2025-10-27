@@ -6,12 +6,17 @@ export interface FeatureItem {
 	label: string
 	conflicts?: readonly string[]
 	children?: readonly FeatureItem[]
-	hideToggle?: boolean
+	hideToggleButton?: boolean
 	renderSimpleOrAdvanced?: "always_show" | "always_hide" | "advanced_only"
 	simpleModeActive?: readonly SimplePresetMode[]
+	// TODO: temporary fix to prevent recursion bug
+	// TS is enforcing FeatureID being a union of all IDs
+	// Certain features e.g. simple_mode_preset and is_simple_mode
+	// trigger other toggles, but will currently recurse unless
+	// it's specfically ignored.
+	// Ideally, we separate these special feature toggles
+	ignoreToggle?: boolean
 }
-
-// export type FeatureID = string
 
 // Feature definitions without toggle functions - lightweight for popup imports
 export const features = [
@@ -29,26 +34,30 @@ export const features = [
 		id: "blocked_categories",
 		label: "Blocked Categories",
 		renderSimpleOrAdvanced: "always_hide",
+		ignoreToggle: true,
 	},
 	{
 		id: "blocked_channels",
 		label: "Blocked Channels",
 		renderSimpleOrAdvanced: "always_hide",
+		ignoreToggle: true,
 	},
 	{
 		id: "simple_mode_preset",
 		label: "Simple Mode Preset",
 		renderSimpleOrAdvanced: "always_hide",
+		ignoreToggle: true,
 	},
 	{
 		id: "is_simple_mode",
 		label: "Simple or Advanced Mode",
 		renderSimpleOrAdvanced: "always_hide",
+		ignoreToggle: true,
 	},
 	{
 		id: "hide_topbar",
 		label: "Top Bar Section",
-		hideToggle: true,
+		hideToggleButton: true,
 		children: [
 			{
 				id: "hide_topbar_following_button",
@@ -146,12 +155,13 @@ export const features = [
 	{
 		id: "no_chat_section",
 		label: "Chat",
-		hideToggle: true,
+		hideToggleButton: true,
 		children: [
 			{
 				id: "no_chat",
 				label: "Hide Chat",
 				conflicts: ["chat_only"],
+				ignoreToggle: true,
 				children: [],
 			},
 			{
@@ -178,7 +188,7 @@ export const features = [
 	{
 		id: "hide_video_section",
 		label: "Video Section",
-		hideToggle: true,
+		hideToggleButton: true,
 		children: [
 			{
 				id: "featured_stream_play_by_default",
@@ -206,7 +216,7 @@ export const features = [
 	{
 		id: "hide_info",
 		label: "Below Video Section",
-		hideToggle: true,
+		hideToggleButton: true,
 
 		children: [
 			{
@@ -285,13 +295,15 @@ export const getFeaturesForMode = (mode: SimplePresetMode): FeatureID[] => {
 	return collectFeatures(features)
 }
 
-const collectAllFeatureIDs = (items: readonly FeatureItem[]): FeatureID[] =>
-	items.flatMap((item) => [
-		item.id,
-		...(item.children ? collectAllFeatureIDs(item.children) : []),
-	]) as FeatureID[]
+const collectToggleableFeatureIDs = (items: readonly FeatureItem[]): FeatureID[] =>
+	items
+		.filter(({ ignoreToggle }) => !ignoreToggle)
+		.flatMap((item) => [
+			item.id,
+			...(item.children ? collectToggleableFeatureIDs(item.children) : []),
+		]) as FeatureID[]
 
-export const allFeatureIDs = collectAllFeatureIDs(features)
+export const toggleableFeatureIDs = collectToggleableFeatureIDs(features)
 
 type ExtractFeatureIDs<T extends readonly FeatureItem[]> = T extends readonly (infer U)[]
 	? U extends { id: infer ID; children?: infer C }
@@ -300,3 +312,5 @@ type ExtractFeatureIDs<T extends readonly FeatureItem[]> = T extends readonly (i
 	: never
 
 export type FeatureID = ExtractFeatureIDs<typeof features>
+
+// export type FeatureID = string

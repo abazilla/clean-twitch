@@ -25,7 +25,7 @@ function updateElementAsync(
 	if (persistenceSetting === "stop_on_found") {
 		if (timeoutMs !== "no_timeout" && timeoutMs > 0) {
 			setTimeout(() => {
-				console.log("timing out observer")
+				// console.log("timing out observer")
 				observer.disconnect()
 			}, timeoutMs)
 		}

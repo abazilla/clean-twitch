@@ -192,7 +192,7 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 		})
 
 		setTimeout(() => {
-			console.log("timing out observer")
+			// console.log("timing out observer")
 			observer.disconnect()
 		}, 10000)
 	}
