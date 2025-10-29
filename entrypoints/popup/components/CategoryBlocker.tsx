@@ -1,6 +1,6 @@
 import { BlockedCategories } from "@/entrypoints/content/features/definitions"
 import { parseCategory } from "@/entrypoints/content/utils/categoryParser"
-import { JSX } from "react"
+import { JSX, useState } from "react"
 import { useStorageState } from "../storage"
 
 export const CategoryBlocker = (): JSX.Element => {

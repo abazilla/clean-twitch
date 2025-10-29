@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { storageHandler } from "@/entrypoints/content/utils/storageHandler"
 
 /**

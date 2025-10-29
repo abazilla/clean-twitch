@@ -22,6 +22,11 @@ export default defineConfig({
 		// },
 		host_permissions: ["https://*.twitch.tv/*"],
 		permissions: ["tabs", "scripting", "storage"],
+		browser_specific_settings: {
+			gecko: {
+				id: "hide-twitch@dev.local"
+			}
+		}
 	},
 	webExt: {
 		disabled: true,
