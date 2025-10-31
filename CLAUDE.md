@@ -2,98 +2,102 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Development Commands
 
-Hide Twitch 2 is a Chrome/Firefox browser extension that hides unwanted sections of Twitch. It's built with TypeScript, React, and jQuery, using Parcel for bundling. The extension uses Chrome Extensions Manifest V3 and supports automatic reloading during development.
+### Core Development
 
-## Commands
+- `pnpm dev` - Start development server for Chrome
+- `pnpm dev:firefox` - Start development server for Firefox
+- `pnpm build` - Build extension for production (Chrome)
+- `pnpm build:firefox` - Build extension for Firefox
+- `pnpm zip` - Create zip package for Chrome store
+- `pnpm zip:firefox` - Create zip package for Firefox addon store
+- `pnpm compile` - TypeScript compilation check (no emit)
 
-**Development:**
+### Testing
 
-Currently broken - must re-build using `npm run build` to test new changes.
+The project uses **Vitest** as the test runner with the following setup:
 
-**Build for production:**
+**Commands:**
 
-```bash
-npm run build          # Builds both Chrome and Firefox extensions
-npm run build-chrome   # Chrome extension only
-npm run build-firefox  # Firefox extension only
-```
+- `pnpm test` - Run all tests
+- `pnpm test:ui` - Run tests with Vitest UI
 
-Creates ZIP files in the `releases/` folder ready for store submission with version numbers.
+**Test Structure:**
 
-**Testing:**
+- `entrypoints/content/utils/__tests__/` - Contains test files using Vitest syntax
+- Test files use `describe`, `test`, `expect`, `vi` (mocking) from Vitest
+- Global setup in `test-setup.ts` includes MutationObserver mocking for DOM tests
 
-```bash
-npm test
-```
+**Configuration:**
 
-Runs Jest tests with TypeScript support.
+- `vitest.config.ts` - Vitest configuration with jsdom environment
+- `test-setup.ts` - Global test setup file for mocks and utilities
 
-**Linting:**
+## Project Architecture
 
-```bash
-npx eslint .
-```
+This is a **WXT-based browser extension** for Twitch that provides content filtering and UI customization. The extension operates in two modes:
 
-Uses ESLint with TypeScript and React configurations.
+### Extension Entry Points
 
-## Architecture
+- **Content Script** (`entrypoints/content/index.ts`) - Main logic injected into Twitch pages
+- **Popup** (`entrypoints/popup/`) - React-based extension popup interface
 
-### Extension Structure
+### Core Architecture Patterns
 
-- **Content Scripts**: Main content script runs on Twitch pages
-  - `content/index.ts`: Main content script with DOM manipulation and feature toggles
-  - `content/features/`: Feature-specific implementations (UI features, blocked categories/channels)
-  - `content/utils/`: Utility functions for DOM manipulation, URL observation, and category parsing
-- **Popup UI**: React-based popup (`pages/popup/`) for extension settings with Simple/Advanced modes
+**Dual Mode System:**
 
-### Key Components
+- **Simple Mode** - Preset-based feature toggles (show_all, no_monetization, minimalist)
+- **Advanced Mode** - Individual feature control
 
-**Feature System**: The popup provides both Simple and Advanced modes for user interaction. Simple mode shows basic toggles, while Advanced mode provides granular control over individual features.
+**Feature System:**
 
-**Content Script Flow**:
+- Features defined in `entrypoints/content/toggles.ts` with metadata (conflicts, modes, children)
+- Toggle functions mapped in `entrypoints/content/toggleMap.ts`
+- UI implementations in `entrypoints/content/features/uiFeatures.ts`
 
-1. Initialize global CSS styles for hiding elements
-2. Load feature states from Chrome storage
-3. Set up URL change observer for SPA navigation
-4. Listen for storage changes and toggle features accordingly
+**Storage & State:**
 
-**Modular Features**: Features are organized into separate modules:
+- Uses WXT storage API (`entrypoints/content/storage.ts`)
+- Custom React hook `useStorageState` for popup state management
+- Storage changes trigger content script updates via `storage.onChanged`
 
-- `uiFeatures.ts`: UI element hiding functionality
-- `blockedCategories.ts`: Category-based content blocking
-- `blockedChannels.ts`: Channel-based content blocking
+**Content Filtering:**
 
-**Element Hiding**: Uses a combination of:
+- Channel blocking (`entrypoints/content/features/blockedChannels.ts`)
+- Category blocking (`entrypoints/content/features/blockedCategories.ts`)
+- DOM manipulation utilities (`entrypoints/content/utils/dom.ts`)
 
-- Dynamic CSS injection for scalable hiding
-- jQuery-based DOM manipulation for complex selectors
-- CSS classes like `.twitch-declutter-hidden` for consistent styling
+### Key Architectural Concepts
 
-### Storage & State
+**Toggle System:** Each feature has an ID that maps to a toggle function. Features can have parent-child relationships and conflict definitions.
 
-- Uses Chrome's `chrome.storage.sync` for cross-device settings sync
-- Feature states are stored by feature ID
-- Blocked channels/categories stored as structured data with enable flags
+**CSS Injection:** The extension injects styles with `.clean-twitch-clutter` class. Test mode shows elements with red background instead of hiding them.
 
-### Category/Channel Blocking
+**URL Monitoring:** Uses `setupUrlChangeListener` to detect navigation changes on Twitch's SPA.
 
-- **Category Parser**: `utils/categoryParser.ts` converts user input to URL-friendly category names
-- **Dynamic CSS**: Generates CSS rules for hiding elements based on href attributes
-- **Multi-target Hiding**: Supports hiding from sidebar, directory, and search results independently
+**Component Structure:** React popup uses component composition with `SimpleMode` and `AdvancedMode` components.
 
-## Development Notes
+## Configuration Files
 
-**Testing Setup**: Jest configured with `ts-jest` transformer and Chrome extension mocks via `jest-chrome`.
+- `wxt.config.ts` - WXT framework configuration with React module and Tailwind
+- `tsconfig.json` - TypeScript configuration extending WXT defaults
+- Package manager: **pnpm** (uses pnpm-lock.yaml)
 
-**Build System**: Parcel handles TypeScript compilation, bundling, and extension packaging. Supports both Chrome and Firefox targets.
+## Technology Stack
 
-**Code Style**: Uses Prettier with import organization and Tailwind CSS formatting plugins.
+- **Framework:** WXT (Web Extension Toolkit)
+- **Frontend:** React 19 with TypeScript
+- **Styling:** Tailwind CSS 4.x
+- **Permissions:** tabs, scripting, storage, host_permissions for twitch.tv
+- **External:** jQuery for DOM manipulation in content scripts
 
-**File Structure**:
+## WXT Documentation References
 
-- `src-chrome/` and `src-firefox/`: Browser-specific manifest files
-- `src/content/`: Content script functionality split into features and utilities
-- `src/pages/popup/`: React popup UI with Simple/Advanced mode components
-- Test files are co-located with source files using `__tests__/` directories
+When working with WXT-specific features, Claude can access the following documentation:
+
+- **General Documentation**: https://wxt.dev/knowledge/docs.txt
+- **API Reference**: https://wxt.dev/knowledge/api-reference.txt
+- **Blog/Updates**: https://wxt.dev/knowledge/blog.txt
+
+These references provide comprehensive information about WXT configuration, APIs, and best practices for browser extension development.

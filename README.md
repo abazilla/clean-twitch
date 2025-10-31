@@ -1,39 +1,77 @@
-# Hide Twitch 2
+# Clean Twitch
 
-A Chrome extension to hide annoying Twitch stuff. It supports **TypeScript**, **JSX**, and **automatic reloading** during development. Jest, ESLint and Prettier included, all bundled using [Parcel](https://parceljs.org/).
-
-## Development
-
-[Parcel's Hot Module Reloading](https://parceljs.org/recipes/web-extension/#hmr) doesn't work with Manifest V3. You will have to run the following, and then refresh/update in chrome/firefox everytime..
-
-```sh
-npm run build
-```
-
-## Production
-
-When it's time to publish your Chrome extension, make a production build to submit to the Chrome Web Store. This project will use the version in `package.json`, unless you add a version to `src/manifest.json`.
-
-> Make sure you have updated the name and version of your extension in `package.json`.
-
-Run the following line:
-
-```sh
-npm run build
-```
-
-This will create a ZIP file with your package name and version in the `releases` folder.
-
-## Source Layout
-
-Your manifest is at `src/manifest.json`, and Parcel will bundle any files you include here. All the filepaths in your manifest should point to files in `src`.
+Twitch without the clutter.
 
 ## Features
 
-- Uses Parcel to bundle your extension
-- Chrome Extension automatic reloader
-- Jest configuration for testing
+- **Content Filtering**: Block specific channels and categories
+- **UI Customization**: Hide various Twitch UI elements (ads, recommendations, chat, etc.)
+- **Dual Mode System**:
+  - **Simple Mode**: Quick presets (Show All, No Monetization, Minimalist)
+  - **Advanced Mode**: Individual feature control
+- **Test Mode**: Preview changes with visual indicators before applying
 
-## Resources
+## Installation
 
-[Chrome Extension official documentation](https://developer.chrome.com/docs/webstore/)
+### Development
+
+1. Install dependencies: `pnpm install`
+2. Start development server: `pnpm dev` (Chrome) or `pnpm dev:firefox` (Firefox)
+3. Load the extension in your browser's developer mode
+
+### Production Build
+
+- Chrome: `pnpm build && pnpm zip`
+- Firefox: `pnpm build:firefox && pnpm zip:firefox`
+
+## Development Commands
+
+### Core Development
+
+- `pnpm dev` - Start development server for Chrome
+- `pnpm dev:firefox` - Start development server for Firefox
+- `pnpm build` - Build extension for production (Chrome)
+- `pnpm build:firefox` - Build extension for Firefox
+- `pnpm zip` - Create zip package for Chrome store
+- `pnpm zip:firefox` - Create zip package for Firefox addon store
+- `pnpm compile` - TypeScript compilation check
+
+### Testing
+
+- `pnpm test` - Run all tests with Vitest
+- `pnpm test:ui` - Run tests with Vitest UI
+
+## Technology Stack
+
+- **Framework**: WXT (Web Extension Toolkit)
+- **Frontend**: React 19 with TypeScript
+- **Styling**: Tailwind CSS 4.x
+- **Testing**: Vitest with jsdom
+- **Package Manager**: pnpm
+
+## Architecture
+
+### Extension Entry Points
+
+- **Content Script**: Main logic injected into Twitch pages
+- **Popup**: React-based extension popup interface
+
+### Key Components
+
+- **Feature System**: Toggle-based features with conflict resolution
+- **Storage Management**: WXT storage API with React hooks
+- **DOM Manipulation**: CSS injection and element hiding
+- **URL Monitoring**: SPA navigation detection
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `pnpm test`
+5. Build and test the extension: `pnpm build`
+6. Submit a pull request
+
+## License
+
+This project is open source and available under the MIT License.

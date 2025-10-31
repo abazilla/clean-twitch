@@ -1,0 +1,56 @@
+import { JSX } from "react"
+import { FeatureItem, features } from "../content/features/definitions"
+import AdvancedMode from "./components/AdvancedMode"
+import { FeatureToggle } from "./components/FeatureToggle"
+import SimpleMode from "./components/SimpleMode"
+import { useStorageState } from "./storage"
+
+// const AdvancedMode = lazy(() => import("./components/AdvancedMode"))
+
+const App = (): JSX.Element => {
+	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
+	const [isSimpleMode, setIsSimpleMode] = useStorageState<boolean>("is_simple_mode", true)
+
+	// Initialize mode from storage
+	useEffect(() => {
+		setIsAdvancedMode(!isSimpleMode)
+	}, [isSimpleMode])
+
+	const handleModeToggle = async () => {
+		const newIsAdvancedMode = !isAdvancedMode
+		setIsAdvancedMode(newIsAdvancedMode)
+		// Set is_simple_mode to the opposite of isAdvancedMode
+		await setIsSimpleMode(!newIsAdvancedMode)
+	}
+
+	return (
+		<div className="w-80 bg-purple-600 p-4 text-white">
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="m-0 p-0 text-lg">Clean Twitch</h1>
+				<button
+					onClick={handleModeToggle}
+					className="rounded bg-purple-500 px-3 py-1 text-sm hover:bg-purple-400"
+				>
+					{isAdvancedMode ? "Simple" : "Advanced"}
+				</button>
+			</div>
+
+			{features.map((item: FeatureItem) =>
+				item.renderSimpleOrAdvanced === "always_show" ? (
+					<FeatureToggle key={item.id} item={item} />
+				) : (
+					<></>
+				)
+			)}
+			{isAdvancedMode ? (
+				// <Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
+				<AdvancedMode />
+			) : (
+				// </Suspense>
+				<SimpleMode />
+			)}
+		</div>
+	)
+}
+
+export default App
