@@ -24,7 +24,7 @@ export default defineConfig({
 		permissions: ["tabs", "scripting", "storage"],
 		browser_specific_settings: {
 			gecko: {
-				id: "hide-twitch@dev.local"
+				id: "{8f2e5b0a-9d22-4a63-a9a0-b924e19fb1e2}"
 			}
 		}
 	},
