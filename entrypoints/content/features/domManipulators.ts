@@ -7,6 +7,11 @@ export const UNIVERSAL_STYLE_ID = "clean-twitch-id"
 export const TEST_MODE_CSS = `.${UNIVERSAL_CLASS_NAME} { background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important; } `
 export const NORMAL_CSS = `.${UNIVERSAL_CLASS_NAME} { display: none !important; } `
 
+// Can this somehow just be run on page load? i believe the whole website automatically refreshes when logging in/out
+function isLoggedIn(): boolean {
+	return $("body").hasClass("logged-in")
+}
+
 export function toggleTestMode(toggled: boolean) {
 	const style = document.getElementById(UNIVERSAL_STYLE_ID)
 	if (style) {
@@ -279,25 +284,41 @@ export function toggleInfoViralClipSection(value: boolean) {
 	)
 }
 
+// UNDER VIDEO PANEL
 export function toggleInfoMonetizationButtons(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	updateElement(
-		() =>
-			$(
-				"div[data-target='channel-header-right'] button[data-test-selector='subscribe-button__dropdown']"
-			)
-				.parents()
-				.eq(6),
-		($el) => toggleElementVisibility($el, value)
-	)
-	updateElement(
-		() =>
-			$("div[data-target='channel-header-right'] button[data-a-target='top-nav-get-bits-button']")
-				.parents()
-				.eq(5),
-		($el) => toggleElementVisibility($el, value)
-	)
+	if (isLoggedIn()) {
+		// SUBSCRIBE BUTTON
+		updateElement(
+			() =>
+				$(
+					"div[data-target='channel-header-right'] button[data-test-selector='subscribe-button__dropdown']"
+				)
+					.parents()
+					.eq(6),
+			($el) => toggleElementVisibility($el, value)
+		)
+		// BITS BUTTON
+		updateElement(
+			() =>
+				$("div[data-target='channel-header-right'] button[data-a-target='top-nav-get-bits-button']")
+					.parents()
+					.eq(5),
+			($el) => toggleElementVisibility($el, value)
+		)
+	} else {
+		// SUBSCRIBE BUTTON
+		updateElement(
+			() =>
+				$(
+					"div[data-target='channel-header-right'] button[data-test-selector='subscribe-button__dropdown']"
+				)
+					.parents()
+					.eq(3),
+			($el) => toggleElementVisibility($el, value)
+		)
+	}
 }
 
 export function toggleInfoAboutSection(value: boolean) {

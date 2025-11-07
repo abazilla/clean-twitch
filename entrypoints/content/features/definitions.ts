@@ -96,7 +96,6 @@ export const features = [
 			{
 				id: "hide_prime_gaming_button",
 				label: 'Hide "Prime Gaming" Button',
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
@@ -110,21 +109,18 @@ export const features = [
 			{
 				id: "hide_whispers_button",
 				label: 'Hide "Whispers" Button',
-
 				simpleModeActive: ["minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_top_bits_button",
 				label: 'Hide "Bits" Button',
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_top_turbo_button",
 				label: 'Hide "Turbo" Button',
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
@@ -187,20 +183,17 @@ export const features = [
 			{
 				id: "hide_chat_monetization",
 				label: "Hide Chat Monetization",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_top_gifters",
 				label: "Hide Top Gifters",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 			},
 			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 			},
 		],
@@ -213,21 +206,18 @@ export const features = [
 			{
 				id: "featured_stream_play_by_default",
 				label: "Prevent Homepage Stream from Auto-Playing",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_video_gift_section",
 				label: 'Hide Theatre Mode "Gift"/"Subscribe" Buttons',
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_video_ad_wrapper",
 				label: "Hide Ad Wrapper around video player",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
@@ -237,40 +227,34 @@ export const features = [
 		id: "hide_info",
 		label: "Below Video Section",
 		hideToggleButton: true,
-
 		children: [
 			{
 				id: "hide_info_monetization_buttons",
 				label: "Hide Monetization Buttons",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_info_viral_clip_section",
 				label: "Hide Viral Clip Section",
-
 				simpleModeActive: ["no_monetization", "minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_info_about_section",
 				label: "Hide About Section",
-
 				simpleModeActive: ["minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_info_channel_panel_section",
 				label: "Hide Channel Panel Section",
-
 				simpleModeActive: ["minimalist"],
 				children: [],
 			},
 			{
 				id: "hide_sticky_footer",
 				label: "Remove Purple Footer",
-
 				simpleModeActive: ["minimalist"],
 				children: [],
 			},
