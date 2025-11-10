@@ -1,5 +1,8 @@
 // Map of feature IDs to their toggle functions
-import { FeatureID } from "./definitions"
+import { applySimpleModeFeatures, handleModeSwitch } from "../featureController"
+import { handleBlockedCategories } from "./blockedCategories"
+import { handleBlockedChannels } from "./blockedChannels"
+import { BlockedCategories, BlockedChannels, FeatureID, SimplePresetMode } from "./definitions"
 import {
 	hideBrowseButton,
 	hideDotsButton,
@@ -13,6 +16,7 @@ import {
 	toggleChatMonetizationButtons,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
+	toggleGreyscale,
 	toggleInfoAboutSection,
 	toggleInfoChannelPanelSection,
 	toggleInfoMonetizationButtons,
@@ -27,19 +31,20 @@ import {
 	toggleLeftSidebarStoriesXS,
 	toggleLeftSidebarViewersAlsoWatch,
 	toggleStickyFooter,
+	toggleTestMode,
 	toggleTopGifters,
 	toggleVideoAdWrapper,
 	toggleVideoGiftButtonSection,
 } from "./domManipulators"
 
-export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
+export const featureToggleMap: Record<FeatureID, (enabled: any) => void> = {
 	no_chat: () => {},
-	test_mode: () => {},
-	greyscale_all: () => {},
-	blocked_categories: () => {},
-	blocked_channels: () => {},
-	simple_mode_preset: () => {},
-	is_simple_mode: () => {},
+	test_mode: (value: boolean) => toggleTestMode(value),
+	greyscale_all: (value: boolean) => toggleGreyscale(value),
+	blocked_categories: (value: BlockedCategories) => handleBlockedCategories(value),
+	blocked_channels: (value: BlockedChannels) => handleBlockedChannels(value),
+	simple_mode_preset: (value: SimplePresetMode) => applySimpleModeFeatures(value),
+	is_simple_mode: (value: boolean) => handleModeSwitch(value),
 	hide_info: () => {},
 	hide_topbar: () => {},
 	hide_video_section: () => {},

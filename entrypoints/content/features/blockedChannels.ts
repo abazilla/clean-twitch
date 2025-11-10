@@ -1,6 +1,5 @@
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
-import { storageHandler } from "../utils/storageHandler"
 import { BlockedChannels, TwitchURLs } from "./definitions"
 
 let styleElement: HTMLStyleElement
@@ -9,10 +8,11 @@ export async function initializeBlockedChannels(style: HTMLStyleElement) {
 	styleElement = style
 
 	// Load and apply initial blocked channels
-	const blockedChannels = (await storageHandler.get("blocked_channels")) as BlockedChannels
-	if (blockedChannels && blockedChannels.usernames) {
-		handleBlockedChannels(blockedChannels)
-	}
+	await storage.getItem<BlockedChannels>("sync:blocked_channels").then((blockedChannels) => {
+		if (blockedChannels && blockedChannels.usernames) {
+			handleBlockedChannels(blockedChannels)
+		}
+	})
 }
 
 export function handleBlockedChannels(blockedChannels: BlockedChannels) {

@@ -1,7 +1,6 @@
 import { parseCategory } from "@/entrypoints/content/utils/categoryParser"
 import $ from "jquery"
 import { toggleElementVisibility, updateElement } from "../utils/dom"
-import { storageHandler } from "../utils/storageHandler"
 import { BlockedCategories, TwitchURLs } from "./definitions"
 
 let styleElement: HTMLStyleElement
@@ -11,13 +10,16 @@ export async function initializeBlockedCategories(style: HTMLStyleElement) {
 
 	// Load and apply initial blocked categories
 	// const { storageHandler: storage } = await import("../utils/storage")
-	const blockedCategories = (await storageHandler.get("blocked_categories")) as BlockedCategories
-	if (blockedCategories && blockedCategories.categories) {
-		handleBlockedCategories(blockedCategories)
-	}
+	await storage.getItem<BlockedCategories>("sync:blocked_categories").then((blockedCategories) => {
+		if (blockedCategories && blockedCategories.categories) {
+			handleBlockedCategories(blockedCategories)
+		}
+	})
 }
 
-export function handleBlockedCategories(blockedCategories: BlockedCategories) {
+export function handleBlockedCategories(blockedCategories: BlockedCategories | null) {
+	if (!blockedCategories) return
+
 	const { enabled, hideFromSidebar, hideFromDirectory, hideFromSearch } = blockedCategories
 	const url = window.location.pathname
 

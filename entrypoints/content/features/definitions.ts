@@ -129,7 +129,6 @@ export const features = [
 	{
 		id: "hide_left_sidebar",
 		label: "Left sidebar",
-
 		simpleModeActive: [],
 		children: [
 			{
@@ -298,6 +297,14 @@ export const getFeaturesForMode = (mode: SimplePresetMode): FeatureID[] => {
 
 	return collectFeatures(features)
 }
+
+const collectAllFeatureIDs = (items: readonly FeatureItem[]): FeatureID[] =>
+	items.flatMap((item) => [
+		item.id,
+		...(item.children ? collectAllFeatureIDs(item.children) : []),
+	]) as FeatureID[]
+
+export const allFeatureIDs = collectAllFeatureIDs(features)
 
 const collectToggleableFeatureIDs = (items: readonly FeatureItem[]): FeatureID[] =>
 	items

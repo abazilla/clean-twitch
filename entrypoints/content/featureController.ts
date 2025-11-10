@@ -1,55 +1,81 @@
-import { handleBlockedCategories, initializeBlockedCategories } from "./features/blockedCategories"
-import { handleBlockedChannels, initializeBlockedChannels } from "./features/blockedChannels"
+import { initializeBlockedCategories } from "./features/blockedCategories"
+import { initializeBlockedChannels } from "./features/blockedChannels"
 import {
+	allFeatureIDs,
 	FeatureID,
 	getFeaturesForMode,
 	SimplePresetMode,
 	toggleableFeatureIDs,
 } from "./features/definitions"
-import {
-	NORMAL_CSS,
-	toggleGreyscale,
-	toggleTestMode,
-	UNIVERSAL_STYLE_ID,
-} from "./features/domManipulators"
+import { NORMAL_CSS, UNIVERSAL_STYLE_ID } from "./features/domManipulators"
 import { featureToggleMap } from "./features/toggleMap"
-import { storageHandler } from "./utils/storageHandler"
 
 // Toggle feature functionality
-export async function handleFeatureOnToggle(id: FeatureID, value: any) {
+export async function handleFeatureOnToggle() {
 	// Handle special cases that don't have on_toggle functions
-	switch (id) {
-		case "blocked_channels":
-			handleBlockedChannels(value)
-			return
-		case "blocked_categories":
-			handleBlockedCategories(value)
-			return
-		case "simple_mode_preset":
-			await applySimpleModeFeatures(value as SimplePresetMode)
-			return
-		case "is_simple_mode":
-			await handleModeSwitch(value as boolean)
-			return
-		case "test_mode":
-			await toggleTestMode(value)
-			return
-		case "greyscale_all":
-			await toggleGreyscale(value)
-			return
-	}
+	// storage.watch<BlockedChannels>("sync:blocked_channels", (value) => handleBlockedChannels(value))
+	// storage.watch<BlockedCategories>("sync:blocked_categories", (value) =>
+	// 	handleBlockedCategories(value)
+	// )
+	// storage.watch<SimplePresetMode>("sync:simple_mode_preset", (value) =>
+	// 	applySimpleModeFeatures(value || "show_all")
+	// )
+	// storage.watch<boolean>("sync:is_simple_mode", (value) => handleModeSwitch(!!value))
+	// storage.watch<boolean>("sync:test_mode", (value) => toggleTestMode(!!value))
+	// storage.watch<boolean>("sync:greyscale_all", (value) => toggleGreyscale(!!value))
 
+	// initialize items
+	watchFeatures(allFeatureIDs)
+	runFeatures(allFeatureIDs)
+}
+
+export function watchFeatures(featureIDs: FeatureID[]) {
 	// Find the toggle function in the map and call it
-	const toggleFunction = featureToggleMap[id]
-	if (toggleFunction) {
-		try {
-			toggleFunction(value)
-		} catch (error) {
-			console.error(`Error calling toggle function for ${id}:`, error)
-		}
-	} else {
-		console.warn(`No toggle function found for feature: ${id}`)
-	}
+	featureIDs.forEach((featureId) => {
+		storage.watch<boolean>(`sync:${featureId}`, (value) => {
+			// console.log("watchFeatures", { featureId, value })
+			const toggleFunction = featureToggleMap[featureId]
+			if (toggleFunction) {
+				try {
+					toggleFunction(!!value)
+				} catch (error) {
+					console.error(`Error calling toggle function for ${featureId}:`, error)
+				}
+			}
+		})
+	})
+}
+
+async function runFeatures(featureIDs: FeatureID[]) {
+	const syncIDs = featureIDs.map((id) => `sync:${id}`) as `local:${string}`[]
+	// Find the toggle function in the map and call it
+	await storage.getItems(syncIDs).then((results) => {
+		results.forEach(({ key, value }) => {
+			const featureId = key.replace("sync:", "") as FeatureID
+			// console.log("runFeatures", { key, value, featureId })
+			const toggleFunction = featureToggleMap[featureId]
+			if (toggleFunction) {
+				try {
+					toggleFunction(!!value)
+				} catch (error) {
+					console.error(`Error calling toggle function for ${featureId}:`, error)
+				}
+			}
+		})
+	})
+	// featureIDs.forEach((featureId) => {
+	// 	await storage.getItem<boolean>(`sync:${featureId}`).then((value) => {
+	// 		console.log("runFeatures", { featureId, value })
+	// 		const toggleFunction = featureToggleMap[featureId]
+	// 		if (toggleFunction) {
+	// 			try {
+	// 				toggleFunction(!!value)
+	// 			} catch (error) {
+	// 				console.error(`Error calling toggle function for ${featureId}:`, error)
+	// 			}
+	// 		}
+	// 	})
+	// })
 }
 
 // Handle switching between Simple and Advanced modes, and on init.
@@ -58,51 +84,35 @@ export async function handleModeSwitch(isSimpleMode: boolean) {
 
 	if (isSimpleMode) {
 		// apply the current preset
-		const preset = (await storageHandler.get<SimplePresetMode>("simple_mode_preset")) || "show_all"
-		await applySimpleModeFeatures(preset)
+		await storage
+			.getItem<SimplePresetMode>("sync:simple_mode_preset")
+			.then((value) => applySimpleModeFeatures(value || "show_all"))
 	} else {
 		// restore individual settings
 		await applyAdvancedModeFeatures()
 	}
 }
 
-export async function applySimpleModeFeatures(preset: SimplePresetMode) {
+export function applySimpleModeFeatures(preset: SimplePresetMode) {
 	const featuresToEnable = getFeaturesForMode(preset)
-	toggleableFeatureIDs.forEach((featureId) => {
-		try {
-			const shouldEnable = featuresToEnable.includes(featureId)
-			handleFeatureOnToggle(featureId, shouldEnable)
-		} catch (error) {
-			console.error(`Error toggling feature ${featureId}:`, error)
-		}
-	})
+	runFeatures(featuresToEnable)
 }
 
-export async function applyAdvancedModeFeatures() {
-	for (const featureId of toggleableFeatureIDs) {
-		const storedValue = await storageHandler.get(featureId)
-		try {
-			// Use stored value if it exists, otherwise default to false (disabled)
-			const shouldEnable =
-				storedValue !== undefined && storedValue !== null ? Boolean(storedValue) : false
-			handleFeatureOnToggle(featureId, shouldEnable)
-		} catch (error) {
-			console.error(`Error restoring feature ${featureId}:`, error)
-		}
-	}
+export function applyAdvancedModeFeatures() {
+	runFeatures(toggleableFeatureIDs)
 }
 
 export async function initializeStylesAndFeatures() {
-	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
+	await storage.getItem<boolean>("sync:is_simple_mode").then(async (isSimpleMode) => {
+		// First time setup
+		if (isSimpleMode === undefined || isSimpleMode === null) {
+			await storage.setItem("sync:is_simple_mode", true)
+			isSimpleMode = true
+		}
 
-	// First time setup
-	if (isSimpleMode === undefined || isSimpleMode === null) {
-		await storageHandler.set("is_simple_mode", true)
-		isSimpleMode = true
-	}
-
-	// Apply correct mode on load
-	await handleModeSwitch(isSimpleMode)
+		// Apply correct mode on load
+		await handleModeSwitch(isSimpleMode)
+	})
 
 	const style = document.createElement("style")
 	style.id = UNIVERSAL_STYLE_ID

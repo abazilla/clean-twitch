@@ -1,8 +1,6 @@
 import { ContentScriptContext } from "#imports"
 import $ from "jquery"
 import { handleFeatureOnToggle, initializeStylesAndFeatures } from "./featureController"
-import { FeatureID } from "./features/definitions"
-import { storageHandler } from "./utils/storageHandler"
 import { setupUrlChangeListener } from "./utils/urlObserver"
 
 export default defineContentScript({
@@ -17,13 +15,16 @@ export default defineContentScript({
 		const mainInitialization = async () => {
 			setupUrlChangeListener()
 
-			storageHandler.onChanged.addListener((changes, areaName) => {
-				if (areaName === "local") {
-					const key = Object.keys(changes)[0] as FeatureID
-					// Should check for simple mode here
-					handleFeatureOnToggle(key, changes[key].newValue)
-				}
-			})
+			handleFeatureOnToggle()
+			// TODO: optimize to only run for simple vs advanced mode
+			// watchFeatures(toggleableFeatureIDs)
+			// storageHandler.onChanged.addListener((changes, areaName) => {
+			// 	if (areaName === "local") {
+			// 		const key = Object.keys(changes)[0] as FeatureID
+			// 		// Should check for simple mode here
+			// 		handleFeatureOnToggle(key, changes[key].newValue)
+			// 	}
+			// })
 		}
 
 		$(mainInitialization)

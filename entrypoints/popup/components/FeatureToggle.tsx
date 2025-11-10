@@ -1,5 +1,4 @@
 import { FeatureItem } from "@/entrypoints/content/features/definitions"
-import { storageHandler } from "@/entrypoints/content/utils/storageHandler"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
@@ -19,7 +18,9 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 		if (item.conflicts) {
 			if (newValue && item.conflicts.length > 0) {
 				// Update conflicts first
-				await Promise.all(item.conflicts.map((conflictId) => storageHandler.set(conflictId, false)))
+				await Promise.all(
+					item.conflicts.map((conflictId) => storage.setItem(`sync:${conflictId}`, false))
+				)
 			}
 		}
 
