@@ -178,7 +178,7 @@ export function toggleTopGifters(value: boolean) {
 		($el) => toggleElementVisibility($el, value),
 		5000,
 		"stop_on_found",
-		"toggleTopGifters"
+		"toggleTopGifters-leaderboard"
 	)
 
 	updateElement(
@@ -186,7 +186,7 @@ export function toggleTopGifters(value: boolean) {
 		($el) => toggleElementVisibility($el, value),
 		5000,
 		"stop_on_found",
-		"toggleTopGifters"
+		"toggleTopGifters-entries"
 	)
 }
 

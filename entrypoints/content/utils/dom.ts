@@ -15,11 +15,11 @@ function updateElementAsync(
 			action($element)
 			if (persistenceSetting === "stop_on_found") {
 				obs.disconnect()
-				console.log(
-					functionName || "unknown function",
-					"found!, disconnecting obs",
-					persistenceSetting
-				)
+				// console.log(
+				// 	functionName || "unknown function",
+				// 	"found!, disconnecting obs",
+				// 	persistenceSetting
+				// )
 			}
 		}
 	})
@@ -32,14 +32,14 @@ function updateElementAsync(
 	if (persistenceSetting === "stop_on_found" || persistenceSetting === "stop_after_timeout") {
 		if (timeoutMs !== "no_timeout" && timeoutMs > 0) {
 			setTimeout(() => {
-				console.log(
-					"disconnecting observer for",
-					functionName || "unknown function",
-					"after",
-					timeoutMs,
-					"ms",
-					persistenceSetting
-				)
+				// console.log(
+				// 	"disconnecting observer for",
+				// 	functionName || "unknown function",
+				// 	"after",
+				// 	timeoutMs,
+				// 	"ms",
+				// 	persistenceSetting
+				// )
 				observer.disconnect()
 			}, timeoutMs)
 		}

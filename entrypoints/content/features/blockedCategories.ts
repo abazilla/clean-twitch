@@ -61,7 +61,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 					.parent()
 					.parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled),
-			10000,
+			5000,
 			"stop_on_found",
 			"handleBlockedCategories"
 		)
@@ -75,7 +75,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.parent(),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -89,7 +89,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.eq(1),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -103,7 +103,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 					).parent(),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -126,7 +126,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 				() => $(`div > h2 > a[href*="${blockedCategory.category}"]`).parent().parent().parent(),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -139,7 +139,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.parent(),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -154,7 +154,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.parent(),
 				($el) =>
 					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)
@@ -204,7 +204,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						)
 						.closest(`div.search-results`),
 				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedCategories"
 			)

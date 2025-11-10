@@ -49,7 +49,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 		updateElement(
 			() => $(`div.side-nav-card:has(a[href="/${blockedUser.username}"])`).parent().parent(),
 			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled),
-			10000,
+			5000,
 			"stop_on_found",
 			"handleBlockedChannels"
 		)
@@ -62,7 +62,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						.closest("div.shelf-card__impression-wrapper")
 						.parent(),
 				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedChannels"
 			)
@@ -88,7 +88,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						.closest(`div[data-target="directory-game__card_container"]`)
 						.parent(),
 				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedChannels"
 			)
@@ -98,7 +98,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 			updateElement(
 				() => $(`a[href="/${blockedUser.username}"]`).parents().eq(10),
 				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
-				10000,
+				5000,
 				"stop_on_found",
 				"handleBlockedChannels"
 			)
@@ -111,7 +111,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					"div.recommended-channel"
 				),
 			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
-			10000,
+			5000,
 			"stop_on_found",
 			"handleBlockedChannels"
 		)
