@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
 import { storageHandler } from "@/entrypoints/content/utils/storageHandler"
+import { useEffect, useState } from "react"
 
 /**
  * React hook for managing storage state with automatic sync
@@ -11,7 +11,6 @@ export function useStorageState<T>(key: string, initialValue: T) {
 	// Initial load
 	useEffect(() => {
 		storageHandler.get<T>(key).then((result) => {
-			console.log(`Initial load for ${key}:`, result)
 			if (result !== undefined) {
 				setValue(result)
 			}
@@ -23,7 +22,6 @@ export function useStorageState<T>(key: string, initialValue: T) {
 	useEffect(() => {
 		const handleStorageChange = (changes: Record<string, any>, areaName: string) => {
 			if (areaName === "local" && key in changes) {
-				console.log(`Storage change for ${key}:`, changes, areaName)
 				setValue(changes[key].newValue ?? initialValue)
 			}
 		}

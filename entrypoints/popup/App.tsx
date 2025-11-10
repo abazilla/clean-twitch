@@ -5,8 +5,6 @@ import { FeatureToggle } from "./components/FeatureToggle"
 import SimpleMode from "./components/SimpleMode"
 import { useStorageState } from "./storage"
 
-// const AdvancedMode = lazy(() => import("./components/AdvancedMode"))
-
 const App = (): JSX.Element => {
 	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
 	const [isSimpleMode, setIsSimpleMode] = useStorageState<boolean>("is_simple_mode", true)

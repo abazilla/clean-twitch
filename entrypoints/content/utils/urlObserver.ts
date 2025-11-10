@@ -32,9 +32,9 @@ export function setupUrlChangeListener() {
 
 export async function handleUrlChange(lastUrl: string) {
 	// TODO: check for possible optimizations
+	console.log("URL changed to:", window.location.href)
 	await initializeStylesAndFeatures()
 
-	// console.log("URL changed to:", window.location.href)
 	// if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
 	// TODO: which component is this
 	// if (lastUrl.includes("/directory/category/"))

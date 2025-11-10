@@ -51,14 +51,20 @@ export function hidePrimeGamingButton(isHidden: boolean) {
 export function hideNotificationsButton(isHidden: boolean) {
 	updateElement(
 		() => $(".onsite-notifications").parent(),
-		($el) => toggleElementVisibility($el, isHidden)
+		($el) => toggleElementVisibility($el, isHidden),
+		5000,
+		"stop_on_found",
+		"hideNotificationsButton"
 	)
 }
 
 export function hideWhispersButton(isHidden: boolean) {
 	updateElement(
 		() => $('button[data-a-target="whisper-box-button"]').parents().eq(3),
-		($el) => toggleElementVisibility($el, isHidden)
+		($el) => toggleElementVisibility($el, isHidden),
+		5000,
+		"stop_on_found",
+		"hideWhispersButton"
 	)
 }
 
@@ -68,7 +74,10 @@ export function hideTopBitsButton(isHidden: boolean) {
 			$("nav[data-a-target='top-nav-container'] button[data-a-target='top-nav-get-bits-button']")
 				.parents()
 				.eq(5),
-		($el) => toggleElementVisibility($el, isHidden)
+		($el) => toggleElementVisibility($el, isHidden),
+		5000,
+		"stop_on_found",
+		"hideTopBitsButton"
 	)
 }
 
@@ -78,7 +87,10 @@ export function hideTopTurboButton(isHidden: boolean) {
 			$('div[data-a-target="tw-core-button-label-text"]:contains("Go Ad-Free for Free")')
 				.parents()
 				.eq(4),
-		($el) => toggleElementVisibility($el, isHidden)
+		($el) => toggleElementVisibility($el, isHidden),
+		5000,
+		"stop_on_found",
+		"hideTopTurboButton"
 	)
 }
 
@@ -100,42 +112,62 @@ export function toggleLeftSidebar(value: boolean) {
 export function toggleLeftSidebarStories(value: boolean) {
 	updateElement(
 		() => $("div.storiesLeftNavSection--csO9S"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleLeftSidebarStories"
 	)
 }
 
 export function toggleLeftSidebarStoriesXS(value: boolean) {
 	updateElement(
 		() => $("div.storiesLeftNavSectionCollapsedButton--txKvw").parents().eq(2),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleLeftSidebarStoriesXS"
 	)
 }
 
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
 	updateElement(
 		() => $("div[aria-label='Followed Channels']"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleLeftSidebarFollowedChannels"
 	)
 }
 
 export function toggleLeftSidebarLiveChannels(value: boolean) {
-	updateElement(
-		() => $("div[aria-label='Live Channels']"),
-		($el) => toggleElementVisibility($el, value)
-	)
+	if (isLoggedIn()) {
+		updateElement(
+			() => $("div[aria-label='Live Channels']"),
+			($el) => toggleElementVisibility($el, value),
+			5000,
+			"stop_on_found",
+			"toggleLeftSidebarLiveChannels"
+		)
+	}
 }
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
 	updateElement(
 		() => $("div[aria-label*='Viewers Also Watch']"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleLeftSidebarViewersAlsoWatch"
 	)
 }
 
 export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 	updateElement(
 		() => $("div[aria-label='Recommended Categories']"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleLeftSidebarRecommendedCategories"
 	)
 }
 
@@ -143,30 +175,45 @@ export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 export function toggleTopGifters(value: boolean) {
 	updateElement(
 		() => $("div[aria-label='Expand Top Gifters Leaderboard']").parents().eq(9),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleTopGifters"
 	)
 
 	updateElement(
 		() => $("div.bits-leaderboard-expanded-top-three-entry").parents().eq(13),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleTopGifters"
 	)
 }
 
 export function toggleChatMonetizationButtons(value: boolean) {
 	updateElement(
 		() => $('div.chat-input button[aria-label="Bits and Points Balances"]').parent(),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleChatMonetizationButtons-1"
 	)
 	updateElement(
 		() => $('div.chat-input button[data-a-target="bits-button"]').parents().eq(1),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleChatMonetizationButtons-2"
 	)
 }
 
 export function toggleCommunityHighlightStack(value: boolean) {
 	updateElement(
 		() => $(".community-highlight-stack__scroll-area--disable").parents().eq(1),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleCommunityHighlightStack"
 	)
 }
 
@@ -203,7 +250,7 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 		setTimeout(() => {
 			// console.log("timing out observer")
 			observer.disconnect()
-		}, 10000)
+		}, 5000)
 	}
 }
 
@@ -212,8 +259,9 @@ export function toggleLeftSidebarOfflineChannels(value: boolean) {
 		() =>
 			$('a[data-test-selector="followed-channel"]:has(span:contains("Offline"))').parent().parent(),
 		($el) => toggleElementVisibility($el, value),
-		"no_timeout",
-		"always_on"
+		5000,
+		"stop_after_timeout",
+		"toggleLeftSidebarOfflineChannels"
 	)
 }
 
@@ -239,8 +287,9 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 				return $buttons
 			},
 			() => {},
-			undefined,
-			"always_on"
+			5000,
+			"stop_after_timeout",
+			"toggleLeftSidebarAlwaysShowMore"
 		)
 	}
 }
@@ -251,7 +300,10 @@ export function toggleVideoGiftButtonSection(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $('div.theatre-social-panel:has(button[data-a-target="gift-button"])'),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleVideoGiftButtonSection"
 	)
 }
 
@@ -260,7 +312,10 @@ export function toggleVideoAdWrapper(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div.stream-display-ad__wrapper"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleVideoAdWrapper"
 	)
 }
 
@@ -270,7 +325,10 @@ export function toggleBelowVideoAdSection(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $('div[aria-label="chan-sda-upsell-third-view"]'),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleBelowVideoAdSection"
 	)
 }
 
@@ -280,7 +338,10 @@ export function toggleInfoViralClipSection(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div[style*='social-sharing-badge-promo-banner']").parents().eq(2),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleInfoViralClipSection"
 	)
 }
 
@@ -292,12 +353,17 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 		// SUBSCRIBE BUTTON
 		updateElement(
 			() =>
-				$(
-					"div[data-target='channel-header-right'] button[data-test-selector='subscribe-button__dropdown']"
-				)
+				// $("div[data-target='channel-header-right'] button[data-a-target='subscribe-button']")
+				// 	.parents()
+				// 	.eq(6),
+				$("div[data-target='channel-header-right'] button[data-a-target='top-nav-get-bits-button']")
 					.parents()
-					.eq(6),
-			($el) => toggleElementVisibility($el, value)
+					.eq(5)
+					.next(),
+			($el) => toggleElementVisibility($el, value),
+			5000,
+			"stop_on_found",
+			"toggleInfoMonetizationButtons-subscribe"
 		)
 		// BITS BUTTON
 		updateElement(
@@ -305,7 +371,10 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 				$("div[data-target='channel-header-right'] button[data-a-target='top-nav-get-bits-button']")
 					.parents()
 					.eq(5),
-			($el) => toggleElementVisibility($el, value)
+			($el) => toggleElementVisibility($el, value),
+			5000,
+			"stop_on_found",
+			"toggleInfoMonetizationButtons-bits"
 		)
 	} else {
 		// SUBSCRIBE BUTTON
@@ -316,7 +385,10 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 				)
 					.parents()
 					.eq(3),
-			($el) => toggleElementVisibility($el, value)
+			($el) => toggleElementVisibility($el, value),
+			5000,
+			"stop_on_found",
+			"toggleInfoMonetizationButtons-sub-logged-out"
 		)
 	}
 }
@@ -326,7 +398,10 @@ export function toggleInfoAboutSection(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("section#live-channel-about-panel").parent(),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleInfoAboutSection"
 	)
 }
 
@@ -335,11 +410,17 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
 		() => $("div.channel-panels").parent(),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleInfoChannelPanelSection"
 	)
 	updateElement(
 		() => $('div[style="transform: scale(2); opacity: 1; background-color: rgb(0, 0, 0);"]'),
-		($el) => $el.attr("style", "transform: scale(2);opacity: 1;background-color: inherit")
+		($el) => $el.attr("style", "transform: scale(2);opacity: 1;background-color: inherit"),
+		5000,
+		"stop_on_found",
+		"toggleInfoChannelPanelSection"
 	)
 }
 
@@ -347,6 +428,9 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 export function toggleStickyFooter(value: boolean) {
 	updateElement(
 		() => $("#twilight-sticky-footer-root"),
-		($el) => toggleElementVisibility($el, value)
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_on_found",
+		"toggleStickyFooter"
 	)
 }

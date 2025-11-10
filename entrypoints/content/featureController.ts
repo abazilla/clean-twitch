@@ -93,6 +93,7 @@ export async function applyAdvancedModeFeatures() {
 }
 
 export async function initializeStylesAndFeatures() {
+	await storageHandler.pullFromSync()
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
 
 	// First time setup

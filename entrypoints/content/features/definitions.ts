@@ -24,7 +24,7 @@ export enum TwitchURLs {
 export interface FeatureItem {
 	id: string
 	label: string
-	conflicts?: readonly string[]
+	// conflicts?: readonly string[]
 	children?: readonly FeatureItem[]
 	hideToggleButton?: boolean
 	renderSimpleOrAdvanced?: "always_show" | "always_hide" | "advanced_only"
@@ -176,7 +176,6 @@ export const features = [
 			{
 				id: "no_chat",
 				label: "Hide Chat",
-				conflicts: ["chat_only"],
 				ignoreToggle: true,
 				children: [],
 			},

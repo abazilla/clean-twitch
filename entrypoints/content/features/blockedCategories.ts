@@ -60,7 +60,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 					.closest("div.side-nav-card")
 					.parent()
 					.parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedCategory.enabled),
+			10000,
+			"stop_on_found",
+			"handleBlockedCategories"
 		)
 
 		// Directory section cards
@@ -71,7 +74,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.closest(`div[data-target="directory-page__card-container"]`)
 						.parent(),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 		}
 
@@ -82,7 +88,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.parents()
 						.eq(1),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 		}
 
@@ -93,7 +102,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${blockedCategory.category}"])`
 					).parent(),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 		}
 
@@ -113,7 +125,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 			updateElement(
 				() => $(`div > h2 > a[href*="${blockedCategory.category}"]`).parent().parent().parent(),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 
 			// Homepage cards
@@ -123,7 +138,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.closest(".shelf-card__impression-wrapper")
 						.parent(),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 
 			// Purple Homepage buttons
@@ -135,7 +153,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.parent()
 						.parent(),
 				($el) =>
-					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled)
+					toggleElementVisibility($el, enabled && hideFromDirectory && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 		}
 
@@ -144,7 +165,9 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 			() =>
 				$(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".search-result"),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-			"no_timeout"
+			"no_timeout",
+			"stop_on_found",
+			"handleBlockedCategories"
 		)
 
 		if (url.includes(TwitchURLs.Search)) {
@@ -155,12 +178,16 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						.closest(".search-result-card")
 						.parent(),
 				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-				"no_timeout"
+				"no_timeout",
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 			updateElement(
 				() => $(`a[href*="/directory/category/${blockedCategory.category}"]`).closest(".tw-col"),
 				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
-				"no_timeout"
+				"no_timeout",
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 
 			// Hide whole search results page
@@ -176,7 +203,10 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 								)
 						)
 						.closest(`div.search-results`),
-				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled)
+				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedCategory.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedCategories"
 			)
 		}
 	})

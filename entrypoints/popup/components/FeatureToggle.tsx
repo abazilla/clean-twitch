@@ -1,5 +1,4 @@
 import { FeatureItem } from "@/entrypoints/content/features/definitions"
-import { storageHandler } from "@/entrypoints/content/utils/storageHandler"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 import { ChildFeatureToggle } from "./ChildFeatureToggle"
@@ -16,12 +15,12 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 		const newValue = target.checked
 		console.log(`Toggling ${item.id} to:`, newValue)
 
-		if (item.conflicts) {
-			if (newValue && item.conflicts.length > 0) {
-				// Update conflicts first
-				await Promise.all(item.conflicts.map((conflictId) => storageHandler.set(conflictId, false)))
-			}
-		}
+		// if (item.conflicts) {
+		// 	if (newValue && item.conflicts.length > 0) {
+		// 		// Update conflicts first
+		// 		await Promise.all(item.conflicts.map((conflictId) => storageHandler.set(conflictId, false)))
+		// 	}
+		// }
 
 		// Then update this toggle
 		await setChecked(newValue)

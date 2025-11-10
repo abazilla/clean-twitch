@@ -48,7 +48,10 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 		// Hide from sidebar - recommended channels
 		updateElement(
 			() => $(`div.side-nav-card:has(a[href="/${blockedUser.username}"])`).parent().parent(),
-			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromSidebar && blockedUser.enabled),
+			10000,
+			"stop_on_found",
+			"handleBlockedChannels"
 		)
 
 		// Hide from homepage
@@ -58,7 +61,10 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
 						.closest("div.shelf-card__impression-wrapper")
 						.parent(),
-				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedChannels"
 			)
 		}
 
@@ -70,7 +76,9 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						.closest(`div[data-target="directory-game__card_container"]`)
 						.parent(),
 				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
-				"no_timeout"
+				"no_timeout",
+				"stop_on_found",
+				"handleBlockedChannels"
 			)
 
 			// Hide from directory
@@ -79,14 +87,20 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					$(`a[href="/${blockedUser.username}"][data-a-target="preview-card-image-link"]`)
 						.closest(`div[data-target="directory-game__card_container"]`)
 						.parent(),
-				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedChannels"
 			)
 		}
 
 		if (url.includes(TwitchURLs.DirectoryCategory)) {
 			updateElement(
 				() => $(`a[href="/${blockedUser.username}"]`).parents().eq(10),
-				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+				($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
+				10000,
+				"stop_on_found",
+				"handleBlockedChannels"
 			)
 		}
 
@@ -96,7 +110,10 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 				$(`a[href="/${blockedUser.username}"][data-test-selector="recommended-channel"]`).closest(
 					"div.recommended-channel"
 				),
-			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled)
+			($el) => toggleElementVisibility($el, enabled && hideFromDirectory && blockedUser.enabled),
+			10000,
+			"stop_on_found",
+			"handleBlockedChannels"
 		)
 
 		// Hide from search results (online)
@@ -106,7 +123,9 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					`div[data-a-target="search-results-live-channel"]:has(a[href="/${blockedUser.username}"])`
 				),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
-			"no_timeout"
+			"no_timeout",
+			"stop_on_found",
+			"handleBlockedChannels"
 		)
 
 		if (TwitchURLs.Search) {
@@ -117,7 +136,9 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						.parents()
 						.eq(1),
 				($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
-				"no_timeout"
+				"no_timeout",
+				"stop_on_found",
+				"handleBlockedChannels"
 			)
 		}
 
@@ -128,7 +149,9 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 					".search-result"
 				),
 			($el) => toggleElementVisibility($el, enabled && hideFromSearch && blockedUser.enabled),
-			"no_timeout"
+			"no_timeout",
+			"stop_on_found",
+			"handleBlockedChannels"
 		)
 	})
 }

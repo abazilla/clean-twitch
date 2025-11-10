@@ -1,10 +1,13 @@
 import { UNIVERSAL_CLASS_NAME } from "../features/domManipulators"
 
+type PersistenceSettingType = "always_on" | "stop_on_found" | "stop_after_timeout"
+
 function updateElementAsync(
 	getElement: () => JQuery<HTMLElement>,
 	action: (element: JQuery<HTMLElement>) => void,
 	timeoutMs: number | "no_timeout",
-	persistenceSetting: "always_on" | "stop_on_found"
+	persistenceSetting: PersistenceSettingType,
+	functionName?: string
 ): MutationObserver {
 	const observer = new MutationObserver((mutations, obs) => {
 		const $element = getElement()
@@ -12,20 +15,31 @@ function updateElementAsync(
 			action($element)
 			if (persistenceSetting === "stop_on_found") {
 				obs.disconnect()
-				console.log("disconnecting observer for", $element)
+				console.log(
+					functionName || "unknown function",
+					"found!, disconnecting obs",
+					persistenceSetting
+				)
 			}
 		}
 	})
 
-	observer.observe(document.body, {
+	observer.observe(document, {
 		childList: true,
 		subtree: true,
 	})
 
-	if (persistenceSetting === "stop_on_found") {
+	if (persistenceSetting === "stop_on_found" || persistenceSetting === "stop_after_timeout") {
 		if (timeoutMs !== "no_timeout" && timeoutMs > 0) {
 			setTimeout(() => {
-				// console.log("timing out observer")
+				console.log(
+					"disconnecting observer for",
+					functionName || "unknown function",
+					"after",
+					timeoutMs,
+					"ms",
+					persistenceSetting
+				)
 				observer.disconnect()
 			}, timeoutMs)
 		}
@@ -38,11 +52,12 @@ export const updateElement = (
 	getElement: () => JQuery<HTMLElement>,
 	action: (element: JQuery<HTMLElement>) => void,
 	timeoutMs: number | "no_timeout" = 10000,
-	persistenceSetting: "always_on" | "stop_on_found" = "stop_on_found"
+	persistenceSetting: PersistenceSettingType = "stop_on_found",
+	functionName?: string
 ) => {
 	const $element = getElement()
 	if ($element.length) action($element)
-	else updateElementAsync(getElement, action, timeoutMs, persistenceSetting)
+	else updateElementAsync(getElement, action, timeoutMs, persistenceSetting, functionName)
 }
 
 export function toggleElementVisibility($element: JQuery<HTMLElement>, toggled: boolean) {

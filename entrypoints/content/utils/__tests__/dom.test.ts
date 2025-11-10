@@ -44,7 +44,7 @@ describe("DOM utilities", () => {
 			const mockAction = vi.fn()
 			const mockGetElement = vi.fn().mockReturnValue(mockJQuery)
 
-			updateElement(mockGetElement, mockAction)
+			updateElement(mockGetElement, mockAction, 10000, "stop_on_found", "testFunction")
 
 			expect(mockGetElement).toHaveBeenCalled()
 			expect(mockAction).toHaveBeenCalledWith(mockJQuery)
@@ -56,7 +56,7 @@ describe("DOM utilities", () => {
 			const mockGetElement = vi.fn().mockReturnValue(emptyElement)
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction)
+			updateElement(mockGetElement, mockAction, 10000, "stop_on_found", "testFunction")
 
 			expect(mockGetElement).toHaveBeenCalled()
 			expect(mockAction).not.toHaveBeenCalled()
@@ -68,7 +68,7 @@ describe("DOM utilities", () => {
 			const mockGetElement = vi.fn().mockReturnValue(emptyElement)
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction, 5000, "stop_on_found")
+			updateElement(mockGetElement, mockAction, 5000, "stop_on_found", "testFunction")
 
 			// Verify MutationObserver was created
 			expect(MutationObserver).toHaveBeenCalled()
@@ -86,7 +86,7 @@ describe("DOM utilities", () => {
 			const mockGetElement = vi.fn().mockReturnValue(emptyElement)
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction, "no_timeout", "stop_on_found")
+			updateElement(mockGetElement, mockAction, "no_timeout", "stop_on_found", "testFunction")
 
 			// Verify MutationObserver was created
 			expect(MutationObserver).toHaveBeenCalled()
@@ -104,7 +104,7 @@ describe("DOM utilities", () => {
 			const mockGetElement = vi.fn().mockReturnValue(emptyElement)
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction)
+			updateElement(mockGetElement, mockAction, 10000, "stop_on_found", "testFunction")
 
 			// Should use default timeout of 10000ms and 'stop_on_found'
 			vi.advanceTimersByTime(10000)
@@ -122,7 +122,7 @@ describe("DOM utilities", () => {
 				.mockReturnValueOnce(foundElement) // In mutation callback
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction, 5000, "stop_on_found")
+			updateElement(mockGetElement, mockAction, 5000, "stop_on_found", "testFunction")
 
 			// Get the observer callback and simulate it
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]
@@ -143,7 +143,7 @@ describe("DOM utilities", () => {
 				.mockReturnValueOnce(foundElement) // In mutation callback
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction, 5000, "always_on")
+			updateElement(mockGetElement, mockAction, 5000, "always_on", "testFunction")
 
 			// Get the observer callback and simulate it
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]
@@ -160,7 +160,7 @@ describe("DOM utilities", () => {
 			const mockGetElement = vi.fn().mockReturnValue(emptyElement)
 			const mockAction = vi.fn()
 
-			updateElement(mockGetElement, mockAction)
+			updateElement(mockGetElement, mockAction, 10000, "stop_on_found", "testFunction")
 
 			// Get the observer callback and simulate it when element is still not found
 			const observerCallback = (MutationObserver as any).mock.calls[0][0]

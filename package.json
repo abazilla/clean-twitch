@@ -11,6 +11,7 @@
 		"build:firefox": "wxt build -b firefox",
 		"zip": "wxt zip",
 		"zip:firefox": "wxt zip -b firefox",
+		"zip:repo": "mkdir -p .output && zip -r \".output/clean-twitch-repo-$npm_package_version.zip\" . -x '.git/*' 'node_modules/*' '.output/*' '.wxt/*' '.gitignore' '.prettierrc'",
 		"compile": "tsc --noEmit",
 		"test": "vitest",
 		"test:ui": "vitest --ui",
