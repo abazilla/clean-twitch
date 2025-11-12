@@ -21,7 +21,7 @@ export default defineConfig({
 		// 	default_popup: "/entrypoints/popup/index.html",
 		// },
 		host_permissions: ["https://*.twitch.tv/*"],
-		permissions: ["tabs", "storage"],
+		permissions: ["storage"],
 		browser_specific_settings: {
 			gecko: {
 				id: "{8f2e5b0a-9d22-4a63-a9a0-b924e19fb1e2}",

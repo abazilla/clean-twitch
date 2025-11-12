@@ -15,7 +15,22 @@ function isLoggedIn(): boolean {
 export function toggleTestMode(toggled: boolean) {
 	const style = document.getElementById(UNIVERSAL_STYLE_ID)
 	if (style) {
-		toggled ? (style.textContent = TEST_MODE_CSS) : (style.textContent = NORMAL_CSS)
+		const currentContent = style.textContent || ""
+		if (toggled) {
+			// Replace display: none !important; with test mode styling
+			const testContent = currentContent.replace(
+				/display:\s*none\s*!important;/g,
+				"background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important;"
+			)
+			style.textContent = testContent
+		} else {
+			// Replace test mode styling back to display: none
+			const normalContent = currentContent.replace(
+				/background-color:\s*red\s*!important;\s*border:\s*1px\s*solid\s*yellow\s*!important;\s*opacity:\s*0\.5\s*!important;/g,
+				"display: none !important;"
+			)
+			style.textContent = normalContent
+		}
 	}
 }
 
