@@ -41,6 +41,12 @@ export interface FeatureItem {
 // Feature definitions without toggle functions - lightweight for popup imports
 export const features = [
 	{
+		id: "extension_enabled",
+		label: "Extension Enabled",
+		renderSimpleOrAdvanced: "always_hide",
+		ignoreToggle: true,
+	},
+	{
 		id: "test_mode",
 		label: "Test Mode",
 		renderSimpleOrAdvanced: "always_show",

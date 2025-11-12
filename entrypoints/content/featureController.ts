@@ -7,7 +7,15 @@ import {
 	toggleableFeatureIDs,
 } from "./features/definitions"
 import {
+	DISPLAY_DISABLED_STYLES,
+	DISPLAY_DISABLED_TEST,
+	DISPLAY_NONE_STYLES,
+	GREYSCALE_CLASS_NAME,
+	GREYSCALE_CSS,
+	GREYSCALE_DISABLED,
+	GREYSCALE_FILTER_ON,
 	NORMAL_CSS,
+	TEST_MODE_STYLES,
 	toggleGreyscale,
 	toggleTestMode,
 	UNIVERSAL_STYLE_ID,
@@ -37,6 +45,9 @@ export async function handleFeatureOnToggle(id: FeatureID, value: any) {
 		case "greyscale_all":
 			await toggleGreyscale(value)
 			return
+		case "extension_enabled":
+			await toggleExtensionEnabled(value as boolean)
+			return
 	}
 
 	// Find the toggle function in the map and call it
@@ -49,6 +60,31 @@ export async function handleFeatureOnToggle(id: FeatureID, value: any) {
 		}
 	} else {
 		console.warn(`No toggle function found for feature: ${id}`)
+	}
+}
+
+// Toggle the entire extension on/off
+export async function toggleExtensionEnabled(enabled: boolean) {
+	const style = document.getElementById(UNIVERSAL_STYLE_ID)
+	if (style) {
+		const currentContent = style.textContent || ""
+		if (enabled) {
+			// Replace invalid display values back to "display: none !important;"
+			let enabledContent = currentContent.replaceAll(DISPLAY_DISABLED_STYLES, DISPLAY_NONE_STYLES)
+			// Also replace test mode disabled back to test mode styles
+			enabledContent = enabledContent.replaceAll(DISPLAY_DISABLED_TEST, TEST_MODE_STYLES)
+			// Also replace greyscale disabled back to greyscale active
+			enabledContent = enabledContent.replaceAll(GREYSCALE_DISABLED, GREYSCALE_FILTER_ON)
+			style.textContent = enabledContent
+		} else {
+			// Replace "display: none !important;" with invalid value to disable hiding
+			let disabledContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, DISPLAY_DISABLED_STYLES)
+			// Also replace test mode styling with disabled test value
+			disabledContent = disabledContent.replaceAll(TEST_MODE_STYLES, DISPLAY_DISABLED_TEST)
+			// Also replace greyscale filter with disabled greyscale
+			disabledContent = disabledContent.replaceAll(GREYSCALE_FILTER_ON, GREYSCALE_DISABLED)
+			style.textContent = disabledContent
+		}
 	}
 }
 
@@ -93,7 +129,16 @@ export async function applyAdvancedModeFeatures() {
 }
 
 export async function initializeStylesAndFeatures() {
-	await storageHandler.pullFromSync()
+	// Sync from sync storage
+	storageHandler.pullFromSync()
+
+	// create styles
+	const style = document.createElement("style")
+	style.id = UNIVERSAL_STYLE_ID
+	style.textContent = NORMAL_CSS + GREYSCALE_CSS
+	document.head.appendChild(style)
+
+	// Apply correct mode on load
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
 
 	// First time setup
@@ -101,14 +146,17 @@ export async function initializeStylesAndFeatures() {
 		await storageHandler.set("is_simple_mode", true)
 		isSimpleMode = true
 	}
-
-	// Apply correct mode on load
 	await handleModeSwitch(isSimpleMode)
 
-	const style = document.createElement("style")
-	style.id = UNIVERSAL_STYLE_ID
-	style.textContent = NORMAL_CSS
-	document.head.appendChild(style)
+	// Handle greyscale setting
+	document.documentElement.classList.add(GREYSCALE_CLASS_NAME)
+	const greyscaleMode = await storageHandler.get<boolean>("greyscale_all")
+	toggleGreyscale(greyscaleMode || false)
+
+	// Handle test mode setting
+	document.documentElement.classList.add(GREYSCALE_CLASS_NAME)
+	const testMode = await storageHandler.get<boolean>("test_mode")
+	toggleTestMode(testMode || false)
 
 	await initializeBlockedChannels(style)
 	await initializeBlockedCategories(style)

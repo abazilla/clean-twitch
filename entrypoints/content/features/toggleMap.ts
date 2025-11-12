@@ -44,6 +44,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_topbar: () => {},
 	hide_video_section: () => {},
 	no_chat_section: () => {},
+	extension_enabled: () => {},
 	hide_topbar_following_button: (value: boolean) => hideFollowingButton(value),
 	hide_topbar_browse_button: (value: boolean) => hideBrowseButton(value),
 	hide_topbar_dots_button: (value: boolean) => hideDotsButton(value),

@@ -3,9 +3,19 @@ import { toggleElementVisibility, updateElement } from "../utils/dom"
 import { TwitchURLs } from "./definitions"
 
 export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
+export const GREYSCALE_CLASS_NAME = "clean-twitch-greyscale"
 export const UNIVERSAL_STYLE_ID = "clean-twitch-id"
 export const TEST_MODE_CSS = `.${UNIVERSAL_CLASS_NAME} { background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important; } `
-export const NORMAL_CSS = `.${UNIVERSAL_CLASS_NAME} { display: none !important; } `
+export const TEST_MODE_STYLES =
+	"background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important;"
+export const DISPLAY_NONE_STYLES = "display: none !important;"
+export const DISPLAY_DISABLED_STYLES = "display: clean-twitch-disabled !important;"
+export const DISPLAY_DISABLED_TEST = "display: clean-twitch-test-disabled !important;"
+export const GREYSCALE_FILTER_OFF = "filter: grayscale(0) !important;"
+export const GREYSCALE_FILTER_ON = "filter: grayscale(1) !important;"
+export const GREYSCALE_DISABLED = "filter: clean-twitch-greyscale-disabled !important;"
+export const GREYSCALE_CSS = `.${GREYSCALE_CLASS_NAME} { ${GREYSCALE_FILTER_OFF} } `
+export const NORMAL_CSS = `.${UNIVERSAL_CLASS_NAME} { ${DISPLAY_NONE_STYLES} } `
 
 // Can this somehow just be run on page load? i believe the whole website automatically refreshes when logging in/out
 function isLoggedIn(): boolean {
@@ -18,26 +28,29 @@ export function toggleTestMode(toggled: boolean) {
 		const currentContent = style.textContent || ""
 		if (toggled) {
 			// Replace display: none !important; with test mode styling
-			const testContent = currentContent.replace(
-				/display:\s*none\s*!important;/g,
-				"background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important;"
-			)
+			let testContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, TEST_MODE_STYLES)
 			style.textContent = testContent
 		} else {
 			// Replace test mode styling back to display: none
-			const normalContent = currentContent.replace(
-				/background-color:\s*red\s*!important;\s*border:\s*1px\s*solid\s*yellow\s*!important;\s*opacity:\s*0\.5\s*!important;/g,
-				"display: none !important;"
-			)
+			const normalContent = currentContent.replaceAll(TEST_MODE_STYLES, DISPLAY_NONE_STYLES)
 			style.textContent = normalContent
 		}
 	}
 }
 
 export function toggleGreyscale(toggled: boolean) {
-	toggled
-		? $("html").attr("style", "filter: grayscale(1) !important;")
-		: $("html").removeAttr("style")
+	const style = document.getElementById(UNIVERSAL_STYLE_ID)
+	if (style) {
+		const currentContent = style.textContent || ""
+		if (toggled) {
+			let testContent = currentContent.replaceAll(GREYSCALE_FILTER_OFF, GREYSCALE_FILTER_ON)
+			style.textContent = testContent
+		} else {
+			// Remove greyscale CSS
+			let testContent = currentContent.replaceAll(GREYSCALE_FILTER_ON, GREYSCALE_FILTER_OFF)
+			style.textContent = testContent
+		}
+	}
 }
 
 // NOTE: Elements that use updateElement are elements that load after a delay, or load on certain pages
