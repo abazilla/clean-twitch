@@ -1,6 +1,9 @@
 import tailwindcss from "@tailwindcss/vite"
 import checker from "vite-plugin-checker"
 import { defineConfig, type WxtViteConfig } from "wxt"
+import { readFileSync } from "fs"
+
+const pkg = JSON.parse(readFileSync("package.json", "utf-8"))
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -15,6 +18,9 @@ export default defineConfig({
 					overlay: { initialIsOpen: false },
 				}),
 			],
+			define: {
+				__APP_VERSION__: JSON.stringify(pkg.version),
+			},
 		}) as WxtViteConfig,
 	manifest: {
 		// action: {

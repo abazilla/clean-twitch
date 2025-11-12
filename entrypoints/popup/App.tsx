@@ -1,9 +1,11 @@
-import { JSX } from "react"
+import { JSX, useEffect, useState } from "react"
 import { FeatureItem, features } from "../content/features/definitions"
 import AdvancedMode from "./components/AdvancedMode"
 import { FeatureToggle } from "./components/FeatureToggle"
 import SimpleMode from "./components/SimpleMode"
 import { useStorageState } from "./storage"
+
+declare const __APP_VERSION__: string
 
 const App = (): JSX.Element => {
 	const [isAdvancedMode, setIsAdvancedMode] = useState(false)
@@ -24,7 +26,9 @@ const App = (): JSX.Element => {
 	return (
 		<div className="w-80 bg-purple-600 p-4 text-white">
 			<div className="mb-4 flex items-center justify-between">
-				<h1 className="m-0 p-0 text-lg">Clean Twitch</h1>
+				<h1 className="m-0 p-0 text-lg">
+					Clean Twitch <span className="text-sm opacity-75">v{__APP_VERSION__}</span>
+				</h1>
 				<button
 					onClick={handleModeToggle}
 					className="rounded bg-purple-500 px-3 py-1 text-sm hover:bg-purple-400"
