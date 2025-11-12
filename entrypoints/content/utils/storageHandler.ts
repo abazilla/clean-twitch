@@ -1,5 +1,47 @@
 import { browser } from "wxt/browser"
 
+// Note: does not run if popup is closed before timeout
+// Batched sync storage writer - accumulates all pending changes and writes them together
+let syncTimeout: NodeJS.Timeout | null = null
+const pendingSyncChanges: Record<string, any> = {}
+
+function scheduleBatchedSync(key: string, value: any) {
+	const hadPendingChanges = Object.keys(pendingSyncChanges).length > 0
+
+	// Add to pending changes
+	pendingSyncChanges[key] = value
+	console.log(
+		`Scheduling batched sync for ${key} (${Object.keys(pendingSyncChanges).length} keys pending${hadPendingChanges ? ", extending timeout" : ""})`
+	)
+	console.log(`Value being synced for ${key}:`, value)
+
+	// Clear existing timeout
+	if (syncTimeout) {
+		console.log("Clearing existing sync timeout")
+		clearTimeout(syncTimeout)
+	}
+
+	// Schedule batched write
+	console.log("Setting new sync timeout for 3 seconds")
+	syncTimeout = setTimeout(async () => {
+		console.log("TIMEOUT FIRED - starting batched sync")
+		try {
+			const keysToSync = Object.keys(pendingSyncChanges)
+			const changesToSync = { ...pendingSyncChanges }
+
+			// Clear pending changes
+			keysToSync.forEach((key) => delete pendingSyncChanges[key])
+			syncTimeout = null
+
+			console.log(`Running batched sync for ${keysToSync.length} keys: ${keysToSync.join(", ")}`)
+			await browser.storage.sync.set(changesToSync)
+			console.log(`Successfully synced ${keysToSync.length} keys to sync storage`)
+		} catch (error) {
+			console.error("Error in batched sync to sync storage:", error)
+		}
+	}, 300)
+}
+
 /**
  * Hybrid storage system: writes to local for performance, syncs to sync storage periodically
  */
@@ -34,8 +76,10 @@ export const storageHandler = {
 
 	async set<T>(key: string, value: T): Promise<void> {
 		try {
-			// Write to local storage - background script will handle sync
+			// Write to local storage immediately for fast access
 			await browser.storage.local.set({ [key]: value })
+			// Batched write to sync storage for cross-device sync
+			scheduleBatchedSync(key, value)
 		} catch (error) {
 			console.error(`Error setting ${key} in storage:`, error)
 			throw error
@@ -66,7 +110,7 @@ export const storageHandler = {
 		}
 		return {}
 	},
-	async pullFromSync<T>(): Promise<void> {
+	async pullFromSync(): Promise<void> {
 		// gets sync storage keys.
 		console.log("Pulling from sync storage")
 		const syncResult = await browser.storage.sync.get()
@@ -76,7 +120,6 @@ export const storageHandler = {
 		// check if they're different from local
 		// then update local storage keys
 	},
-
 
 	onChanged: {
 		addListener(callback: (changes: Record<string, any>, areaName: string) => void) {
