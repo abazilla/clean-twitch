@@ -9,12 +9,12 @@
  * - Remove accents
  * - Convert & to "and"
  */
-export function parseCategory(input: string): string {
+export function parseCategory(input: string): [string, string] {
 	// Early return for empty input
-	if (!input.trim()) return ""
+	if (!input.trim()) return ["", ""]
 
 	// First, normalize the string to decompose accented characters
-	let result = input
+	let normalized = input
 		.normalize("NFD")
 		// Remove accents/diacritics
 		.replace(/[\u0300-\u036f]/g, "")
@@ -29,7 +29,7 @@ export function parseCategory(input: string): string {
 
 	// Handle acronyms vs regular periods
 	// Split into words
-	const words = result.split(" ")
+	const words = normalized.split(" ")
 	const processedWords = words.map((word) => {
 		// Check if word is likely an acronym (all caps with periods)
 		const isAcronym = /^([A-Z]\.)+[A-Z]?$/i.test(word)
@@ -42,16 +42,15 @@ export function parseCategory(input: string): string {
 	})
 
 	// Join words back together and replace spaces with hyphens
-	result = processedWords.join(" ").replace(/\s+/g, "-")
+	const urlFriendly = processedWords
+		.join(" ")
+		// Remove any remaining non-alphanumeric characters except hyphens
+		.replace(/[^a-z0-9- ]/g, "")
+		// Remove multiple consecutive hyphens
+		.replace(/-+/g, "-")
+		// Remove leading and trailing hyphens
+		.replace(/^-+|-+$/g, "")
+	const urlUnfriendly = urlFriendly.replace(/\s+/g, "-")
 
-	// Remove any remaining non-alphanumeric characters except hyphens
-	result = result.replace(/[^a-z0-9-]/g, "")
-
-	// Remove multiple consecutive hyphens
-	result = result.replace(/-+/g, "-")
-
-	// Remove leading and trailing hyphens
-	result = result.replace(/^-+|-+$/g, "")
-
-	return result
+	return [urlFriendly, urlUnfriendly]
 }

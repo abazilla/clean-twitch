@@ -17,8 +17,7 @@ export const CategoryBlocker = (): JSX.Element => {
 	)
 
 	const handleAddCategory = () => {
-		const category = parseCategory(categoryInput)
-		const name = categoryInput.trim()
+		const [name, category] = parseCategory(categoryInput)
 		setCategoryInput("")
 		if (blockedCategories.categories.map((c) => c.category).includes(category)) return
 		if (!category) return
