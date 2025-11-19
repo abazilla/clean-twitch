@@ -3,6 +3,7 @@ import {
 	BLOCKED_CATEGORIES_STYLE_ID,
 	BLOCKED_CHANNELS_STYLE_ID,
 	DISPLAY_NONE_STYLES,
+	GRAYSCALE_DISABLED,
 	GRAYSCALE_FILTER_OFF,
 	GRAYSCALE_FILTER_ON,
 	TEST_MODE_STYLES,
@@ -34,12 +35,12 @@ export function toggleTestMode(toggled: boolean) {
 			if (toggled) {
 				// Replace display: none !important; with test mode styling
 				let testContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, TEST_MODE_STYLES)
-				testContent = testContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_FILTER_OFF)
+				testContent = testContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_DISABLED)
 				style.textContent = testContent
 			} else {
 				// Replace test mode styling back to display: none
 				let normalContent = currentContent.replaceAll(TEST_MODE_STYLES, DISPLAY_NONE_STYLES)
-				normalContent = normalContent.replaceAll(GRAYSCALE_FILTER_OFF, GRAYSCALE_FILTER_ON)
+				normalContent = normalContent.replaceAll(GRAYSCALE_DISABLED, GRAYSCALE_FILTER_ON)
 				style.textContent = normalContent
 			}
 		}
@@ -149,6 +150,7 @@ export function toggleLeftSidebar(value: boolean) {
 
 export function toggleSideNavGrayscale(value: boolean) {
 	toggleCSSGrayscale('div[data-a-target="side-nav-bar"]', value)
+	toggleCSSGrayscale('div[data-a-target="side-nav-bar-collapsed"]', value)
 }
 
 export function toggleLeftSidebarStories(value: boolean) {
@@ -332,6 +334,7 @@ export function toggleThumbnailViewership(value: boolean) {
 
 // VIDEO PLAYER
 export function toggleVideoGrayscale(value: boolean) {
+	toggleCSSGrayscale("div.root-scrollable__wrapper", value)
 	toggleCSSGrayscale('div[data-a-target="video-player"]', value)
 }
 

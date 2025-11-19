@@ -248,7 +248,7 @@ export const features = [
 		children: [
 			{
 				id: "toggle_video_grayscale",
-				label: "Grayscale Video Player",
+				label: "Grayscale Video Player/Browse Section",
 				simpleModeActive: ["focus"],
 				children: [],
 			},

@@ -29,9 +29,7 @@ export function initializeStyleElement() {
 	globalStyleElementCSS = document.createElement("style")
 	globalStyleElementCSS.id = UNIVERSAL_STYLE_ID_CSS
 	globalStyleElementCSS.textContent =
-		NORMAL_CSS +
-		GRAYSCALE_CSS +
-		"\n/* DISPLAY_NONE_STYLES_START */\n/* DISPLAY_NONE_STYLES_END */" +
+		"/* DISPLAY_NONE_STYLES_START */\n/* DISPLAY_NONE_STYLES_END */" +
 		"\n/* GRAYSCALE_STYLES_START */\n/* GRAYSCALE_STYLES_END */"
 	document.head.appendChild(globalStyleElementCSS)
 }
