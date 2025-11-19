@@ -1,5 +1,5 @@
 // This file contains all feature definitions without toggle functions
-export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist"
+export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist" | "bare"
 
 export enum TwitchURLs {
 	Home = "/",
@@ -88,7 +88,7 @@ export const features = [
 			{
 				id: "hide_topbar_following_button",
 				label: 'Hide "Following" Button',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_topbar_browse_button",
@@ -97,37 +97,37 @@ export const features = [
 			{
 				id: "hide_topbar_dots_button",
 				label: 'Hide "Dots" Button',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_prime_gaming_button",
 				label: 'Hide "Prime Gaming" Button',
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_notifications_button",
 				label: 'Hide "Notifications" Button',
 
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_whispers_button",
 				label: 'Hide "Whispers" Button',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_top_bits_button",
 				label: 'Hide "Bits" Button',
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_top_turbo_button",
 				label: 'Hide "Turbo" Button',
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 		],
@@ -141,36 +141,41 @@ export const features = [
 			{
 				id: "hide_left_sidebar_stories",
 				label: 'Hide "Stories"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_left_sidebar_followed_channels",
 				label: 'Hide "Followed Channels"',
 			},
 			{
+				id: "hide_left_sidebar_viewership",
+				label: "Hide Viewership Numbers",
+				simpleModeActive: ["bare"],
+			},
+			{
 				id: "hide_left_sidebar_offline_channels",
 				label: 'Hide "Offline Channels"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_left_sidebar_live_channels",
 				label: 'Hide "Live Channels"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_left_sidebar_viewers_also_watch",
 				label: 'Hide "Viewers Also Watch"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "hide_left_sidebar_recommended_categories",
 				label: 'Hide "Recommended Categories"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 			{
 				id: "left_sidebar_always_show_more",
 				label: 'Automatically "Show More"',
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 			},
 		],
 	},
@@ -188,23 +193,36 @@ export const features = [
 			{
 				id: "hide_chat_monetization",
 				label: "Hide Chat Monetization",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_top_gifters",
 				label: "Hide Top Gifters",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 			},
 			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 			},
 			{
 				id: "hide_chat_badges",
 				label: "Hide Chat Badges",
-				simpleModeActive: [],
+				simpleModeActive: ["bare"],
+			},
+		],
+	},
+	{
+		id: "other_section",
+		label: "Other",
+		hideToggleButton: true,
+		children: [
+			{
+				id: "hide_thumbnail_viewership",
+				label: "Hide Thumbnail Viewership Numbers",
+				simpleModeActive: ["bare"],
+				children: [],
 			},
 		],
 	},
@@ -216,19 +234,25 @@ export const features = [
 			{
 				id: "featured_stream_play_by_default",
 				label: "Prevent Homepage Stream from Auto-Playing",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				children: [],
+			},
+			{
+				id: "hide_video_viewership",
+				label: "Hide Video Viewership Numbers",
+				simpleModeActive: ["bare"],
 				children: [],
 			},
 			{
 				id: "hide_video_gift_section",
 				label: 'Hide Theatre Mode "Gift"/"Subscribe" Buttons',
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_video_ad_wrapper",
 				label: "Hide Ad Wrapper around video player",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 		],
@@ -241,31 +265,31 @@ export const features = [
 			{
 				id: "hide_info_monetization_buttons",
 				label: "Hide Monetization Buttons",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_info_viral_clip_section",
 				label: "Hide Viral Clip Section",
-				simpleModeActive: ["no_monetization", "minimalist"],
+				simpleModeActive: ["no_monetization", "minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_info_about_section",
 				label: "Hide About Section",
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_info_channel_panel_section",
 				label: "Hide Channel Panel Section",
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 				children: [],
 			},
 			{
 				id: "hide_sticky_footer",
 				label: "Remove Purple Footer",
-				simpleModeActive: ["minimalist"],
+				simpleModeActive: ["minimalist", "bare"],
 				children: [],
 			},
 		],

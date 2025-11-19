@@ -27,10 +27,13 @@ import {
 	toggleLeftSidebarStories,
 	toggleLeftSidebarStoriesXS,
 	toggleLeftSidebarViewersAlsoWatch,
+	toggleLeftSidebarViewership,
 	toggleStickyFooter,
+	toggleThumbnailViewership,
 	toggleTopGifters,
 	toggleVideoAdWrapper,
 	toggleVideoGiftButtonSection,
+	toggleVideoViewership,
 } from "./domManipulators"
 
 export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
@@ -46,6 +49,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_video_section: () => {},
 	no_chat_section: () => {},
 	extension_enabled: () => {},
+	other_section: () => {},
 	hide_chat_badges: (value: boolean) => toggleChatBadges(value),
 	hide_topbar_following_button: (value: boolean) => hideFollowingButton(value),
 	hide_topbar_browse_button: (value: boolean) => hideBrowseButton(value),
@@ -60,6 +64,9 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 		toggleLeftSidebarStories(value)
 		toggleLeftSidebarStoriesXS(value)
 	},
+	hide_thumbnail_viewership: (value: boolean) => toggleThumbnailViewership(value),
+	hide_video_viewership: (value: boolean) => toggleVideoViewership(value),
+	hide_left_sidebar_viewership: (value: boolean) => toggleLeftSidebarViewership(value),
 	hide_left_sidebar_followed_channels: (value: boolean) => toggleLeftSidebarFollowedChannels(value),
 	hide_left_sidebar_offline_channels: (value: boolean) => toggleLeftSidebarOfflineChannels(value),
 	hide_left_sidebar_live_channels: (value: boolean) => toggleLeftSidebarLiveChannels(value),

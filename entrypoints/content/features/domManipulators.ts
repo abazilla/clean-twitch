@@ -135,7 +135,6 @@ export function toggleLeftSidebar(value: boolean) {
 	}
 }
 
-// TODO: check which can just use jquery toggle to hide
 export function toggleLeftSidebarStories(value: boolean) {
 	toggleCSSSelector("div.storiesLeftNavSection--csO9S", value)
 }
@@ -148,6 +147,10 @@ export function toggleLeftSidebarStoriesXS(value: boolean) {
 		"stop_on_found",
 		"toggleLeftSidebarStoriesXS"
 	)
+}
+
+export function toggleLeftSidebarViewership(value: boolean) {
+	toggleCSSSelector("div[data-a-target='side-nav-live-status']", value)
 }
 
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
@@ -172,6 +175,46 @@ export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 		"stop_on_found",
 		"toggleLeftSidebarRecommendedCategories"
 	)
+}
+
+export function toggleLeftSidebarOfflineChannels(value: boolean) {
+	updateElement(
+		() =>
+			$('a[data-test-selector="followed-channel"]:has(span:contains("Offline"))').parent().parent(),
+		($el) => toggleElementVisibility($el, value),
+		5000,
+		"stop_after_timeout",
+		"toggleLeftSidebarOfflineChannels"
+	)
+}
+
+export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
+	if (!value) {
+		toggleCSSSelector('[data-a-target="side-nav-show-more-button"]', value)
+		toggleCSSSelector('[data-a-target="side-nav-show-less-button"]', value)
+	} else {
+		updateElement(
+			() => {
+				const $buttons = $('[data-a-target="side-nav-show-more-button"]')
+				if ($buttons.length > 0) {
+					$buttons.each(function () {
+						$(this).trigger("click")
+					})
+					setTimeout(() => {
+						toggleLeftSidebarAlwaysShowMore(value)
+						toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+					}, 100)
+				} else {
+					toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+				}
+				return $buttons
+			},
+			() => {},
+			5000,
+			"stop_after_timeout",
+			"toggleLeftSidebarAlwaysShowMore"
+		)
+	}
 }
 
 // RIGHT SIDEBAR
@@ -261,44 +304,10 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	}
 }
 
-export function toggleLeftSidebarOfflineChannels(value: boolean) {
-	updateElement(
-		() =>
-			$('a[data-test-selector="followed-channel"]:has(span:contains("Offline"))').parent().parent(),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_after_timeout",
-		"toggleLeftSidebarOfflineChannels"
-	)
-}
-
-export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
-	if (!value) {
-		toggleCSSSelector('[data-a-target="side-nav-show-more-button"]', value)
-		toggleCSSSelector('[data-a-target="side-nav-show-less-button"]', value)
-	} else {
-		updateElement(
-			() => {
-				const $buttons = $('[data-a-target="side-nav-show-more-button"]')
-				if ($buttons.length > 0) {
-					$buttons.each(function () {
-						$(this).trigger("click")
-					})
-					setTimeout(() => {
-						toggleLeftSidebarAlwaysShowMore(value)
-						toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
-					}, 100)
-				} else {
-					toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
-				}
-				return $buttons
-			},
-			() => {},
-			5000,
-			"stop_after_timeout",
-			"toggleLeftSidebarAlwaysShowMore"
-		)
-	}
+// THUMBNAILS
+export function toggleThumbnailViewership(value: boolean) {
+	toggleCSSSelector("p.kdDAY", value)
+	toggleCSSSelector("div.tw-media-card-stat", value)
 }
 
 // VIDEO PLAYER
@@ -312,6 +321,11 @@ export function toggleVideoAdWrapper(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	toggleCSSSelector("div.stream-display-ad__wrapper", value)
+}
+
+export function toggleVideoViewership(value: boolean) {
+	toggleCSSSelector("div.cbxBks", value)
+	toggleCSSSelector('strong[data-a-target="animated-channel-viewers-count"]', value)
 }
 
 // TODO: only hides - resize still occurs

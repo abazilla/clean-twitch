@@ -15,6 +15,10 @@ const presetLabels = {
 	},
 	minimalist: {
 		label: "Minimalist",
+		description: "Minimal distractions",
+	},
+	bare: {
+		label: "Bare bones",
 		description: "No distractions",
 	},
 }
