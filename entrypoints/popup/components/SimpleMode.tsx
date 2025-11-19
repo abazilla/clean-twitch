@@ -17,9 +17,9 @@ const presetLabels = {
 		label: "Minimalist",
 		description: "Minimal distractions",
 	},
-	bare: {
-		label: "Bare bones",
-		description: "No distractions",
+	focus: {
+		label: "Focus mode",
+		description: "Background noise only",
 	},
 }
 

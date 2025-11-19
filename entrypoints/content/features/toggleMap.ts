@@ -11,12 +11,14 @@ import {
 	hideWhispersButton,
 	toggleBelowVideoAdSection,
 	toggleChatBadges,
+	toggleChatGrayscale,
 	toggleChatMonetizationButtons,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
 	toggleInfoAboutSection,
 	toggleInfoChannelPanelSection,
 	toggleInfoMonetizationButtons,
+	toggleInfoSectionGrayscale,
 	toggleInfoViralClipSection,
 	toggleLeftSidebar,
 	toggleLeftSidebarAlwaysShowMore,
@@ -28,18 +30,21 @@ import {
 	toggleLeftSidebarStoriesXS,
 	toggleLeftSidebarViewersAlsoWatch,
 	toggleLeftSidebarViewership,
+	toggleSideNavGrayscale,
 	toggleStickyFooter,
 	toggleThumbnailViewership,
+	toggleTopBarGrayscale,
 	toggleTopGifters,
 	toggleVideoAdWrapper,
 	toggleVideoGiftButtonSection,
+	toggleVideoGrayscale,
 	toggleVideoViewership,
 } from "./domManipulators"
 
 export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	no_chat: () => {},
 	test_mode: () => {},
-	greyscale_all: () => {},
+	grayscale_all: () => {},
 	blocked_categories: () => {},
 	blocked_channels: () => {},
 	simple_mode_preset: () => {},
@@ -51,6 +56,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	extension_enabled: () => {},
 	other_section: () => {},
 	hide_chat_badges: (value: boolean) => toggleChatBadges(value),
+	toggle_topbar_grayscale: (value: boolean) => toggleTopBarGrayscale(value),
 	hide_topbar_following_button: (value: boolean) => hideFollowingButton(value),
 	hide_topbar_browse_button: (value: boolean) => hideBrowseButton(value),
 	hide_topbar_dots_button: (value: boolean) => hideDotsButton(value),
@@ -60,6 +66,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_top_bits_button: (value: boolean) => hideTopBitsButton(value),
 	hide_top_turbo_button: (value: boolean) => hideTopTurboButton(value),
 	hide_left_sidebar: (value: boolean) => toggleLeftSidebar(value),
+	toggle_sidenav_grayscale: (value: boolean) => toggleSideNavGrayscale(value),
 	hide_left_sidebar_stories: (value: boolean) => {
 		toggleLeftSidebarStories(value)
 		toggleLeftSidebarStoriesXS(value)
@@ -78,12 +85,15 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_chat_monetization: (value: boolean) => toggleChatMonetizationButtons(value),
 	hide_top_gifters: (value: boolean) => toggleTopGifters(value),
 	hide_chat_highlights: (value: boolean) => toggleCommunityHighlightStack(value),
+	toggle_chat_grayscale: (value: boolean) => toggleChatGrayscale(value),
 	featured_stream_play_by_default: (value: boolean) => toggleFeaturedStreamPlayByDefault(value),
+	toggle_video_grayscale: (value: boolean) => toggleVideoGrayscale(value),
 	hide_video_gift_section: (value: boolean) => toggleVideoGiftButtonSection(value),
 	hide_video_ad_wrapper: (value: boolean) => {
 		toggleVideoAdWrapper(value)
 		toggleBelowVideoAdSection(value)
 	},
+	toggle_info_grayscale: (value: boolean) => toggleInfoSectionGrayscale(value),
 	hide_info_monetization_buttons: (value: boolean) => toggleInfoMonetizationButtons(value),
 	hide_info_viral_clip_section: (value: boolean) => toggleInfoViralClipSection(value),
 	hide_info_about_section: (value: boolean) => toggleInfoAboutSection(value),

@@ -1,5 +1,5 @@
 // This file contains all feature definitions without toggle functions
-export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist" | "bare"
+export type SimplePresetMode = "show_all" | "no_monetization" | "minimalist" | "focus"
 
 export enum TwitchURLs {
 	Home = "/",
@@ -52,7 +52,7 @@ export const features = [
 		renderSimpleOrAdvanced: "always_show",
 	},
 	{
-		id: "greyscale_all",
+		id: "grayscale_all",
 		label: "Grayscale Site",
 		renderSimpleOrAdvanced: "always_show",
 	},
@@ -86,9 +86,14 @@ export const features = [
 		hideToggleButton: true,
 		children: [
 			{
+				id: "toggle_topbar_grayscale",
+				label: "Toggle Top Bar Grayscale",
+				simpleModeActive: ["focus"],
+			},
+			{
 				id: "hide_topbar_following_button",
 				label: 'Hide "Following" Button',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_topbar_browse_button",
@@ -97,37 +102,37 @@ export const features = [
 			{
 				id: "hide_topbar_dots_button",
 				label: 'Hide "Dots" Button',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_prime_gaming_button",
 				label: 'Hide "Prime Gaming" Button',
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_notifications_button",
 				label: 'Hide "Notifications" Button',
 
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_whispers_button",
 				label: 'Hide "Whispers" Button',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_top_bits_button",
 				label: 'Hide "Bits" Button',
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_top_turbo_button",
 				label: 'Hide "Turbo" Button',
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 		],
@@ -135,13 +140,17 @@ export const features = [
 	{
 		id: "hide_left_sidebar",
 		label: "Left sidebar",
-
 		simpleModeActive: [],
 		children: [
 			{
+				id: "toggle_sidenav_grayscale",
+				label: "Toggle Side Nav Grayscale",
+				simpleModeActive: ["focus"],
+			},
+			{
 				id: "hide_left_sidebar_stories",
 				label: 'Hide "Stories"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_left_sidebar_followed_channels",
@@ -150,32 +159,32 @@ export const features = [
 			{
 				id: "hide_left_sidebar_viewership",
 				label: "Hide Viewership Numbers",
-				simpleModeActive: ["bare"],
+				simpleModeActive: ["focus"],
 			},
 			{
 				id: "hide_left_sidebar_offline_channels",
 				label: 'Hide "Offline Channels"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_left_sidebar_live_channels",
 				label: 'Hide "Live Channels"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_left_sidebar_viewers_also_watch",
 				label: 'Hide "Viewers Also Watch"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "hide_left_sidebar_recommended_categories",
 				label: 'Hide "Recommended Categories"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
 				id: "left_sidebar_always_show_more",
 				label: 'Automatically "Show More"',
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 			},
 		],
 	},
@@ -191,25 +200,31 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "toggle_chat_grayscale",
+				label: "Grayscale Chat",
+				simpleModeActive: ["focus"],
+				children: [],
+			},
+			{
 				id: "hide_chat_monetization",
 				label: "Hide Chat Monetization",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_top_gifters",
 				label: "Hide Top Gifters",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
 				id: "hide_chat_badges",
 				label: "Hide Chat Badges",
-				simpleModeActive: ["bare"],
+				simpleModeActive: ["focus"],
 			},
 		],
 	},
@@ -221,7 +236,7 @@ export const features = [
 			{
 				id: "hide_thumbnail_viewership",
 				label: "Hide Thumbnail Viewership Numbers",
-				simpleModeActive: ["bare"],
+				simpleModeActive: ["focus"],
 				children: [],
 			},
 		],
@@ -232,27 +247,33 @@ export const features = [
 		hideToggleButton: true,
 		children: [
 			{
+				id: "toggle_video_grayscale",
+				label: "Grayscale Video Player",
+				simpleModeActive: ["focus"],
+				children: [],
+			},
+			{
 				id: "featured_stream_play_by_default",
 				label: "Prevent Homepage Stream from Auto-Playing",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_video_viewership",
 				label: "Hide Video Viewership Numbers",
-				simpleModeActive: ["bare"],
+				simpleModeActive: ["focus"],
 				children: [],
 			},
 			{
 				id: "hide_video_gift_section",
 				label: 'Hide Theatre Mode "Gift"/"Subscribe" Buttons',
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_video_ad_wrapper",
 				label: "Hide Ad Wrapper around video player",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 		],
@@ -263,33 +284,39 @@ export const features = [
 		hideToggleButton: true,
 		children: [
 			{
+				id: "toggle_info_grayscale",
+				label: "Grayscale Info Section",
+				simpleModeActive: ["focus"],
+				children: [],
+			},
+			{
 				id: "hide_info_monetization_buttons",
 				label: "Hide Monetization Buttons",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_info_viral_clip_section",
 				label: "Hide Viral Clip Section",
-				simpleModeActive: ["no_monetization", "minimalist", "bare"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_info_about_section",
 				label: "Hide About Section",
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_info_channel_panel_section",
 				label: "Hide Channel Panel Section",
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "hide_sticky_footer",
 				label: "Remove Purple Footer",
-				simpleModeActive: ["minimalist", "bare"],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 		],

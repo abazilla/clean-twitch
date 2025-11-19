@@ -1,21 +1,15 @@
 import $ from "jquery"
-import { toggleCSSSelector, toggleElementVisibility, updateElement } from "../utils/dom"
+import {
+	DISPLAY_NONE_STYLES,
+	GRAYSCALE_FILTER_OFF,
+	GRAYSCALE_FILTER_ON,
+	TEST_MODE_STYLES,
+	toggleCSSGrayscale,
+	toggleCSSHidden,
+	UNIVERSAL_STYLE_ID_JS,
+} from "../utils/cssManipulators"
+import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
 import { TwitchURLs } from "./definitions"
-
-export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
-export const GREYSCALE_CLASS_NAME = "clean-twitch-greyscale"
-export const UNIVERSAL_STYLE_ID = "clean-twitch-id"
-export const TEST_MODE_CSS = `.${UNIVERSAL_CLASS_NAME} { background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important; } `
-export const TEST_MODE_STYLES =
-	"background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important;"
-export const DISPLAY_NONE_STYLES = "display: none !important;"
-export const DISPLAY_DISABLED_STYLES = "display: clean-twitch-disabled !important;"
-export const DISPLAY_DISABLED_TEST = "display: clean-twitch-test-disabled !important;"
-export const GREYSCALE_FILTER_OFF = "filter: grayscale(0) !important;"
-export const GREYSCALE_FILTER_ON = "filter: grayscale(1) !important;"
-export const GREYSCALE_DISABLED = "filter: clean-twitch-greyscale-disabled !important;"
-export const GREYSCALE_CSS = `.${GREYSCALE_CLASS_NAME} { ${GREYSCALE_FILTER_OFF} } `
-export const NORMAL_CSS = `.${UNIVERSAL_CLASS_NAME} { ${DISPLAY_NONE_STYLES} } `
 
 // Can this somehow just be run on page load? i believe the whole website automatically refreshes when logging in/out
 function isLoggedIn(): boolean {
@@ -23,7 +17,7 @@ function isLoggedIn(): boolean {
 }
 
 export function toggleTestMode(toggled: boolean) {
-	const style = document.getElementById(UNIVERSAL_STYLE_ID)
+	const style = document.getElementById(UNIVERSAL_STYLE_ID_JS)
 	if (style) {
 		const currentContent = style.textContent || ""
 		if (toggled) {
@@ -38,16 +32,16 @@ export function toggleTestMode(toggled: boolean) {
 	}
 }
 
-export function toggleGreyscale(toggled: boolean) {
-	const style = document.getElementById(UNIVERSAL_STYLE_ID)
+export function toggleGrayscale(toggled: boolean) {
+	const style = document.getElementById(UNIVERSAL_STYLE_ID_JS)
 	if (style) {
 		const currentContent = style.textContent || ""
 		if (toggled) {
-			let testContent = currentContent.replaceAll(GREYSCALE_FILTER_OFF, GREYSCALE_FILTER_ON)
+			let testContent = currentContent.replaceAll(GRAYSCALE_FILTER_OFF, GRAYSCALE_FILTER_ON)
 			style.textContent = testContent
 		} else {
-			// Remove greyscale CSS
-			let testContent = currentContent.replaceAll(GREYSCALE_FILTER_ON, GREYSCALE_FILTER_OFF)
+			// Remove grayscale CSS
+			let testContent = currentContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_FILTER_OFF)
 			style.textContent = testContent
 		}
 	}
@@ -56,6 +50,10 @@ export function toggleGreyscale(toggled: boolean) {
 // NOTE: Elements that use updateElement are elements that load after a delay, or load on certain pages
 
 // TOP BAR
+export function toggleTopBarGrayscale(value: boolean) {
+	toggleCSSGrayscale('nav[data-a-target="top-nav-container"]', value)
+}
+
 export function hideFollowingButton(isHidden: boolean) {
 	const $followingButton = $('a[data-a-target="following-link"]').parents().eq(1)
 	toggleElementVisibility($followingButton, isHidden)
@@ -72,7 +70,7 @@ export function hideDotsButton(isHidden: boolean) {
 }
 
 export function hidePrimeGamingButton(isHidden: boolean) {
-	toggleCSSSelector(".top-nav__prime", isHidden)
+	toggleCSSHidden(".top-nav__prime", isHidden)
 }
 
 export function hideNotificationsButton(isHidden: boolean) {
@@ -135,8 +133,12 @@ export function toggleLeftSidebar(value: boolean) {
 	}
 }
 
+export function toggleSideNavGrayscale(value: boolean) {
+	toggleCSSGrayscale('div[data-a-target="side-nav-bar"]', value)
+}
+
 export function toggleLeftSidebarStories(value: boolean) {
-	toggleCSSSelector("div.storiesLeftNavSection--csO9S", value)
+	toggleCSSHidden("div.storiesLeftNavSection--csO9S", value)
 }
 
 export function toggleLeftSidebarStoriesXS(value: boolean) {
@@ -150,21 +152,21 @@ export function toggleLeftSidebarStoriesXS(value: boolean) {
 }
 
 export function toggleLeftSidebarViewership(value: boolean) {
-	toggleCSSSelector("div[data-a-target='side-nav-live-status']", value)
+	toggleCSSHidden("div[data-a-target='side-nav-live-status']", value)
 }
 
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
-	toggleCSSSelector("div[aria-label='Followed Channels']", value)
+	toggleCSSHidden("div[aria-label='Followed Channels']", value)
 }
 
 export function toggleLeftSidebarLiveChannels(value: boolean) {
 	if (isLoggedIn()) {
-		toggleCSSSelector("div[aria-label='Live Channels']", value)
+		toggleCSSHidden("div[aria-label='Live Channels']", value)
 	}
 }
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
-	toggleCSSSelector("div[aria-label*='Viewers Also Watch']", value)
+	toggleCSSHidden("div[aria-label*='Viewers Also Watch']", value)
 }
 
 export function toggleLeftSidebarRecommendedCategories(value: boolean) {
@@ -190,8 +192,8 @@ export function toggleLeftSidebarOfflineChannels(value: boolean) {
 
 export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	if (!value) {
-		toggleCSSSelector('[data-a-target="side-nav-show-more-button"]', value)
-		toggleCSSSelector('[data-a-target="side-nav-show-less-button"]', value)
+		toggleCSSHidden('[data-a-target="side-nav-show-more-button"]', value)
+		toggleCSSHidden('[data-a-target="side-nav-show-less-button"]', value)
 	} else {
 		updateElement(
 			() => {
@@ -263,8 +265,12 @@ export function toggleCommunityHighlightStack(value: boolean) {
 	)
 }
 
+export function toggleChatGrayscale(value: boolean) {
+	toggleCSSGrayscale(".channel-root__right-column", value)
+}
+
 export function toggleChatBadges(value: boolean) {
-	toggleCSSSelector(".chat-line__username-container > span:first-child", value)
+	toggleCSSHidden(".chat-line__username-container > span:first-child", value)
 }
 
 // HOMEPAGE
@@ -306,36 +312,44 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 
 // THUMBNAILS
 export function toggleThumbnailViewership(value: boolean) {
-	toggleCSSSelector("p.kdDAY", value)
-	toggleCSSSelector("div.tw-media-card-stat", value)
+	toggleCSSHidden("p.kdDAY", value)
+	toggleCSSHidden("div.tw-media-card-stat", value)
 }
 
 // VIDEO PLAYER
+export function toggleVideoGrayscale(value: boolean) {
+	toggleCSSGrayscale('div[data-a-target="video-player"]', value)
+}
+
 export function toggleVideoGiftButtonSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	toggleCSSSelector('div.theatre-social-panel:has(button[data-a-target="gift-button"])', value)
+	toggleCSSHidden('div.theatre-social-panel:has(button[data-a-target="gift-button"])', value)
 }
 
 export function toggleVideoAdWrapper(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	toggleCSSSelector("div.stream-display-ad__wrapper", value)
+	toggleCSSHidden("div.stream-display-ad__wrapper", value)
 }
 
 export function toggleVideoViewership(value: boolean) {
-	toggleCSSSelector("div.cbxBks", value)
-	toggleCSSSelector('strong[data-a-target="animated-channel-viewers-count"]', value)
+	toggleCSSHidden("div.cbxBks", value)
+	toggleCSSHidden('strong[data-a-target="animated-channel-viewers-count"]', value)
 }
 
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	toggleCSSSelector('div[aria-label="chan-sda-upsell-third-view"]', value)
+	toggleCSSHidden('div[aria-label="chan-sda-upsell-third-view"]', value)
 }
 
 // BELOW VIDEO PLAYER
+export function toggleInfoSectionGrayscale(value: boolean) {
+	toggleCSSGrayscale("div.channel-root__info", value)
+}
+
 export function toggleInfoViralClipSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
@@ -429,5 +443,5 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
-	toggleCSSSelector("#twilight-sticky-footer-root", value)
+	toggleCSSHidden("#twilight-sticky-footer-root", value)
 }

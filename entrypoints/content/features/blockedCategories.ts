@@ -1,6 +1,6 @@
+import { DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
 import { storageHandler } from "../utils/storageHandler"
 import { BlockedCategories } from "./definitions"
-import { DISPLAY_NONE_STYLES } from "./domManipulators"
 
 let categoryStyleElement: HTMLStyleElement
 
