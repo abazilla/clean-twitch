@@ -16,13 +16,14 @@ Twitch without the clutter.
 ### Development
 
 1. Install dependencies: `pnpm install`
-2. Start development server: `pnpm dev` (Chrome) or `pnpm dev:firefox` (Firefox)
+2. Start development server: `pnpm dev` (Chrome) or `pnpm dev:firefox` (Firefox) or `pnpm dev:edge` (Edge)
 3. Load the extension in your browser's developer mode
 
 ### Production Build
 
 - Chrome: `pnpm build && pnpm zip`
 - Firefox: `pnpm build:firefox && pnpm zip:firefox`
+- Edge: `pnpm build:edge && pnpm zip:edge`
 
 ## Development Commands
 
@@ -30,10 +31,16 @@ Twitch without the clutter.
 
 - `pnpm dev` - Start development server for Chrome
 - `pnpm dev:firefox` - Start development server for Firefox
+- `pnpm dev:edge` - Start development server for Edge
+
 - `pnpm build` - Build extension for production (Chrome)
 - `pnpm build:firefox` - Build extension for Firefox
+- `pnpm build:edge` - Build extension for Edge
+
 - `pnpm zip` - Create zip package for Chrome store
-- `pnpm zip:firefox` - Create zip package for Firefox addon store
+- `pnpm zip:firefox` - Create zip package AND source code zip for Firefox addon store
+- `pnpm zip:edge` - Create zip package for Edge addon store
+
 - `pnpm compile` - TypeScript compilation check
 
 ### Testing

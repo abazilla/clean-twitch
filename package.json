@@ -7,10 +7,13 @@
 	"scripts": {
 		"dev": "wxt",
 		"dev:firefox": "wxt -b firefox",
+		"dev:edge": "wxt -b edge",
 		"build": "wxt build",
 		"build:firefox": "wxt build -b firefox",
+		"build:edge": "wxt build -b edge",
 		"zip": "wxt zip",
 		"zip:firefox": "wxt zip -b firefox",
+		"zip:edge": "wxt zip -b edge",
 		"zip:repo": "mkdir -p .output && zip -r \".output/clean-twitch-repo-$npm_package_version.zip\" . -x '.git/*' 'node_modules/*' '.output/*' '.wxt/*' '.gitignore' '.prettierrc'",
 		"compile": "tsc --noEmit",
 		"test": "vitest",
