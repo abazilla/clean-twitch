@@ -1,7 +1,5 @@
 import { JSX, useEffect, useState } from "react"
-import { FeatureItem, features } from "../content/features/definitions"
 import AdvancedMode from "./components/AdvancedMode"
-import { FeatureToggle } from "./components/FeatureToggle"
 import SimpleMode from "./components/SimpleMode"
 import { useStorageState } from "./storage"
 
@@ -28,7 +26,7 @@ const App = (): JSX.Element => {
 	}
 
 	return (
-		<div className="flex h-96 w-80 flex-col overflow-hidden bg-purple-500 text-white">
+		<div className="flex h-96 w-96 flex-col overflow-hidden bg-purple-500 text-white">
 			<div className="scrollbar-hide flex-1 overflow-y-auto p-4">
 				<div className="flex items-center justify-between">
 					<h1 className="m-0 p-0 text-lg">Clean Twitch</h1>
@@ -52,14 +50,7 @@ const App = (): JSX.Element => {
 				</div>
 
 				{extensionEnabled && (
-					<div className="mt-4">
-						{features.map((item: FeatureItem) =>
-							item.renderSimpleOrAdvanced === "always_show" ? (
-								<FeatureToggle key={item.id} item={item} />
-							) : (
-								<></>
-							)
-						)}
+					<div className="mt-2">
 						{isAdvancedMode ? (
 							// <Suspense fallback={<div className="text-center text-sm">Loading...</div>}>
 							<AdvancedMode />

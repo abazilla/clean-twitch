@@ -1,11 +1,14 @@
 import $ from "jquery"
 import {
+	BLOCKED_CATEGORIES_STYLE_ID,
+	BLOCKED_CHANNELS_STYLE_ID,
 	DISPLAY_NONE_STYLES,
 	GRAYSCALE_FILTER_OFF,
 	GRAYSCALE_FILTER_ON,
 	TEST_MODE_STYLES,
 	toggleCSSGrayscale,
 	toggleCSSHidden,
+	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
 } from "../utils/cssManipulators"
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
@@ -17,17 +20,28 @@ function isLoggedIn(): boolean {
 }
 
 export function toggleTestMode(toggled: boolean) {
-	const style = document.getElementById(UNIVERSAL_STYLE_ID_JS)
-	if (style) {
-		const currentContent = style.textContent || ""
-		if (toggled) {
-			// Replace display: none !important; with test mode styling
-			let testContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, TEST_MODE_STYLES)
-			style.textContent = testContent
-		} else {
-			// Replace test mode styling back to display: none
-			const normalContent = currentContent.replaceAll(TEST_MODE_STYLES, DISPLAY_NONE_STYLES)
-			style.textContent = normalContent
+	const styleIds = [
+		UNIVERSAL_STYLE_ID_JS,
+		UNIVERSAL_STYLE_ID_CSS,
+		BLOCKED_CHANNELS_STYLE_ID,
+		BLOCKED_CATEGORIES_STYLE_ID,
+	]
+
+	for (const styleId of styleIds) {
+		const style = document.getElementById(styleId)
+		if (style) {
+			const currentContent = style.textContent || ""
+			if (toggled) {
+				// Replace display: none !important; with test mode styling
+				let testContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, TEST_MODE_STYLES)
+				testContent = testContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_FILTER_OFF)
+				style.textContent = testContent
+			} else {
+				// Replace test mode styling back to display: none
+				let normalContent = currentContent.replaceAll(TEST_MODE_STYLES, DISPLAY_NONE_STYLES)
+				normalContent = normalContent.replaceAll(GRAYSCALE_FILTER_OFF, GRAYSCALE_FILTER_ON)
+				style.textContent = normalContent
+			}
 		}
 	}
 }

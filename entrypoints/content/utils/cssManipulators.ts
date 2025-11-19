@@ -2,6 +2,8 @@ export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
 export const GRAYSCALE_CLASS_NAME = "clean-twitch-grayscale"
 export const UNIVERSAL_STYLE_ID_JS = "clean-twitch-id-js"
 export const UNIVERSAL_STYLE_ID_CSS = "clean-twitch-id-css"
+export const BLOCKED_CHANNELS_STYLE_ID = "blocked-channels-styles"
+export const BLOCKED_CATEGORIES_STYLE_ID = "blocked-categories-styles"
 export const TEST_MODE_CSS = `.${UNIVERSAL_CLASS_NAME} { background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important; } `
 export const TEST_MODE_STYLES =
 	"background-color: red !important; border: 1px solid yellow !important; opacity: 0.5 !important;"

@@ -378,4 +378,8 @@ type ExtractFeatureIDs<T extends readonly FeatureItem[]> = T extends readonly (i
 
 export type FeatureID = ExtractFeatureIDs<typeof features>
 
+export const alwaysShowFeatures = features.filter(
+	(item: FeatureItem) => item.renderSimpleOrAdvanced === "always_show"
+)
+
 // export type FeatureID = string

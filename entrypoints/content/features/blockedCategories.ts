@@ -1,4 +1,4 @@
-import { DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
+import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
 import { storageHandler } from "../utils/storageHandler"
 import { BlockedCategories } from "./definitions"
 
@@ -7,7 +7,7 @@ let categoryStyleElement: HTMLStyleElement
 export async function initializeBlockedCategories() {
 	// Create dedicated style element for blocked categories
 	categoryStyleElement = document.createElement("style")
-	categoryStyleElement.id = "blocked-categories-styles"
+	categoryStyleElement.id = BLOCKED_CATEGORIES_STYLE_ID
 	document.head.appendChild(categoryStyleElement)
 
 	// Load and apply initial blocked categories

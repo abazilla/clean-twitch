@@ -1,4 +1,4 @@
-import { DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
+import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
 import { storageHandler } from "../utils/storageHandler"
 import { BlockedChannels } from "./definitions"
 
@@ -7,7 +7,7 @@ let channelStyleElement: HTMLStyleElement
 export async function initializeBlockedChannels() {
 	// Create dedicated style element for blocked channels
 	channelStyleElement = document.createElement("style")
-	channelStyleElement.id = "blocked-channels-styles"
+	channelStyleElement.id = BLOCKED_CHANNELS_STYLE_ID
 	document.head.appendChild(channelStyleElement)
 
 	// Load and apply initial blocked channels

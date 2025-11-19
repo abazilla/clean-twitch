@@ -91,8 +91,8 @@ export const CategoryBlocker = (): JSX.Element => {
 					Block Categories
 				</label>
 			</div>
-			<div className="mt-2 flex flex-wrap gap-4">
-				<label className="flex items-center gap-2">
+			<div className="mt-1 grid grid-cols-2">
+				<label className="flex items-center gap-2 text-sm">
 					<input
 						type="checkbox"
 						checked={blockedCategories.hideFromSidebar}
@@ -101,7 +101,7 @@ export const CategoryBlocker = (): JSX.Element => {
 					/>
 					Hide from sidebar
 				</label>
-				<label className="flex items-center gap-2">
+				<label className="flex items-center gap-2 text-sm">
 					<input
 						type="checkbox"
 						checked={blockedCategories.hideFromDirectory}
@@ -110,7 +110,7 @@ export const CategoryBlocker = (): JSX.Element => {
 					/>
 					Hide from directory
 				</label>
-				<label className="flex items-center gap-2">
+				<label className="flex items-center gap-2 text-sm">
 					<input
 						type="checkbox"
 						checked={blockedCategories.hideFromSearch}
@@ -121,19 +121,21 @@ export const CategoryBlocker = (): JSX.Element => {
 				</label>
 			</div>
 			<form onSubmit={handleSubmit} className="mt-2">
-				<input
-					type="text"
-					value={categoryInput || ""}
-					onChange={(e) => setCategoryInput((e.target as HTMLInputElement).value)}
-					placeholder="Category name"
-					className="w-full rounded border border-purple-300 p-1 text-black"
-				/>
-				<button
-					type="submit"
-					className="mt-2 rounded bg-purple-700 px-3 py-1 text-white hover:bg-purple-800"
-				>
-					Add Category
-				</button>
+				<div className="flex gap-2">
+					<input
+						type="text"
+						value={categoryInput || ""}
+						onChange={(e) => setCategoryInput((e.target as HTMLInputElement).value)}
+						placeholder="Category name"
+						className="flex-1 rounded border border-purple-300 p-1 text-black"
+					/>
+					<button
+						type="submit"
+						className="rounded bg-purple-700 px-3 py-1 text-white hover:bg-purple-800"
+					>
+						Add
+					</button>
+				</div>
 			</form>
 			<div className="mt-4 flex flex-wrap gap-2">
 				{blockedCategories.categories.map((blockedCategory) => (

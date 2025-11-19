@@ -1,8 +1,13 @@
-import { SimplePresetMode } from "@/entrypoints/content/features/definitions"
+import {
+	alwaysShowFeatures,
+	FeatureItem,
+	SimplePresetMode,
+} from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
+import { FeatureToggle } from "./FeatureToggle"
 
 const presetLabels = {
 	show_all: {
@@ -36,28 +41,45 @@ const SimpleMode = (): JSX.Element => {
 	return (
 		<div className="mt-1 space-y-4">
 			<div className="space-y-3">
-				<h3 className="text-sm font-medium">Choose a preset:</h3>
-				{(
-					Object.entries(presetLabels) as [
-						SimplePresetMode,
-						(typeof presetLabels)[SimplePresetMode],
-					][]
-				).map(([key, config]) => (
-					<label key={key} className="flex cursor-pointer items-start gap-3">
-						<input
-							type="radio"
-							name="preset"
-							value={key}
-							checked={currentPreset === key}
-							onChange={() => applyPreset(key)}
-							className="mt-0.5 h-4 w-4 border-gray-300 text-purple-600 focus:ring-purple-500"
-						/>
-						<div className="flex-1">
-							<div className="text-sm font-medium">{config.label}</div>
-							<div className="text-xs opacity-75">{config.description}</div>
-						</div>
-					</label>
-				))}
+				<h3 className="mt-2 text-sm font-medium">Choose a preset:</h3>
+				<div className="grid grid-cols-2 gap-3">
+					{(
+						Object.entries(presetLabels) as [
+							SimplePresetMode,
+							(typeof presetLabels)[SimplePresetMode],
+						][]
+					).map(([key, config]) => (
+						<label
+							key={key}
+							className={`flex cursor-pointer items-start gap-3 rounded border p-3 ${
+								currentPreset === key ? "bg-purple-400" : "border-gray-200"
+							}`}
+						>
+							<input
+								type="radio"
+								name="preset"
+								value={key}
+								checked={currentPreset === key}
+								onChange={() => applyPreset(key)}
+								className="sr-only"
+							/>
+							<div className="flex-1">
+								<div className="text-sm font-medium">{config.label}</div>
+								<div className="text-xs opacity-75">{config.description}</div>
+							</div>
+						</label>
+					))}
+				</div>
+			</div>
+
+			<div className="grid grid-cols-2 gap-3">
+				{alwaysShowFeatures.map((item: FeatureItem) =>
+					item.renderSimpleOrAdvanced === "always_show" ? (
+						<FeatureToggle key={item.id} item={item} />
+					) : (
+						<></>
+					)
+				)}
 			</div>
 
 			<div>

@@ -9,6 +9,8 @@ import {
 import { toggleGrayscale, toggleTestMode } from "./features/domManipulators"
 import { featureToggleMap } from "./features/toggleMap"
 import {
+	BLOCKED_CATEGORIES_STYLE_ID,
+	BLOCKED_CHANNELS_STYLE_ID,
 	DISPLAY_DISABLED_STYLES,
 	DISPLAY_DISABLED_TEST,
 	DISPLAY_NONE_STYLES,
@@ -17,6 +19,7 @@ import {
 	GRAYSCALE_FILTER_ON,
 	initializeStyleElement,
 	TEST_MODE_STYLES,
+	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
 } from "./utils/cssManipulators"
 import { storageHandler } from "./utils/storageHandler"
@@ -63,25 +66,29 @@ export async function handleFeatureOnToggle(id: FeatureID, value: any) {
 
 // Toggle the entire extension on/off
 export async function toggleExtensionEnabled(enabled: boolean) {
-	const style = document.getElementById(UNIVERSAL_STYLE_ID_JS)
-	if (style) {
-		const currentContent = style.textContent || ""
-		if (enabled) {
-			// Replace invalid display values back to "display: none !important;"
-			let enabledContent = currentContent.replaceAll(DISPLAY_DISABLED_STYLES, DISPLAY_NONE_STYLES)
-			// Also replace test mode disabled back to test mode styles
-			enabledContent = enabledContent.replaceAll(DISPLAY_DISABLED_TEST, TEST_MODE_STYLES)
-			// Also replace grayscale disabled back to grayscale active
-			enabledContent = enabledContent.replaceAll(GRAYSCALE_DISABLED, GRAYSCALE_FILTER_ON)
-			style.textContent = enabledContent
-		} else {
-			// Replace "display: none !important;" with invalid value to disable hiding
-			let disabledContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, DISPLAY_DISABLED_STYLES)
-			// Also replace test mode styling with disabled test value
-			disabledContent = disabledContent.replaceAll(TEST_MODE_STYLES, DISPLAY_DISABLED_TEST)
-			// Also replace grayscale filter with disabled grayscale
-			disabledContent = disabledContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_DISABLED)
-			style.textContent = disabledContent
+	const styleIds = [UNIVERSAL_STYLE_ID_JS, UNIVERSAL_STYLE_ID_CSS, BLOCKED_CHANNELS_STYLE_ID, BLOCKED_CATEGORIES_STYLE_ID]
+	
+	for (const styleId of styleIds) {
+		const style = document.getElementById(styleId)
+		if (style) {
+			const currentContent = style.textContent || ""
+			if (enabled) {
+				// Replace invalid display values back to "display: none !important;"
+				let enabledContent = currentContent.replaceAll(DISPLAY_DISABLED_STYLES, DISPLAY_NONE_STYLES)
+				// Also replace test mode disabled back to test mode styles
+				enabledContent = enabledContent.replaceAll(DISPLAY_DISABLED_TEST, TEST_MODE_STYLES)
+				// Also replace grayscale disabled back to grayscale active
+				enabledContent = enabledContent.replaceAll(GRAYSCALE_DISABLED, GRAYSCALE_FILTER_ON)
+				style.textContent = enabledContent
+			} else {
+				// Replace "display: none !important;" with invalid value to disable hiding
+				let disabledContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, DISPLAY_DISABLED_STYLES)
+				// Also replace test mode styling with disabled test value
+				disabledContent = disabledContent.replaceAll(TEST_MODE_STYLES, DISPLAY_DISABLED_TEST)
+				// Also replace grayscale filter with disabled grayscale
+				disabledContent = disabledContent.replaceAll(GRAYSCALE_FILTER_ON, GRAYSCALE_DISABLED)
+				style.textContent = disabledContent
+			}
 		}
 	}
 }
