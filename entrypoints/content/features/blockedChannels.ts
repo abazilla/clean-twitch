@@ -2,10 +2,13 @@ import { storageHandler } from "../utils/storageHandler"
 import { BlockedChannels } from "./definitions"
 import { DISPLAY_NONE_STYLES } from "./domManipulators"
 
-let styleElement: HTMLStyleElement
+let channelStyleElement: HTMLStyleElement
 
-export async function initializeBlockedChannels(style: HTMLStyleElement) {
-	styleElement = style
+export async function initializeBlockedChannels() {
+	// Create dedicated style element for blocked channels
+	channelStyleElement = document.createElement("style")
+	channelStyleElement.id = "blocked-channels-styles"
+	document.head.appendChild(channelStyleElement)
 
 	// Load and apply initial blocked channels
 	const blockedChannels = (await storageHandler.get("blocked_channels")) as BlockedChannels
@@ -47,8 +50,5 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	const channelRuleWithStyling =
 		channelRules.length === 0 ? "" : channelRules + `{${DISPLAY_NONE_STYLES}}`
 
-	const globalRules = styleElement.textContent?.split("/* Channel Rules */")[0] || ""
-	const categoryRules = styleElement.textContent?.split("/* Category Rules */")[1] || ""
-
-	styleElement.textContent = `${globalRules.trim()}\n/* Channel Rules */${channelRuleWithStyling.trim()}\n/* Category Rules */${categoryRules.trim()}`
+	channelStyleElement.textContent = channelRuleWithStyling
 }

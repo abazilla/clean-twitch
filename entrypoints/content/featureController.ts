@@ -11,16 +11,15 @@ import {
 	DISPLAY_DISABLED_TEST,
 	DISPLAY_NONE_STYLES,
 	GREYSCALE_CLASS_NAME,
-	GREYSCALE_CSS,
 	GREYSCALE_DISABLED,
 	GREYSCALE_FILTER_ON,
-	NORMAL_CSS,
 	TEST_MODE_STYLES,
 	toggleGreyscale,
 	toggleTestMode,
 	UNIVERSAL_STYLE_ID,
 } from "./features/domManipulators"
 import { featureToggleMap } from "./features/toggleMap"
+import { initializeStyleElement } from "./utils/dom"
 import { storageHandler } from "./utils/storageHandler"
 
 // Toggle feature functionality
@@ -132,11 +131,9 @@ export async function initializeStylesAndFeatures() {
 	// Sync from sync storage
 	storageHandler.pullFromSync()
 
-	// create styles
-	const style = document.createElement("style")
-	style.id = UNIVERSAL_STYLE_ID
-	style.textContent = NORMAL_CSS + GREYSCALE_CSS
-	document.head.appendChild(style)
+	await initializeBlockedChannels()
+	await initializeBlockedCategories()
+	await initializeStyleElement()
 
 	// Apply correct mode on load
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
@@ -157,7 +154,4 @@ export async function initializeStylesAndFeatures() {
 	document.documentElement.classList.add(GREYSCALE_CLASS_NAME)
 	const testMode = await storageHandler.get<boolean>("test_mode")
 	toggleTestMode(testMode || false)
-
-	await initializeBlockedChannels(style)
-	await initializeBlockedCategories(style)
 }

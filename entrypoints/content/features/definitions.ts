@@ -201,6 +201,11 @@ export const features = [
 				label: "Hide Chat Highlights",
 				simpleModeActive: ["no_monetization", "minimalist"],
 			},
+			{
+				id: "hide_chat_badges",
+				label: "Hide Chat Badges",
+				simpleModeActive: [],
+			},
 		],
 	},
 	{

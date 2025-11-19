@@ -1,5 +1,5 @@
 import $ from "jquery"
-import { toggleElementVisibility, updateElement } from "../utils/dom"
+import { toggleCSSSelector, toggleElementVisibility, updateElement } from "../utils/dom"
 import { TwitchURLs } from "./definitions"
 
 export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
@@ -72,8 +72,7 @@ export function hideDotsButton(isHidden: boolean) {
 }
 
 export function hidePrimeGamingButton(isHidden: boolean) {
-	const $primeButton = $(".top-nav__prime")
-	toggleElementVisibility($primeButton, isHidden)
+	toggleCSSSelector(".top-nav__prime", isHidden)
 }
 
 export function hideNotificationsButton(isHidden: boolean) {
@@ -138,13 +137,7 @@ export function toggleLeftSidebar(value: boolean) {
 
 // TODO: check which can just use jquery toggle to hide
 export function toggleLeftSidebarStories(value: boolean) {
-	updateElement(
-		() => $("div.storiesLeftNavSection--csO9S"),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleLeftSidebarStories"
-	)
+	toggleCSSSelector("div.storiesLeftNavSection--csO9S", value)
 }
 
 export function toggleLeftSidebarStoriesXS(value: boolean) {
@@ -158,35 +151,17 @@ export function toggleLeftSidebarStoriesXS(value: boolean) {
 }
 
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
-	updateElement(
-		() => $("div[aria-label='Followed Channels']"),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleLeftSidebarFollowedChannels"
-	)
+	toggleCSSSelector("div[aria-label='Followed Channels']", value)
 }
 
 export function toggleLeftSidebarLiveChannels(value: boolean) {
 	if (isLoggedIn()) {
-		updateElement(
-			() => $("div[aria-label='Live Channels']"),
-			($el) => toggleElementVisibility($el, value),
-			5000,
-			"stop_on_found",
-			"toggleLeftSidebarLiveChannels"
-		)
+		toggleCSSSelector("div[aria-label='Live Channels']", value)
 	}
 }
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
-	updateElement(
-		() => $("div[aria-label*='Viewers Also Watch']"),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleLeftSidebarViewersAlsoWatch"
-	)
+	toggleCSSSelector("div[aria-label*='Viewers Also Watch']", value)
 }
 
 export function toggleLeftSidebarRecommendedCategories(value: boolean) {
@@ -245,6 +220,10 @@ export function toggleCommunityHighlightStack(value: boolean) {
 	)
 }
 
+export function toggleChatBadges(value: boolean) {
+	toggleCSSSelector(".chat-line__username-container > span:first-child", value)
+}
+
 // HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	const url = window.location.pathname
@@ -295,8 +274,8 @@ export function toggleLeftSidebarOfflineChannels(value: boolean) {
 
 export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	if (!value) {
-		toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
-		toggleElementVisibility($('[data-a-target="side-nav-show-more-button"]'), value)
+		toggleCSSSelector('[data-a-target="side-nav-show-more-button"]', value)
+		toggleCSSSelector('[data-a-target="side-nav-show-less-button"]', value)
 	} else {
 		updateElement(
 			() => {
@@ -326,38 +305,20 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 export function toggleVideoGiftButtonSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	updateElement(
-		() => $('div.theatre-social-panel:has(button[data-a-target="gift-button"])'),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleVideoGiftButtonSection"
-	)
+	toggleCSSSelector('div.theatre-social-panel:has(button[data-a-target="gift-button"])', value)
 }
 
 export function toggleVideoAdWrapper(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	updateElement(
-		() => $("div.stream-display-ad__wrapper"),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleVideoAdWrapper"
-	)
+	toggleCSSSelector("div.stream-display-ad__wrapper", value)
 }
 
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
-	updateElement(
-		() => $('div[aria-label="chan-sda-upsell-third-view"]'),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleBelowVideoAdSection"
-	)
+	toggleCSSSelector('div[aria-label="chan-sda-upsell-third-view"]', value)
 }
 
 // BELOW VIDEO PLAYER
@@ -454,11 +415,5 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
-	updateElement(
-		() => $("#twilight-sticky-footer-root"),
-		($el) => toggleElementVisibility($el, value),
-		5000,
-		"stop_on_found",
-		"toggleStickyFooter"
-	)
+	toggleCSSSelector("#twilight-sticky-footer-root", value)
 }

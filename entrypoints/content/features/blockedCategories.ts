@@ -2,10 +2,13 @@ import { storageHandler } from "../utils/storageHandler"
 import { BlockedCategories } from "./definitions"
 import { DISPLAY_NONE_STYLES } from "./domManipulators"
 
-let styleElement: HTMLStyleElement
+let categoryStyleElement: HTMLStyleElement
 
-export async function initializeBlockedCategories(style: HTMLStyleElement) {
-	styleElement = style
+export async function initializeBlockedCategories() {
+	// Create dedicated style element for blocked categories
+	categoryStyleElement = document.createElement("style")
+	categoryStyleElement.id = "blocked-categories-styles"
+	document.head.appendChild(categoryStyleElement)
 
 	// Load and apply initial blocked categories
 	const blockedCategories = (await storageHandler.get("blocked_categories")) as BlockedCategories
@@ -61,6 +64,5 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 	const categoryRuleWithStyling =
 		categoryRules.length === 0 ? "" : categoryRules + `{${DISPLAY_NONE_STYLES}}`
 
-	const globalAndChannelRules = styleElement.textContent?.split("/* Category Rules */")[0] || ""
-	styleElement.textContent = `${globalAndChannelRules.trim()}\n/* Category Rules */${categoryRuleWithStyling.trim()}`
+	categoryStyleElement.textContent = categoryRuleWithStyling
 }
