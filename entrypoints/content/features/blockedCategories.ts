@@ -37,6 +37,8 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						`a[href*="/directory/category/${c.category}"] ~ .search-result`,
 						`a[href*="/directory/category/${c.category}"] ~ .search-result-card`,
 						`div.efCikq:has(.search-result-card__img-wrapper):has(a[href="/${c.category}"])`,
+						`div[data-a-target="search-result-live-channel"]:has(a[href="/directory/category/${c.category}"])`,
+						`div[data-a-target="search-result-video"]:has(a[href="/directory/category/${c.category}"])`,
 					]
 				: []),
 			...(hideFromSidebar
@@ -49,7 +51,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 				? [
 						`div[data-target="directory-first-item"]:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-target=""]:has(a[href="/directory/category/${c.category}"])`,
-
+						`.ScTransitionBase-sc-hx4quq-0.ldiLWn:has(a[href="/directory/category/${c.category}"])`,
 						`a[href*="/directory/category/${c.category}"] ~ div[data-target="directory-page__card-container"]`,
 						`div.game-card:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${c.category}"])`,

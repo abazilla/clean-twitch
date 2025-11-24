@@ -1,4 +1,5 @@
-import { initializeStylesAndFeatures } from "../featureController"
+import { handleModeSwitch } from "../featureController"
+import { storageHandler } from "./storageHandler"
 
 export function setupUrlChangeListener() {
 	let lastUrl = window.location.href
@@ -31,12 +32,12 @@ export function setupUrlChangeListener() {
 }
 
 export async function handleUrlChange(lastUrl: string) {
-	// TODO: check for possible optimizations
 	console.log("URL changed to:", window.location.href)
-	await initializeStylesAndFeatures()
-
-	// if (lastUrl.includes("search")) $("div.search-results")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
-	// TODO: which component is this
-	// if (lastUrl.includes("/directory/category/"))
-	// 	$("div.switcher-shell__container--grid")?.removeClass(UNIVERSAL_CLASS_NAME) || $()
+	// await initializeStylesAndFeatures()
+	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
+	if (isSimpleMode === undefined || isSimpleMode === null) {
+		await storageHandler.set("is_simple_mode", true)
+		isSimpleMode = true
+	}
+	await handleModeSwitch(isSimpleMode)
 }

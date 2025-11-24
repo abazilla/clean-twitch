@@ -9,6 +9,7 @@ import {
 	hideTopBitsButton,
 	hideTopTurboButton,
 	hideWhispersButton,
+	toggleAlwaysCloseAdblockPopup,
 	toggleBelowVideoAdSection,
 	toggleChatBadges,
 	toggleChatGrayscale,
@@ -27,7 +28,6 @@ import {
 	toggleLeftSidebarOfflineChannels,
 	toggleLeftSidebarRecommendedCategories,
 	toggleLeftSidebarStories,
-	toggleLeftSidebarStoriesXS,
 	toggleLeftSidebarViewersAlsoWatch,
 	toggleLeftSidebarViewership,
 	toggleSideNavGrayscale,
@@ -69,7 +69,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	toggle_sidenav_grayscale: (value: boolean) => toggleSideNavGrayscale(value),
 	hide_left_sidebar_stories: (value: boolean) => {
 		toggleLeftSidebarStories(value)
-		toggleLeftSidebarStoriesXS(value)
+		// toggleLeftSidebarStoriesXS(value)
 	},
 	hide_thumbnail_viewership: (value: boolean) => toggleThumbnailViewership(value),
 	hide_video_viewership: (value: boolean) => toggleVideoViewership(value),
@@ -92,6 +92,9 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_video_ad_wrapper: (value: boolean) => {
 		toggleVideoAdWrapper(value)
 		toggleBelowVideoAdSection(value)
+	},
+	always_close_adblock_popup: (value: boolean) => {
+		toggleAlwaysCloseAdblockPopup(value)
 	},
 	toggle_info_grayscale: (value: boolean) => toggleInfoSectionGrayscale(value),
 	hide_info_monetization_buttons: (value: boolean) => toggleInfoMonetizationButtons(value),

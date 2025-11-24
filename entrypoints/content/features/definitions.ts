@@ -276,6 +276,11 @@ export const features = [
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
+			{
+				id: "always_close_adblock_popup",
+				label: 'Automatically Close "Adblock Popup"',
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
 		],
 	},
 	{

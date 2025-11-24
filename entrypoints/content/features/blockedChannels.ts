@@ -32,6 +32,8 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						`div[data-a-target="search-results-live-channel"]:has(a[href="/${u.username}"])`,
 						`div.search-result-offline_channel--body:has(a[href="/${u.username}"]) .search-result`,
 						`a[href="/${u.username}"][data-a-target="search-result-live-channel"] ~ .search-result`,
+						`div[data-a-target="search-result-live-channel"]:has(a[href="/${u.username}"])`,
+						`div[data-a-target="search-result-video"]:has(a[href*="/${u.username}/"])`,
 					]
 				: []),
 			...(hideFromSidebar ? [`div.side-nav-card:has(a[href="/${u.username}"])`] : []),

@@ -66,8 +66,13 @@ export async function handleFeatureOnToggle(id: FeatureID, value: any) {
 
 // Toggle the entire extension on/off
 export async function toggleExtensionEnabled(enabled: boolean) {
-	const styleIds = [UNIVERSAL_STYLE_ID_JS, UNIVERSAL_STYLE_ID_CSS, BLOCKED_CHANNELS_STYLE_ID, BLOCKED_CATEGORIES_STYLE_ID]
-	
+	const styleIds = [
+		UNIVERSAL_STYLE_ID_JS,
+		UNIVERSAL_STYLE_ID_CSS,
+		BLOCKED_CHANNELS_STYLE_ID,
+		BLOCKED_CATEGORIES_STYLE_ID,
+	]
+
 	for (const styleId of styleIds) {
 		const style = document.getElementById(styleId)
 		if (style) {
@@ -82,7 +87,10 @@ export async function toggleExtensionEnabled(enabled: boolean) {
 				style.textContent = enabledContent
 			} else {
 				// Replace "display: none !important;" with invalid value to disable hiding
-				let disabledContent = currentContent.replaceAll(DISPLAY_NONE_STYLES, DISPLAY_DISABLED_STYLES)
+				let disabledContent = currentContent.replaceAll(
+					DISPLAY_NONE_STYLES,
+					DISPLAY_DISABLED_STYLES
+				)
 				// Also replace test mode styling with disabled test value
 				disabledContent = disabledContent.replaceAll(TEST_MODE_STYLES, DISPLAY_DISABLED_TEST)
 				// Also replace grayscale filter with disabled grayscale
@@ -144,7 +152,6 @@ export async function initializeStylesAndFeatures() {
 	// Apply correct mode on load
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
 
-	// First time setup
 	if (isSimpleMode === undefined || isSimpleMode === null) {
 		await storageHandler.set("is_simple_mode", true)
 		isSimpleMode = true
