@@ -13,7 +13,7 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 	const handleParentToggle = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const target = e.target as HTMLInputElement
 		const newValue = target.checked
-		console.log(`Toggling ${item.id} to:`, newValue)
+		// console.log(`Toggling ${item.id} to:`, newValue)
 
 		// if (item.conflicts) {
 		// 	if (newValue && item.conflicts.length > 0) {

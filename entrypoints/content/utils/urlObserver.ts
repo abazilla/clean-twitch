@@ -32,7 +32,7 @@ export function setupUrlChangeListener() {
 }
 
 export async function handleUrlChange(lastUrl: string) {
-	console.log("URL changed to:", window.location.href)
+	// console.log("URL changed to:", window.location.href)
 	// await initializeStylesAndFeatures()
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
 	if (isSimpleMode === undefined || isSimpleMode === null) {

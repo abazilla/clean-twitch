@@ -31,7 +31,7 @@ export function useStorageState<T>(key: string, initialValue: T) {
 	}, [key, initialValue])
 
 	const updateValue = async (newValue: T) => {
-		console.log(`Setting ${key} to:`, newValue)
+		// console.log(`Setting ${key} to:`, newValue)
 		try {
 			await storageHandler.set(key, newValue)
 			setValue(newValue)

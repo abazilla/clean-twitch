@@ -10,7 +10,7 @@ export default defineBackground(() => {
 
 			// Only pull full data if sync storage is newer
 			if ((syncTimestamp || 0) > (localTimestamp || 0)) {
-				console.log("Pulling newer data from sync storage")
+				// console.log("Pulling newer data from sync storage")
 				const fullSyncData = await browser.storage.sync.get()
 				await browser.storage.local.set(fullSyncData)
 			}

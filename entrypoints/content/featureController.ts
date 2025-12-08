@@ -103,7 +103,7 @@ export async function toggleExtensionEnabled(enabled: boolean) {
 
 // Handle switching between Simple and Advanced modes, and on init.
 export async function handleModeSwitch(isSimpleMode: boolean) {
-	console.log(`Switching to ${isSimpleMode ? "simple" : "advanced"} mode`)
+	// console.log(`Switching to ${isSimpleMode ? "simple" : "advanced"} mode`)
 
 	if (isSimpleMode) {
 		// apply the current preset

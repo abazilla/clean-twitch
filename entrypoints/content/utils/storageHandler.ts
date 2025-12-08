@@ -10,21 +10,21 @@ function scheduleBatchedSync(key: string, value: any) {
 
 	// Add to pending changes
 	pendingSyncChanges[key] = value
-	console.log(
-		`Scheduling batched sync for ${key} (${Object.keys(pendingSyncChanges).length} keys pending${hadPendingChanges ? ", extending timeout" : ""})`
-	)
-	console.log(`Value being synced for ${key}:`, value)
+	// console.log(
+	// 	`Scheduling batched sync for ${key} (${Object.keys(pendingSyncChanges).length} keys pending${hadPendingChanges ? ", extending timeout" : ""})`
+	// )
+	// console.log(`Value being synced for ${key}:`, value)
 
 	// Clear existing timeout
 	if (syncTimeout) {
-		console.log("Clearing existing sync timeout")
+		// console.log("Clearing existing sync timeout")
 		clearTimeout(syncTimeout)
 	}
 
 	// Schedule batched write
-	console.log("Setting new sync timeout for 3 seconds")
+	// console.log("Setting new sync timeout for 3 seconds")
 	syncTimeout = setTimeout(async () => {
-		console.log("TIMEOUT FIRED - starting batched sync")
+		// console.log("TIMEOUT FIRED - starting batched sync")
 		try {
 			const keysToSync = Object.keys(pendingSyncChanges)
 			const changesToSync = { ...pendingSyncChanges }
@@ -33,9 +33,9 @@ function scheduleBatchedSync(key: string, value: any) {
 			keysToSync.forEach((key) => delete pendingSyncChanges[key])
 			syncTimeout = null
 
-			console.log(`Running batched sync for ${keysToSync.length} keys: ${keysToSync.join(", ")}`)
+			// console.log(`Running batched sync for ${keysToSync.length} keys: ${keysToSync.join(", ")}`)
 			await browser.storage.sync.set(changesToSync)
-			console.log(`Successfully synced ${keysToSync.length} keys to sync storage`)
+			// console.log(`Successfully synced ${keysToSync.length} keys to sync storage`)
 		} catch (error) {
 			console.error("Error in batched sync to sync storage:", error)
 		}
@@ -112,9 +112,9 @@ export const storageHandler = {
 	},
 	async pullFromSync(): Promise<void> {
 		// gets sync storage keys.
-		console.log("Pulling from sync storage")
+		// console.log("Pulling from sync storage")
 		const syncResult = await browser.storage.sync.get()
-		console.log("Setting local storage from sync:")
+		// console.log("Setting local storage from sync:")
 		await browser.storage.local.set(syncResult)
 		// if they exist,
 		// check if they're different from local
