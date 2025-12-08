@@ -92,7 +92,7 @@ a[data-a-target="tw-box-art-card-link"] {
 
 /* Always show button */
 a[data-a-target="tw-box-art-card-link"] .hide-twitch-block-btn-destructive {
-	opacity: 0.75;
+	opacity: 1;
 	transition: opacity 0.2s ease;
 }
 

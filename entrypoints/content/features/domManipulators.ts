@@ -228,6 +228,10 @@ export function toggleChatBadges(value: boolean) {
 	toggleCSSHidden(".chat-line__username-container > span:first-child", value)
 }
 
+export function toggleChatClipBestMoments(value: boolean) {
+	toggleCSSHidden('div.cMeiZH:has(div[aria-label="Expand Top Clips Leaderboard"])', value)
+}
+
 // HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	const url = window.location.pathname
@@ -321,6 +325,7 @@ export function toggleInfoSectionGrayscale(value: boolean) {
 	toggleCSSGrayscale("div.channel-root__info", value)
 }
 
+// TODO: fix when you see this
 export function toggleInfoViralClipSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
@@ -333,6 +338,10 @@ export function toggleInfoViralClipSection(value: boolean) {
 	)
 }
 
+export function toggleInfoMonthlyRecap(value: boolean) {
+	toggleCSSHidden("div.Layout-sc-1xcs6mc-0.dHnDFr:has(div.ScCalloutMessage-sc-23utpo-0)", value)
+}
+
 // UNDER VIDEO PANEL
 export function toggleInfoMonetizationButtons(value: boolean) {
 	toggleCSSHidden(
@@ -340,6 +349,7 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 		value
 	)
 	toggleCSSHidden(".Layout-sc-1xcs6mc-0.kaAEut:has(button[data-a-target='gift-button'])", value)
+	toggleCSSHidden(".Layout-sc-1xcs6mc-0.kaAEut:has(button[aria-label='Continue Sub'])", value)
 	toggleCSSHidden(".Layout-sc-1xcs6mc-0.PiZST:has(button[data-a-target='subscribe-button'])", value)
 	toggleCSSHidden(
 		".Layout-sc-1xcs6mc-0.PiZST:has(button[data-a-target='subscribe-button__dropdown'])",

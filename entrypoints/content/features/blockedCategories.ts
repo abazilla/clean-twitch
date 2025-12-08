@@ -51,7 +51,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 				? [
 						`div[data-target="directory-first-item"]:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-target=""]:has(a[href="/directory/category/${c.category}"])`,
-						`.ScTransitionBase-sc-hx4quq-0.ldiLWn:has(a[href="/directory/category/${c.category}"])`,
+						// `.ScTransitionBase-sc-hx4quq-0.ldiLWn:has(a[href="/directory/category/${c.category}"])`, // caused a bug on channels vod list if category existed in vods, may be removed in future
 						`a[href*="/directory/category/${c.category}"] ~ div[data-target="directory-page__card-container"]`,
 						`div.game-card:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${c.category}"])`,

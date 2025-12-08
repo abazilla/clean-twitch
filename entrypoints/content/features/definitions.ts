@@ -222,6 +222,11 @@ export const features = [
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
+				id: "hide_chat_clip_best_moments",
+				label: 'Hide Chat "Clip Best Moments" section',
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
 				id: "hide_chat_badges",
 				label: "Hide Chat Badges",
 				simpleModeActive: ["focus"],
@@ -297,6 +302,12 @@ export const features = [
 			{
 				id: "hide_info_monetization_buttons",
 				label: "Hide Monetization Buttons",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
+				id: "hide_info_monthly_recap",
+				label: "Hide Monthly Recap Section",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
