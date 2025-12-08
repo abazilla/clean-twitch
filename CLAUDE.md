@@ -90,7 +90,6 @@ This is a **WXT-based browser extension** for Twitch that provides content filte
 - **Frontend:** React 19 with TypeScript
 - **Styling:** Tailwind CSS 4.x
 - **Permissions:** tabs, scripting, storage, host_permissions for twitch.tv
-- **External:** jQuery for DOM manipulation in content scripts
 
 ## WXT Documentation References
 

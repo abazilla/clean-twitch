@@ -1,4 +1,3 @@
-import $ from "jquery"
 import {
 	BLOCKED_CATEGORIES_STYLE_ID,
 	BLOCKED_CHANNELS_STYLE_ID,
@@ -15,11 +14,6 @@ import {
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
 import { storageHandler } from "../utils/storageHandler"
 import { TwitchURLs } from "./definitions"
-
-// Can this somehow just be run on page load? i believe the whole website automatically refreshes when logging in/out
-function isLoggedIn(): boolean {
-	return $("body").hasClass("logged-in")
-}
 
 export function toggleTestMode(toggled: boolean) {
 	const styleIds = [
@@ -114,14 +108,22 @@ export function hideTopTurboButton(isHidden: boolean) {
 // LEFT SIDEBAR
 export function toggleLeftSidebar(value: boolean) {
 	if (value) {
-		$('div[data-a-target="side-nav-bar"]').attr("style", "width: 0 !important;")
-		$('div[data-a-target="side-nav-bar-collapsed"]').attr("style", "width: 0 !important;")
-		$('button[aria-label="Collapse Side Nav"]').trigger("click")
-		$('div[data-a-target="side-nav-bar"]').attr("style", "width: 0 !important;")
+		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
+		const sideNavBarCollapsed = document.querySelector('div[data-a-target="side-nav-bar-collapsed"]') as HTMLElement
+		const collapseButton = document.querySelector('button[aria-label="Collapse Side Nav"]') as HTMLButtonElement
+		
+		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
+		if (sideNavBarCollapsed) sideNavBarCollapsed.style.cssText = "width: 0 !important;"
+		if (collapseButton) collapseButton.click()
+		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
 	} else {
-		$('div[data-a-target="side-nav-bar"]').removeAttr("style")
-		$('div[data-a-target="side-nav-bar-collapsed"]').removeAttr("style")
-		$('button[aria-label="Expand Side Nav"]').trigger("click")
+		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
+		const sideNavBarCollapsed = document.querySelector('div[data-a-target="side-nav-bar-collapsed"]') as HTMLElement
+		const expandButton = document.querySelector('button[aria-label="Expand Side Nav"]') as HTMLButtonElement
+		
+		if (sideNavBar) sideNavBar.removeAttribute("style")
+		if (sideNavBarCollapsed) sideNavBarCollapsed.removeAttribute("style")
+		if (expandButton) expandButton.click()
 	}
 }
 
@@ -174,18 +176,18 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	toggleCSSHidden('[data-a-target="side-nav-show-less-button"]', value)
 	if (value) {
 		updateElement(
-			() => $('[data-a-target="side-nav-show-more-button"]'),
+			() => document.querySelectorAll('[data-a-target="side-nav-show-more-button"]'),
 			(buttons) => {
-				if (buttons.length > 0) {
-					buttons.each(function () {
-						$(this).trigger("click")
+				if (buttons && 'length' in buttons && buttons.length > 0) {
+					buttons.forEach((button) => {
+						(button as HTMLButtonElement).click()
 					})
 					setTimeout(() => {
 						toggleLeftSidebarAlwaysShowMore(value)
-						// toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+						// toggleElementVisibility(document.querySelectorAll('[data-a-target="side-nav-show-less-button"]'), value)
 					}, 100)
 				} else {
-					// toggleElementVisibility($('[data-a-target="side-nav-show-less-button"]'), value)
+					// toggleElementVisibility(document.querySelectorAll('[data-a-target="side-nav-show-less-button"]'), value)
 				}
 			},
 			5000,
@@ -239,18 +241,18 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 
 	if (value) {
 		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
-		const observer = new MutationObserver((mutations, obs) => {
-			const $element = $(
+		const observer = new MutationObserver((_mutations, obs) => {
+			const element = document.querySelector(
 				'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
-			)
-			if ($element.length) {
-				if ($element.attr("data-a-player-state") === "paused") {
+			) as HTMLButtonElement
+			if (element) {
+				if (element.getAttribute("data-a-player-state") === "paused") {
 					if (foundPlaying >= 2) {
 						observer.disconnect()
 					}
 				} else {
 					foundPlaying++
-					$element.trigger("click")
+					element.click()
 				}
 			}
 		})
@@ -298,14 +300,16 @@ export function toggleVideoViewership(value: boolean) {
 	toggleCSSHidden('strong[data-a-target="animated-channel-viewers-count"]', value)
 }
 
-export function toggleAlwaysCloseAdblockPopup(value: boolean) {
+export function toggleAlwaysCloseAdblockPopup(_value: boolean) {
 	updateElement(
-		() => $('button[aria-label="Return to stream"]'),
+		() => document.querySelector('button[aria-label="Return to stream"]'),
 		(el) => {
-			el.trigger("click")
-			storageHandler.get<number>("adblock_popups_clicked").then((val) => {
-				storageHandler.set("adblock_popups_clicked", (val || 0) + 1)
-			})
+			if (el && !('length' in el)) {
+				(el as HTMLButtonElement).click()
+				storageHandler.get<number>("adblock_popups_clicked").then((val) => {
+					storageHandler.set("adblock_popups_clicked", (val || 0) + 1)
+				})
+			}
 		},
 		"no_timeout",
 		"always_on",
@@ -330,8 +334,11 @@ export function toggleInfoViralClipSection(value: boolean) {
 	const url = window.location.pathname
 	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
 	updateElement(
-		() => $("div[style*='social-sharing-badge-promo-banner']").parents().eq(2),
-		($el) => toggleElementVisibility($el, value),
+		() => {
+			const element = document.querySelector("div[style*='social-sharing-badge-promo-banner']")
+			return element?.parentElement?.parentElement?.parentElement || null
+		},
+		(el) => toggleElementVisibility(el, value),
 		5000,
 		"stop_on_found",
 		"toggleInfoViralClipSection"
