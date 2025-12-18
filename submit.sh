@@ -45,7 +45,7 @@ fi
 
 # Step 1: Run zip command from package.json
 echo "🔨 Building zip packages..."
-if ! pnpm wxt zip && wxt zip -b firefox && wxt zip -b edge; then
+if ! (pnpm zip:chrome && pnpm zip:firefox && pnpm zip:edge); then
     echo "❌ Zip build failed!"
     exit 1
 fi
@@ -71,7 +71,7 @@ if [ "$SCRIPT_DRY_RUN" = true ]; then
     echo "⏭️  Skipping actual submission (script dry-run mode)"
     echo "🎉 Script dry-run completed successfully!"
     echo ""
-    echo "To run actual submission, run: ./submit.sh"
+    echo "To run actual submission, run: pnpm submit!"
 else
     echo "🚀 Running actual submission..."
     SUBMIT_CMD="pnpm wxt submit --chrome-zip .output/clean-twitch-$VERSION-chrome.zip --firefox-zip .output/clean-twitch-$VERSION-firefox.zip --firefox-sources-zip .output/clean-twitch-$VERSION-sources.zip --edge-zip .output/clean-twitch-$VERSION-edge.zip"
