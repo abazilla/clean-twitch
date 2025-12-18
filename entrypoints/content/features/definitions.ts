@@ -306,6 +306,12 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "hide_combo_button",
+				label: 'Hide "Combo" Button',
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
 				id: "hide_info_monthly_recap",
 				label: "Hide Monthly Recap Section",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],

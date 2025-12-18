@@ -109,18 +109,26 @@ export function hideTopTurboButton(isHidden: boolean) {
 export function toggleLeftSidebar(value: boolean) {
 	if (value) {
 		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
-		const sideNavBarCollapsed = document.querySelector('div[data-a-target="side-nav-bar-collapsed"]') as HTMLElement
-		const collapseButton = document.querySelector('button[aria-label="Collapse Side Nav"]') as HTMLButtonElement
-		
+		const sideNavBarCollapsed = document.querySelector(
+			'div[data-a-target="side-nav-bar-collapsed"]'
+		) as HTMLElement
+		const collapseButton = document.querySelector(
+			'button[aria-label="Collapse Side Nav"]'
+		) as HTMLButtonElement
+
 		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
 		if (sideNavBarCollapsed) sideNavBarCollapsed.style.cssText = "width: 0 !important;"
 		if (collapseButton) collapseButton.click()
 		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
 	} else {
 		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
-		const sideNavBarCollapsed = document.querySelector('div[data-a-target="side-nav-bar-collapsed"]') as HTMLElement
-		const expandButton = document.querySelector('button[aria-label="Expand Side Nav"]') as HTMLButtonElement
-		
+		const sideNavBarCollapsed = document.querySelector(
+			'div[data-a-target="side-nav-bar-collapsed"]'
+		) as HTMLElement
+		const expandButton = document.querySelector(
+			'button[aria-label="Expand Side Nav"]'
+		) as HTMLButtonElement
+
 		if (sideNavBar) sideNavBar.removeAttribute("style")
 		if (sideNavBarCollapsed) sideNavBarCollapsed.removeAttribute("style")
 		if (expandButton) expandButton.click()
@@ -178,9 +186,9 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 		updateElement(
 			() => document.querySelectorAll('[data-a-target="side-nav-show-more-button"]'),
 			(buttons) => {
-				if (buttons && 'length' in buttons && buttons.length > 0) {
+				if (buttons && "length" in buttons && buttons.length > 0) {
 					buttons.forEach((button) => {
-						(button as HTMLButtonElement).click()
+						;(button as HTMLButtonElement).click()
 					})
 					setTimeout(() => {
 						toggleLeftSidebarAlwaysShowMore(value)
@@ -304,8 +312,8 @@ export function toggleAlwaysCloseAdblockPopup(_value: boolean) {
 	updateElement(
 		() => document.querySelector('button[aria-label="Return to stream"]'),
 		(el) => {
-			if (el && !('length' in el)) {
-				(el as HTMLButtonElement).click()
+			if (el && !("length" in el)) {
+				;(el as HTMLButtonElement).click()
 				storageHandler.get<number>("adblock_popups_clicked").then((val) => {
 					storageHandler.set("adblock_popups_clicked", (val || 0) + 1)
 				})
@@ -375,6 +383,10 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 	// 	"stop_on_found",
 	// 	"toggleInfoMonetizationButtons-sub-logged-out"
 	// )
+}
+
+export function toggleComboButton(value: boolean) {
+	toggleCSSHidden("div.gEvECC:has(button[aria-label='Open Combos modal'])", value)
 }
 
 export function toggleInfoAboutSection(value: boolean) {
