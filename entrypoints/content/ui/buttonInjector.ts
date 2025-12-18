@@ -5,8 +5,8 @@ export interface ButtonConfig {
 	targetSelector: string
 	buttonText: string
 	buttonClass: string
-	extractCategoryInfo: (element: Element) => { name: string; category: string } | null
-	onButtonClick: (categoryInfo: { name: string; category: string }) => Promise<void>
+	extractElementInfo: (element: Element) => string[] | null
+	onButtonClick: (categoryInfo: string[]) => Promise<void>
 	position?: "before" | "after" | "first" | "last"
 }
 
@@ -55,7 +55,7 @@ async function injectButtonsInElements(
 			continue
 		}
 
-		const categoryInfo = config.extractCategoryInfo(element)
+		const categoryInfo = config.extractElementInfo(element)
 		if (!categoryInfo) {
 			continue
 		}
@@ -79,10 +79,7 @@ async function injectButtonsInElements(
 	}
 }
 
-function createButton(
-	config: ButtonConfig,
-	categoryInfo: { name: string; category: string }
-): HTMLElement {
+function createButton(config: ButtonConfig, categoryInfo: string[]): HTMLElement {
 	const button = document.createElement("button")
 	button.className = config.buttonClass
 	button.textContent = config.buttonText

@@ -39,6 +39,8 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 			...(hideFromSidebar ? [`div.side-nav-card:has(a[href="/${u.username}"])`] : []),
 			...(hideFromDirectory
 				? [
+						`div[data-target="directory-first-item"]:has(a[href="/${u.username}"])`,
+						`div[data-target=""]:has(a[href="/${u.username}"])`,
 						`a[href="/${u.username}"][data-a-target="preview-card-image-link"] ~ div.shelf-card__impression-wrapper`,
 						`a[data-a-target="preview-card-image-link"][href="/${u.username}"] ~ div[data-target="directory-game__card_container"]`,
 						`a[href="/${u.username}"] ~ .recommended-channel`,

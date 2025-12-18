@@ -1,10 +1,7 @@
-import { BlockedCategories } from "../features/definitions"
+import { BlockedCategories, BlockedChannels } from "../features/definitions"
 import { storageHandler } from "../utils/storageHandler"
 
-export async function blockCategory(categoryInfo: {
-	name: string
-	category: string
-}): Promise<void> {
+export async function blockCategory([name, category]: string[]): Promise<void> {
 	try {
 		const blockedCategories = ((await storageHandler.get(
 			"blocked_categories"
@@ -17,9 +14,7 @@ export async function blockCategory(categoryInfo: {
 		}
 
 		// Check if category already exists
-		const existingCategory = blockedCategories.categories.find(
-			(c) => c.category === categoryInfo.category
-		)
+		const existingCategory = blockedCategories.categories.find((c) => c.category === category)
 
 		if (existingCategory) {
 			// console.log(`Category ${categoryInfo.name} is already blocked`)
@@ -31,8 +26,8 @@ export async function blockCategory(categoryInfo: {
 			...blockedCategories,
 			categories: [
 				{
-					category: categoryInfo.category,
-					name: categoryInfo.name,
+					category: category,
+					name: name,
 					enabled: true,
 				},
 				...blockedCategories.categories,
@@ -40,12 +35,44 @@ export async function blockCategory(categoryInfo: {
 		}
 
 		await storageHandler.set("blocked_categories", updatedBlockedCategories)
-		// console.log(`Successfully blocked category: ${categoryInfo.name}`)
+		// console.log(`Successfully blocked category: ${name}`)
 	} catch (error) {
 		console.error("Error blocking category:", error)
 	}
 }
 
-// Add more button handlers here as needed
-// export async function blockChannel(channelInfo: { name: string; id: string }): Promise<void> { ... }
-// export async function customAction(info: any): Promise<void> { ... }
+export async function blockChannel([channel]: string[]): Promise<void> {
+	try {
+		const blockedChannels = ((await storageHandler.get("blocked_channels")) as BlockedChannels) || {
+			enabled: true,
+			hideFromSidebar: true,
+			hideFromDirectory: true,
+			hideFromSearch: true,
+			usernames: [],
+		}
+
+		// Check if channel already exists
+		const existingChannel = blockedChannels.usernames.find((u) => u.username === channel)
+
+		if (existingChannel) {
+			// console.log(`Channel ${channel} is already blocked`)
+			return
+		}
+
+		const updatedBlockedChannels: BlockedChannels = {
+			...blockedChannels,
+			usernames: [
+				{
+					username: channel,
+					enabled: true,
+				},
+				...blockedChannels.usernames,
+			],
+		}
+
+		await storageHandler.set("blocked_channels", updatedBlockedChannels)
+		// console.log(`Successfully blocked channel: ${channel}`)
+	} catch (error) {
+		console.error("Error blocking channel:", error)
+	}
+}

@@ -1,4 +1,5 @@
 import { handleModeSwitch } from "../featureController"
+import { reinitializeButtonManager } from "../ui/buttonManager"
 import { storageHandler } from "./storageHandler"
 
 export function setupUrlChangeListener() {
@@ -33,11 +34,13 @@ export function setupUrlChangeListener() {
 
 export async function handleUrlChange(lastUrl: string) {
 	// console.log("URL changed to:", window.location.href)
-	// await initializeStylesAndFeatures()
 	let isSimpleMode = await storageHandler.get<boolean>("is_simple_mode")
 	if (isSimpleMode === undefined || isSimpleMode === null) {
 		await storageHandler.set("is_simple_mode", true)
 		isSimpleMode = true
 	}
 	await handleModeSwitch(isSimpleMode)
+
+	// Reinitialize button manager to inject buttons on new pages
+	await reinitializeButtonManager()
 }

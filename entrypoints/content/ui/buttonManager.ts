@@ -12,8 +12,20 @@ let currentConfigs: ButtonConfig[] = []
 let currentCtx: ContentScriptContext | null = null
 let mutationObserver: MutationObserver | null = null
 
+function shouldInjectButtons(): boolean {
+	const href = window.location.href
+
+	// Only inject on directory/browse pages
+	return href.includes("/directory") || href === "https://www.twitch.tv/"
+}
+
 export async function initializeButtonManager(ctx: ContentScriptContext): Promise<void> {
 	if (isInitialized) {
+		return
+	}
+
+	// Check if we should inject buttons on this page
+	if (!shouldInjectButtons()) {
 		return
 	}
 
