@@ -1,55 +1,55 @@
-import { describe, test, expect } from 'vitest'
-import { parseCategoryName } from "../categoryParser"
+import { describe, expect, test } from "vitest"
+import { parseCategory } from "../categoryParser"
 
 describe("parseCategoryName", () => {
 	test("converts spaces to hyphens", () => {
-		expect(parseCategoryName("Just Chatting")).toBe("just-chatting")
-		expect(parseCategoryName("World of Warcraft")).toBe("world-of-warcraft")
+		expect(parseCategory("Just Chatting")).toEqual(["just chatting", "just-chatting"])
+		expect(parseCategory("World of Warcraft")).toEqual(["world of warcraft", "world-of-warcraft"])
 	})
 
 	test("removes apostrophes", () => {
-		expect(parseCategoryName("Player's Unknown")).toBe("players-unknown")
-		expect(parseCategoryName("Don't Starve")).toBe("dont-starve")
+		expect(parseCategory("Player's Unknown")).toEqual(["players unknown", "players-unknown"])
+		expect(parseCategory("Don't Starve")).toEqual(["dont starve", "dont-starve"])
 	})
 
 	test("converts to lowercase", () => {
-		expect(parseCategoryName("VALORANT")).toBe("valorant")
-		expect(parseCategoryName("Counter-Strike")).toBe("counter-strike")
+		expect(parseCategory("VALORANT")).toEqual(["valorant", "valorant"])
+		expect(parseCategory("Counter Strike")).toEqual(["counter strike", "counter-strike"])
 	})
 
 	test("keeps numbers", () => {
-		expect(parseCategoryName("Final Fantasy 14")).toBe("final-fantasy-14")
-		expect(parseCategoryName("GTA 5")).toBe("gta-5")
+		expect(parseCategory("Final Fantasy 14")).toEqual(["final fantasy 14", "final-fantasy-14"])
+		expect(parseCategory("GTA 5")).toEqual(["gta 5", "gta-5"])
 	})
 
 	test("removes colons", () => {
-		expect(parseCategoryName("Half-Life: Alyx")).toBe("half-life-alyx")
-		expect(parseCategoryName("Portal: 2")).toBe("portal-2")
+		expect(parseCategory("Half Life: Alyx")).toEqual(["half life alyx", "half-life-alyx"])
+		expect(parseCategory("Portal: 2")).toEqual(["portal 2", "portal-2"])
 	})
 
 	test("handles periods in acronyms vs regular text", () => {
-		expect(parseCategoryName("R.E.P.O")).toBe("r-e-p-o")
-		expect(parseCategoryName("Super Smash Bros. Melee")).toBe("super-smash-bros-melee")
-		expect(parseCategoryName("Dr. Mario")).toBe("dr-mario")
+		expect(parseCategory("R.E.P.O")).toEqual(["r-e-p-o", "r-e-p-o"])
+		expect(parseCategory("Super Smash Bros. Melee")).toEqual(["super smash bros melee", "super-smash-bros-melee"])
+		expect(parseCategory("Dr. Mario")).toEqual(["dr mario", "dr-mario"])
 	})
 
 	test("removes accents", () => {
-		expect(parseCategoryName("Pokémon")).toBe("pokemon")
-		expect(parseCategoryName("Mônica")).toBe("monica")
+		expect(parseCategory("Pokémon")).toEqual(["pokemon", "pokemon"])
+		expect(parseCategory("Mônica")).toEqual(["monica", "monica"])
 	})
 
 	test("converts & to and", () => {
-		expect(parseCategoryName("Dungeons & Dragons")).toBe("dungeons-and-dragons")
-		expect(parseCategoryName("Ben & Ed")).toBe("ben-and-ed")
+		expect(parseCategory("Dungeons & Dragons")).toEqual(["dungeons and dragons", "dungeons-and-dragons"])
+		expect(parseCategory("Ben & Ed")).toEqual(["ben and ed", "ben-and-ed"])
 	})
 
 	test("handles multiple spaces and special characters", () => {
-		expect(parseCategoryName("  Multiple   Spaces  ")).toBe("multiple-spaces")
-		expect(parseCategoryName("Special:!@#$%^&*Characters")).toBe("special-and-characters")
+		expect(parseCategory("  Multiple   Spaces  ")).toEqual(["multiple spaces", "multiple-spaces"])
+		expect(parseCategory("Special:!@#$%^&*Characters")).toEqual(["special and characters", "special-and-characters"])
 	})
 
 	test("handles empty or whitespace input", () => {
-		expect(parseCategoryName("")).toBe("")
-		expect(parseCategoryName("   ")).toBe("")
+		expect(parseCategory("")).toEqual(["", ""])
+		expect(parseCategory("   ")).toEqual(["", ""])
 	})
 })

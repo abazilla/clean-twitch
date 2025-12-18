@@ -5,7 +5,7 @@ type PersistenceSettingType = "always_on" | "stop_on_found" | "stop_after_timeou
 type ElementCollection = NodeListOf<Element> | Element | null
 
 // Helper to check if collection has elements
-function hasElements(elements: ElementCollection): boolean {
+export function hasElements(elements: ElementCollection): boolean {
 	if (!elements) return false
 	if ('length' in elements) return elements.length > 0
 	return true // single Element

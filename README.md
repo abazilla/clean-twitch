@@ -1,83 +1,28 @@
 # Clean Twitch
 
-Twitch without the clutter.
+WXT + React 19 + TypeScript + Tailwind 4.x + Vitest + pnpm
 
-## Features
-
-- **Content Filtering**: Block specific channels and categories
-- **UI Customization**: Hide various Twitch UI elements (ads, recommendations, chat, etc.)
-- **Dual Mode System**:
-  - **Simple Mode**: Quick presets (Show All, No Monetization, Minimalist)
-  - **Advanced Mode**: Individual feature control
-- **Test Mode**: Preview changes with visual indicators before applying
-
-## Installation
-
-### Development
+## Development
 
 1. Install dependencies: `pnpm install`
-2. Start development server: `pnpm dev` (Chrome) or `pnpm dev:firefox` (Firefox) or `pnpm dev:edge` (Edge)
+2. Start development server: `pnpm dev:chrome` (Chrome) or `pnpm dev:firefox` (Firefox) or `pnpm dev:edge` (Edge)
 3. Load the extension in your browser's developer mode
 
-### Production Build
+## Production Build
 
-- Chrome: `pnpm build && pnpm zip`
+These zips are used for manual submission to each store.
+
+- Chrome: `pnpm build:chrome && pnpm zip:chrome`
 - Firefox: `pnpm build:firefox && pnpm zip:firefox`
 - Edge: `pnpm build:edge && pnpm zip:edge`
 
-## Development Commands
+- `pnpm submit` - Runs a script to automatically build and submit to all 3 stores. Needs setup via `pnpm wxt submit init`
 
-### Core Development
-
-- `pnpm dev` - Start development server for Chrome
-- `pnpm dev:firefox` - Start development server for Firefox
-- `pnpm dev:edge` - Start development server for Edge
-
-- `pnpm build` - Build extension for production (Chrome)
-- `pnpm build:firefox` - Build extension for Firefox
-- `pnpm build:edge` - Build extension for Edge
-
-- `pnpm zip` - Create zip package for Chrome store
-- `pnpm zip:firefox` - Create zip package AND source code zip for Firefox addon store
-- `pnpm zip:edge` - Create zip package for Edge addon store
+## Other
 
 - `pnpm compile` - TypeScript compilation check
-
-### Testing
-
 - `pnpm test` - Run all tests with Vitest
 - `pnpm test:ui` - Run tests with Vitest UI
-
-## Technology Stack
-
-- **Framework**: WXT (Web Extension Toolkit)
-- **Frontend**: React 19 with TypeScript
-- **Styling**: Tailwind CSS 4.x
-- **Testing**: Vitest with jsdom
-- **Package Manager**: pnpm
-
-## Architecture
-
-### Extension Entry Points
-
-- **Content Script**: Main logic injected into Twitch pages
-- **Popup**: React-based extension popup interface
-
-### Key Components
-
-- **Feature System**: Toggle-based features with conflict resolution
-- **Storage Management**: WXT storage API with React hooks
-- **DOM Manipulation**: CSS injection and element hiding
-- **URL Monitoring**: SPA navigation detection
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests: `pnpm test`
-5. Build and test the extension: `pnpm build`
-6. Submit a pull request
 
 ## License
 

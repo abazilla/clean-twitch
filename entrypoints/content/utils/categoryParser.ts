@@ -19,13 +19,16 @@ export function parseCategory(input: string): [string, string] {
 		// Remove accents/diacritics
 		.replace(/[\u0300-\u036f]/g, "")
 		// Convert & to "and"
-		.replace(/&/g, "-and-")
+		.replace(/&/g, " and ")
 		// Remove apostrophes
 		.replace(/[']/g, "")
 		// Remove colons
 		.replace(/:/g, "")
 		// Convert to lowercase
 		.toLowerCase()
+
+	// Clean up multiple spaces before processing
+	normalized = normalized.replace(/\s+/g, " ").trim()
 
 	// Handle acronyms vs regular periods
 	// Split into words
@@ -44,7 +47,7 @@ export function parseCategory(input: string): [string, string] {
 	// Join words back together and replace spaces with hyphens
 	const urlFriendly = processedWords
 		.join(" ")
-		// Remove any remaining non-alphanumeric characters except hyphens
+		// Remove any remaining non-alphanumeric characters except hyphens and spaces
 		.replace(/[^a-z0-9- ]/g, "")
 		// Remove multiple consecutive hyphens
 		.replace(/-+/g, "-")
