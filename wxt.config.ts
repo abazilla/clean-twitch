@@ -23,6 +23,7 @@ export default defineConfig({
 			},
 		}) as WxtViteConfig,
 	manifest: {
+		name: "Clean Twitch",
 		// action: {
 		// 	default_popup: "/entrypoints/popup/index.html",
 		// },
@@ -34,7 +35,7 @@ export default defineConfig({
 			},
 		},
 	},
-	webExt: {
-		disabled: true,
-	},
+	// webExt: {
+	// 	disabled: true,
+	// },
 })

@@ -46,6 +46,7 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 						`a[href="/${u.username}"] ~ .recommended-channel`,
 						`a[href="/${u.username}"][data-test-selector="recommended-channel"] ~ div.recommended-channel`,
 						`div.tw-col:has(a[href="/${u.username}"])`,
+						`div.tw-transition:has(> .shelf-card__impression-wrapper):has(a[href="/${u.username}"])`,
 					]
 				: []),
 		])

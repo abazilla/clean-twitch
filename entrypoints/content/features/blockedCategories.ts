@@ -52,11 +52,12 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						`div[data-target="directory-first-item"]:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-target=""]:has(a[href="/directory/category/${c.category}"])`,
 						// `.ScTransitionBase-sc-hx4quq-0.ldiLWn:has(a[href="/directory/category/${c.category}"])`, // caused a bug on channels vod list if category existed in vods, may be removed in future
-						`a[href*="/directory/category/${c.category}"] ~ div[data-target="directory-page__card-container"]`,
+						`a[href*="/directory/category/${c.category}"] ~ div[data-target="directory-page__card-container"]`, // /directory
 						`div.game-card:has(a[href="/directory/category/${c.category}"])`,
 						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${c.category}"])`,
 						`div > h2 > a[href*="${c.category}"] ~ div`,
-						`a[href*="/directory/category/${c.category}"] ~ .shelf-card__impression-wrapper`,
+						// `a[href*="/directory/category/${c.category}"] ~ .shelf-card__impression-wrapper`,
+						`div.tw-transition:has(> .shelf-card__impression-wrapper):has(a[href="/directory/category/${c.category}"])`, // home
 						`div.vertical-selector__wrapper > div.vertical-selector > a[href*="/directory/${c.category}"]`,
 					]
 				: []),
