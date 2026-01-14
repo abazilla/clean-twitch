@@ -13,14 +13,7 @@ import {
 } from "../utils/cssManipulators"
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
 import { storageHandler } from "../utils/storageHandler"
-import { TwitchURLs } from "./definitions"
-
-/**
- * Checks if the current page is a channel page (not one of the defined TwitchURLs)
- */
-function isChannelPage(): boolean {
-	return !Object.values(TwitchURLs).includes(window.location.pathname as TwitchURLs)
-}
+import { isChannelPage, TwitchURLs } from "./definitions"
 
 export function toggleTestMode(toggled: boolean) {
 	const styleIds = [

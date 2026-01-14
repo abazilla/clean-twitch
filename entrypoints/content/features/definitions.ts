@@ -21,6 +21,10 @@ export enum TwitchURLs {
 	Settings = "/settings",
 }
 
+export function isChannelPage(): boolean {
+	return !Object.values(TwitchURLs).includes(window.location.pathname as TwitchURLs)
+}
+
 export interface FeatureItem {
 	id: string
 	label: string
