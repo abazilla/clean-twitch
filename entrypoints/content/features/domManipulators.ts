@@ -15,6 +15,13 @@ import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
 import { storageHandler } from "../utils/storageHandler"
 import { TwitchURLs } from "./definitions"
 
+/**
+ * Checks if the current page is a channel page (not one of the defined TwitchURLs)
+ */
+function isChannelPage(): boolean {
+	return !Object.values(TwitchURLs).includes(window.location.pathname as TwitchURLs)
+}
+
 export function toggleTestMode(toggled: boolean) {
 	const styleIds = [
 		UNIVERSAL_STYLE_ID_JS,
@@ -281,6 +288,7 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 
 // THUMBNAILS
 export function toggleThumbnailViewership(value: boolean) {
+	if (!isChannelPage()) return
 	toggleCSSHidden("p.kdDAY", value)
 	toggleCSSHidden("div.tw-media-card-stat", value)
 }
@@ -292,18 +300,17 @@ export function toggleVideoGrayscale(value: boolean) {
 }
 
 export function toggleVideoGiftButtonSection(value: boolean) {
-	const url = window.location.pathname
-	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
+	if (!isChannelPage()) return
 	toggleCSSHidden('div.theatre-social-panel:has(button[data-a-target="gift-button"])', value)
 }
 
 export function toggleVideoAdWrapper(value: boolean) {
-	const url = window.location.pathname
-	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
+	if (!isChannelPage()) return
 	toggleCSSHidden("div.stream-display-ad__wrapper", value)
 }
 
 export function toggleVideoViewership(value: boolean) {
+	if (!isChannelPage()) return
 	toggleCSSHidden("div.cbxBks", value)
 	toggleCSSHidden('strong[data-a-target="animated-channel-viewers-count"]', value)
 }
@@ -327,8 +334,7 @@ export function toggleAlwaysCloseAdblockPopup(_value: boolean) {
 
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
-	const url = window.location.pathname
-	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
+	if (!isChannelPage()) return
 	toggleCSSHidden('div[aria-label="chan-sda-upsell-third-view"]', value)
 }
 
@@ -339,8 +345,7 @@ export function toggleInfoSectionGrayscale(value: boolean) {
 
 // TODO: fix when you see this
 export function toggleInfoViralClipSection(value: boolean) {
-	const url = window.location.pathname
-	if (Object.values(TwitchURLs).includes(url as TwitchURLs)) return
+	if (!isChannelPage()) return
 	updateElement(
 		() => {
 			const element = document.querySelector("div[style*='social-sharing-badge-promo-banner']")
