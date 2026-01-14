@@ -13,6 +13,7 @@ import {
 } from "../utils/cssManipulators"
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
 import { storageHandler } from "../utils/storageHandler"
+import { chatWebSocketManager } from "../utils/websocketManager"
 import { isChannelPage, TwitchURLs } from "./definitions"
 
 export function toggleTestMode(toggled: boolean) {
@@ -398,4 +399,13 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
 	toggleCSSHidden("#twilight-sticky-footer-root", value)
+}
+
+// WEBSOCKET MANAGEMENT
+export function toggleAutoManageChatWebSocket(value: boolean) {
+	if (value) {
+		chatWebSocketManager.enable()
+	} else {
+		chatWebSocketManager.disable()
+	}
 }

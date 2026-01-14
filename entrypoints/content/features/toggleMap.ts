@@ -10,6 +10,7 @@ import {
 	hideTopTurboButton,
 	hideWhispersButton,
 	toggleAlwaysCloseAdblockPopup,
+	toggleAutoManageChatWebSocket,
 	toggleBelowVideoAdSection,
 	toggleChatBadges,
 	toggleChatClipBestMoments,
@@ -108,4 +109,5 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_info_about_section: (value: boolean) => toggleInfoAboutSection(value),
 	hide_info_channel_panel_section: (value: boolean) => toggleInfoChannelPanelSection(value),
 	hide_sticky_footer: (value: boolean) => toggleStickyFooter(value),
+	auto_manage_chat_websocket: (value: boolean) => toggleAutoManageChatWebSocket(value),
 }

@@ -248,6 +248,12 @@ export const features = [
 				simpleModeActive: ["focus"],
 				children: [],
 			},
+			{
+				id: "auto_manage_chat_websocket",
+				label: "Auto-close Chat WebSocket When Hidden",
+				simpleModeActive: ["show_all", "no_monetization", "minimalist", "focus"],
+				children: [],
+			},
 		],
 	},
 	{
