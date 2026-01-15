@@ -20,7 +20,9 @@
 		"submit": "./submit.sh",
 		"submit:dry-run": "./submit.sh --dry-run",
 		"postinstall": "wxt prepare",
-		"prepare": "husky"
+		"prepare": "husky",
+		"benchmark": "node scripts/benchmark.mjs",
+		"benchmark:compare": "node scripts/benchmark.mjs --compare"
 	},
 	"dependencies": {
 		"react": "^19.1.1",
@@ -30,7 +32,8 @@
 		"overrides": {
 			"@wxt-dev/browser": "^0.1.4",
 			"@wxt-dev/storage": "1.2.0"
-		}
+		},
+		"onlyBuiltDependencies": ["puppeteer", "esbuild", "@tailwindcss/oxide"]
 	},
 	"devDependencies": {
 		"@tailwindcss/vite": "^4.1.4",
@@ -45,6 +48,7 @@
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.6.11",
+		"puppeteer": "^24.35.0",
 		"tailwindcss": "^4.0.9",
 		"typescript": "^5.9.2",
 		"vite-plugin-checker": "^0.11.0",
