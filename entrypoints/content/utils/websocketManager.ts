@@ -25,8 +25,7 @@ class ChatWebSocketManager {
 		if (this.enabled) return
 
 		this.enabled = true
-		this.enableLogging = options.enableLogging ?? false
-		this.injectInterceptor()
+		this.enableLogging = true
 		this.setupEventListeners()
 
 		// Check initial chat visibility state and block if already hidden
@@ -62,36 +61,6 @@ class ChatWebSocketManager {
 	 */
 	isBlocking(): boolean {
 		return this.blockReconnection
-	}
-
-	/**
-	 * Check if WebSocket interceptor is ready
-	 * The interceptor runs in a separate content script with world: "MAIN"
-	 */
-	private injectInterceptor() {
-		// The interceptor is loaded as a separate content script
-		// with world: "MAIN" to bypass CSP restrictions
-		// We just verify it's loaded by checking the global flag
-
-		// Wait for the interceptor to be ready
-		const checkReady = () => {
-			if ((window as any).__cleanTwitchWSInjected) {
-				this.log("WebSocket interceptor detected")
-				return true
-			}
-			return false
-		}
-
-		if (!checkReady()) {
-			// Wait a bit for the interceptor to load
-			setTimeout(() => {
-				if (checkReady()) {
-					this.log("WebSocket interceptor ready")
-				} else {
-					console.warn("[CT] WebSocket interceptor not found - feature may not work")
-				}
-			}, 100)
-		}
 	}
 
 	/**
@@ -205,15 +174,11 @@ class ChatWebSocketManager {
 	 * Close existing WebSocket and block reconnection attempts
 	 */
 	private closeAndBlock() {
-		if (this.blockReconnection) {
-			this.log("Already blocking, skipping")
-			return
-		}
-
 		this.blockReconnection = true
 		this.log("Closing and blocking chat WebSocket")
 
 		// Dispatch custom event to MAIN world interceptor
+		// Always dispatch to ensure state stays in sync (idempotent)
 		window.dispatchEvent(new CustomEvent("__cleanTwitch_closeAndBlock"))
 	}
 
@@ -221,15 +186,11 @@ class ChatWebSocketManager {
 	 * Unblock WebSocket reconnection (allows Twitch to reconnect naturally)
 	 */
 	private unblock() {
-		if (!this.blockReconnection) {
-			this.log("Not blocking, skipping unblock")
-			return
-		}
-
 		this.blockReconnection = false
 		this.log("Unblocking chat WebSocket")
 
 		// Dispatch custom event to MAIN world interceptor
+		// Always dispatch to ensure state stays in sync (idempotent)
 		window.dispatchEvent(new CustomEvent("__cleanTwitch_unblock"))
 	}
 
@@ -256,7 +217,7 @@ class ChatWebSocketManager {
 	 */
 	private log(message: string) {
 		if (this.enableLogging) {
-			console.log(`[ChatWebSocketManager] ${message}`)
+			console.log(`[CTWM] ${message}`)
 		}
 	}
 }

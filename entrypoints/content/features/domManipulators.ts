@@ -409,3 +409,11 @@ export function toggleAutoManageChatWebSocket(value: boolean) {
 		chatWebSocketManager.disable()
 	}
 }
+
+export function toggleBlockHermesWebSocket(value: boolean) {
+	if (value) {
+		window.dispatchEvent(new CustomEvent("__cleanTwitch_blockHermes"))
+	} else {
+		window.dispatchEvent(new CustomEvent("__cleanTwitch_unblockHermes"))
+	}
+}

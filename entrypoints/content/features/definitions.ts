@@ -254,6 +254,12 @@ export const features = [
 				simpleModeActive: ["show_all", "no_monetization", "minimalist", "focus"],
 				children: [],
 			},
+			{
+				id: "block_hermes_websocket",
+				label: "Block Notification WebSockets",
+				simpleModeActive: [],
+				children: [],
+			},
 		],
 	},
 	{

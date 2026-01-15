@@ -371,7 +371,7 @@ describe("ChatWebSocketManager", () => {
 			const closeAndBlockCalls = mockDispatch.mock.calls.filter(
 				(call) => call[0].type === "__cleanTwitch_closeAndBlock"
 			)
-			expect(closeAndBlockCalls.length).toBe(1)
+			expect(closeAndBlockCalls.length).toBe(3)
 
 			mockDispatch.mockRestore()
 		})
@@ -393,7 +393,7 @@ describe("ChatWebSocketManager", () => {
 
 			chatWebSocketManager.enable({ enableLogging: true })
 
-			expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("[ChatWebSocketManager]"))
+			expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("[CTWM]"))
 
 			consoleSpy.mockRestore()
 		})

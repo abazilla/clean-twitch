@@ -20,23 +20,31 @@ export default defineContentScript({
 
 		const OriginalWebSocket = window.WebSocket
 		let chatWebSocket: WebSocket | null = null
+		let hermesWebSockets: WebSocket[] = []
 		let blockChatWS = false
+		let blockHermesWS = false
 
 		// Proxy WebSocket constructor
 		window.WebSocket = new Proxy(OriginalWebSocket, {
 			construct(target, args: [string | URL, string | string[] | undefined]) {
 				const url = args[0]
+				const urlString = typeof url === "string" ? url : url.toString()
 
 				// Block chat WebSocket if flag is set
-				if (typeof url === "string" && url.includes("irc-ws.chat.twitch.tv") && blockChatWS) {
+				if (urlString.includes("irc-ws.chat.twitch.tv") && blockChatWS) {
 					console.log("[CT] 🚫 Blocked chat WebSocket reconnection")
 					throw new Error("Chat WebSocket blocked - chat is hidden")
+				}
+
+				// Block Hermes WebSocket if flag is set
+				if (urlString.includes("hermes.twitch.tv") && blockHermesWS) {
+					console.log("[CT] 🚫 Blocked Hermes WebSocket")
+					throw new Error("Hermes WebSocket blocked")
 				}
 
 				const ws = new target(...args)
 
 				// Track chat WebSocket
-				const urlString = typeof url === "string" ? url : url.toString()
 				if (urlString.includes("irc-ws.chat.twitch.tv")) {
 					chatWebSocket = ws
 					console.log("[CT] 🟢 Chat WebSocket created")
@@ -44,6 +52,17 @@ export default defineContentScript({
 					ws.addEventListener("close", () => {
 						console.log("[CT] 🔴 Chat WebSocket closed")
 						chatWebSocket = null
+					})
+				}
+
+				// Track Hermes WebSocket
+				if (urlString.includes("hermes.twitch.tv")) {
+					hermesWebSockets.push(ws)
+					console.log("[CT] 🟢 Hermes WebSocket created")
+
+					ws.addEventListener("close", () => {
+						console.log("[CT] 🔴 Hermes WebSocket closed")
+						hermesWebSockets = hermesWebSockets.filter((s) => s !== ws)
 					})
 				}
 
@@ -65,12 +84,31 @@ export default defineContentScript({
 			console.log("[CT] ✅ Chat WebSocket unblocked")
 		})
 
+		// Hermes WebSocket control events
+		window.addEventListener("__cleanTwitch_blockHermes", () => {
+			blockHermesWS = true
+			// Close all existing Hermes connections
+			for (const ws of hermesWebSockets) {
+				if (ws.readyState === WebSocket.OPEN) {
+					ws.close(1000, "Hermes blocked by CT")
+				}
+			}
+			console.log("[CT] 🚫 Hermes WebSocket blocked")
+		})
+
+		window.addEventListener("__cleanTwitch_unblockHermes", () => {
+			blockHermesWS = false
+			console.log("[CT] ✅ Hermes WebSocket unblocked")
+		})
+
 		// Expose state getter via custom event
 		window.addEventListener("__cleanTwitch_getState", ((e: CustomEvent) => {
 			e.detail.callback({
 				blocking: blockChatWS,
 				hasWebSocket: chatWebSocket !== null,
 				wsState: chatWebSocket?.readyState,
+				blockingHermes: blockHermesWS,
+				hermesWebSocketCount: hermesWebSockets.length,
 			})
 		}) as EventListener)
 
