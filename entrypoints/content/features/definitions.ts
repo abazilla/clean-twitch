@@ -251,13 +251,13 @@ export const features = [
 			{
 				id: "auto_manage_chat_websocket",
 				label: "Auto-close Chat WebSocket When Hidden",
-				simpleModeActive: ["show_all", "no_monetization", "minimalist", "focus"],
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "block_hermes_websocket",
 				label: "Block Notification WebSockets",
-				simpleModeActive: [],
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 		],

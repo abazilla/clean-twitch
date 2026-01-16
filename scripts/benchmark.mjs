@@ -5,37 +5,42 @@
  * Measures memory usage, Core Web Vitals, and network metrics over time.
  * Uses Puppeteer + Chrome DevTools Protocol (CDP) for metrics.
  *
- * Usage:
- *   node scripts/benchmark.mjs [options]
- *
- * Options:
- *   --with-extension     Run with extension enabled (default)
- *   --without-extension  Run without extension (baseline)
- *   --duration <seconds> How long to monitor (default: 60)
- *   --interval <ms>      Sampling interval (default: 2000)
- *   --stream <url>       Twitch stream URL to test
- *   --compare            Run both with and without, then compare
- *   --features <list>    Comma-separated list of features to enable
- *   --json               Output results as JSON for pipeline integration
- *   --runs <n>           Run benchmark N times and report statistics (default: 1)
+ * Default mode is 4-way comparison (--compare-all) which tests:
+ *   - Extension (simple mode, minimalist preset) + chat visible
+ *   - Extension (simple mode, minimalist preset) + chat collapsed
+ *   - No extension + chat visible
+ *   - No extension + chat collapsed
  */
 
+import fs from "fs"
 import path from "path"
 import puppeteer from "puppeteer"
 import { fileURLToPath } from "url"
+import {
+	median,
+	stdDev,
+	wilcoxonSignedRank,
+	cliffsD,
+	getStatValue,
+	aggregateRuns,
+} from "./benchmark-utils.js"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const EXTENSION_PATH = path.resolve(__dirname, "../.output/chrome-mv3")
+const OUTPUT_DIR = path.resolve(__dirname, "../.output")
+
+// Capture log output for saving to file
+const logBuffer = []
 
 // Default config
 const config = {
+	// Benchmark mode: "compare-all" | "compare" | "single" | "websocket"
+	mode: "compare-all", // Default to 4-way comparison
 	withExtension: true,
 	duration: 60, // seconds
 	interval: 2000, // ms
 	stream: "https://www.twitch.tv/directory", // Default to directory (always live)
-	compare: false,
-	compare4way: false, // 4-way comparison mode
-	features: [], // Additional features to enable
+	features: [], // Additional features to enable (for advanced mode)
 	json: false, // JSON output mode
 	runs: 10, // Number of runs for statistical analysis (academic minimum)
 }
@@ -60,10 +65,25 @@ for (let i = 0; i < args.length; i++) {
 			config.stream = args[++i]
 			break
 		case "--compare":
-			config.compare = true
+			config.mode = "compare"
 			break
 		case "--compare-all":
-			config.compare4way = true
+			config.mode = "compare-all"
+			break
+		case "--single":
+			config.mode = "single"
+			break
+		case "--websocket-only":
+		case "--ws":
+			config.mode = "websocket"
+			break
+		case "--quick":
+			config.runs = 3
+			config.duration = 30
+			break
+		case "--thorough":
+			config.runs = 20
+			config.duration = 120
 			break
 		case "--features":
 			config.features = args[++i].split(",").map((f) => f.trim())
@@ -80,18 +100,27 @@ Performance Benchmark for Clean Twitch Extension
 
 Usage: node scripts/benchmark.mjs [options]
 
+Benchmark Modes (default: --compare-all):
+  (no flag)             4-way comparison (default): ext+chat, ext+nochat, noext+chat, noext+nochat
+                        Extension runs use simple mode with minimalist preset
+  --compare             2-way comparison: with extension vs without
+  --single              Single run with current settings
+  --websocket-only, --ws  Test only WebSocket features (advanced mode, WS features only)
+
+Speed Presets:
+  --quick               Fast testing: 3 runs, 30s each
+  (default)             Standard: 10 runs, 60s each
+  --thorough            Comprehensive: 20 runs, 120s each
+
 Options:
-  --with-extension      Run with extension enabled (default)
-  --without-extension   Run without extension (baseline)
-  --duration <seconds>  How long to monitor (default: 60)
+  --with-extension      Run with extension enabled (for --single mode)
+  --without-extension   Run without extension (for --single mode)
+  --duration <seconds>  Override duration per run (default: 60)
   --interval <ms>       Sampling interval (default: 2000)
   --stream <url>        Twitch stream URL to test
-  --compare             Run both with and without, then compare
-  --compare-all         Run 4-way comparison: ext+chat, ext+nochat, noext+chat, noext+nochat
-                        Uses simple mode with WebSocket features enabled
-  --features <list>     Comma-separated list of feature IDs to enable
+  --features <list>     Comma-separated list of feature IDs to enable (advanced mode)
   --json                Output results as JSON for pipeline integration
-  --runs <n>            Run benchmark N times and report statistics (default: 10)
+  --runs <n>            Override number of runs (default: 10)
 
 Statistical Analysis:
   When using --compare or --compare-all with multiple runs, results include:
@@ -99,10 +128,20 @@ Statistical Analysis:
   - Cliff's delta effect size (negligible/small/medium/large)
 
 Examples:
-  node scripts/benchmark.mjs --stream https://www.twitch.tv/squeex --duration 120
-  node scripts/benchmark.mjs --compare --duration 60 --json
-  node scripts/benchmark.mjs --compare-all --duration 60 --json | jq '.comparisons'
-  node scripts/benchmark.mjs --without-extension --runs 5
+  # Default 4-way comparison (full)
+  node scripts/benchmark.mjs --stream https://www.twitch.tv/squeex
+
+  # Quick 4-way test for development
+  node scripts/benchmark.mjs --quick --stream https://www.twitch.tv/squeex
+
+  # WebSocket-only test
+  node scripts/benchmark.mjs --ws --quick --stream https://www.twitch.tv/squeex
+
+  # JSON output for analysis
+  node scripts/benchmark.mjs --quick --json | jq '.comparisons'
+
+  # Thorough benchmark for final results
+  node scripts/benchmark.mjs --thorough --stream https://www.twitch.tv/squeex --json
 			`)
 			process.exit(0)
 	}
@@ -134,150 +173,44 @@ function outputError(error) {
 }
 
 /**
- * Log message (respects JSON mode)
+ * Log message (respects JSON mode, captures to buffer)
  */
 function log(message) {
+	logBuffer.push(message)
 	if (!config.json) {
 		console.log(message)
 	}
 }
 
 /**
- * Log warning (respects JSON mode)
+ * Log warning (respects JSON mode, captures to buffer)
  */
 function warn(message) {
+	logBuffer.push(`[WARN] ${message}`)
 	if (!config.json) {
 		console.warn(message)
 	}
 }
 
 /**
- * Calculate median of array
+ * Save benchmark results to JSON file in .output/
  */
-function median(values) {
-	if (values.length === 0) return 0
-	const sorted = [...values].sort((a, b) => a - b)
-	const mid = Math.floor(sorted.length / 2)
-	return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
-}
+function saveResults(results) {
+	const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+	const filename = `benchmark-${config.mode}-${timestamp}.json`
+	const filepath = path.join(OUTPUT_DIR, filename)
 
-/**
- * Calculate standard deviation
- */
-function stdDev(values) {
-	if (values.length === 0) return 0
-	const avg = values.reduce((a, b) => a + b, 0) / values.length
-	const squareDiffs = values.map((v) => Math.pow(v - avg, 2))
-	return Math.sqrt(squareDiffs.reduce((a, b) => a + b, 0) / values.length)
-}
-
-/**
- * Approximation of standard normal CDF
- * Used for p-value calculation in Wilcoxon test
- */
-function normalCDF(z) {
-	const a1 = 0.254829592,
-		a2 = -0.284496736,
-		a3 = 1.421413741
-	const a4 = -1.453152027,
-		a5 = 1.061405429,
-		p = 0.3275911
-	const sign = z < 0 ? -1 : 1
-	z = Math.abs(z) / Math.sqrt(2)
-	const t = 1.0 / (1.0 + p * z)
-	const y = 1.0 - ((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-z * z)
-	return 0.5 * (1.0 + sign * y)
-}
-
-/**
- * Wilcoxon signed-rank test for paired samples
- * Non-parametric test - doesn't assume normal distribution
- * Returns p-value approximation using normal distribution (valid for n >= 10)
- */
-function wilcoxonSignedRank(sample1, sample2) {
-	const n = Math.min(sample1.length, sample2.length)
-	const differences = []
-
-	for (let i = 0; i < n; i++) {
-		const diff = sample1[i] - sample2[i]
-		if (diff !== 0) {
-			differences.push({ diff, absDiff: Math.abs(diff), sign: Math.sign(diff) })
-		}
+	const output = {
+		...results,
+		log: logBuffer,
+		timestamp: new Date().toISOString(),
 	}
 
-	if (differences.length === 0) {
-		return { W: 0, z: 0, pValue: 1, significant: false, sampleSize: n }
-	}
-
-	// Rank by absolute difference (handle ties by averaging ranks)
-	differences.sort((a, b) => a.absDiff - b.absDiff)
-	let i = 0
-	while (i < differences.length) {
-		let j = i
-		while (j < differences.length && differences[j].absDiff === differences[i].absDiff) {
-			j++
-		}
-		// Average rank for tied values
-		const avgRank = (i + 1 + j) / 2
-		for (let k = i; k < j; k++) {
-			differences[k].rank = avgRank
-		}
-		i = j
-	}
-
-	// Sum of positive and negative ranks
-	const W_plus = differences.filter((d) => d.sign > 0).reduce((sum, d) => sum + d.rank, 0)
-	const W_minus = differences.filter((d) => d.sign < 0).reduce((sum, d) => sum + d.rank, 0)
-	const W = Math.min(W_plus, W_minus)
-
-	// Normal approximation for n >= 10
-	const nDiff = differences.length
-	const mean = (nDiff * (nDiff + 1)) / 4
-	const variance = (nDiff * (nDiff + 1) * (2 * nDiff + 1)) / 24
-	const z = (W - mean) / Math.sqrt(variance)
-
-	// Two-tailed p-value from z-score
-	const pValue = 2 * (1 - normalCDF(Math.abs(z)))
-
-	return {
-		W,
-		z: z.toFixed(3),
-		pValue: pValue.toFixed(4),
-		significant: pValue < 0.05,
-		sampleSize: n,
-	}
+	fs.writeFileSync(filepath, JSON.stringify(output, null, 2))
+	console.log(`\nResults saved to: ${filepath}`)
+	return filepath
 }
 
-/**
- * Cliff's delta - non-parametric effect size measure
- * Interpretation:
- *   |d| < 0.147 = negligible
- *   |d| < 0.33  = small
- *   |d| < 0.474 = medium
- *   |d| >= 0.474 = large
- */
-function cliffsD(sample1, sample2) {
-	let greater = 0,
-		less = 0
-
-	for (const x of sample1) {
-		for (const y of sample2) {
-			if (x > y) greater++
-			else if (x < y) less++
-		}
-	}
-
-	const d = (greater - less) / (sample1.length * sample2.length)
-	const absD = Math.abs(d)
-
-	let interpretation
-	if (absD < 0.147) interpretation = "negligible"
-	else if (absD < 0.33) interpretation = "small"
-	else if (absD < 0.474) interpretation = "medium"
-	else interpretation = "large"
-
-	return { d: d.toFixed(3), interpretation }
-}
 
 /**
  * Get the extension ID from the loaded extension
@@ -296,11 +229,15 @@ async function getExtensionId(browser) {
  * Configure extension features via chrome.storage.local
  * @param {Object} page - Puppeteer page
  * @param {string} extensionId - Extension ID
- * @param {string[]} features - Features to enable
- * @param {boolean} useSimpleMode - Use simple mode (default: false for backward compat)
+ * @param {Object} options - Configuration options
+ * @param {string[]} options.features - Features to enable (for advanced mode)
+ * @param {boolean} options.useSimpleMode - Use simple mode (default: false)
+ * @param {string} options.preset - Simple mode preset: "show_all" | "no_monetization" | "minimalist" | "focus"
  */
-async function configureExtensionFeatures(page, extensionId, features, useSimpleMode = false) {
+async function configureExtensionFeatures(page, extensionId, options = {}) {
 	if (!extensionId) return
+
+	const { features = [], useSimpleMode = false, preset = null } = options
 
 	// Navigate to extension page to access chrome.storage
 	const extensionPage = `chrome-extension://${extensionId}/popup.html`
@@ -314,18 +251,27 @@ async function configureExtensionFeatures(page, extensionId, features, useSimple
 
 		// Set features in storage
 		await configPage.evaluate(
-			(featureList, simpleMode) => {
+			(featureList, simpleMode, presetValue) => {
 				const storage = { is_simple_mode: simpleMode }
+
+				// Set preset if in simple mode
+				if (simpleMode && presetValue) {
+					storage.simple_mode_preset = presetValue
+				}
+
+				// Enable individual features (for advanced mode or additional features)
 				for (const feature of featureList) {
 					storage[feature] = true
 				}
+
 				return chrome.storage.local.set(storage)
 			},
 			features,
-			useSimpleMode
+			useSimpleMode,
+			preset
 		)
 
-		const modeLabel = useSimpleMode ? "simple" : "advanced"
+		const modeLabel = useSimpleMode ? `simple (${preset || "default"})` : "advanced"
 		const featureLog = features.length > 0 ? features.join(", ") : "(none)"
 		log(`Configured: mode=${modeLabel}, features: ${featureLog}`)
 	} catch (err) {
@@ -337,6 +283,7 @@ async function configureExtensionFeatures(page, extensionId, features, useSimple
 
 /**
  * Measure Core Web Vitals
+ * LCP waits until stable (no new entries for 2s) or max 10s timeout
  */
 async function measureVitals(page) {
 	return await page.evaluate(() => {
@@ -348,15 +295,37 @@ async function measureVitals(page) {
 				TTFB: null,
 			}
 
-			// LCP
+			let lcpStabilityTimer = null
+			let lcpObserver = null
+			const LCP_STABILITY_DELAY = 2000 // Consider LCP stable after 2s of no updates
+			const LCP_MAX_WAIT = 10000 // Max 10s wait for LCP
+
+			const finalize = () => {
+				if (lcpObserver) {
+					lcpObserver.disconnect()
+				}
+				if (lcpStabilityTimer) {
+					clearTimeout(lcpStabilityTimer)
+				}
+				resolve(vitals)
+			}
+
+			// LCP - wait for stability (no new entries for 2s) or max timeout
 			try {
-				new PerformanceObserver((list) => {
+				lcpObserver = new PerformanceObserver((list) => {
 					const entries = list.getEntries()
 					if (entries.length > 0) {
 						const lastEntry = entries[entries.length - 1]
 						vitals.LCP = lastEntry.renderTime || lastEntry.loadTime
+
+						// Reset stability timer on each new LCP entry
+						if (lcpStabilityTimer) {
+							clearTimeout(lcpStabilityTimer)
+						}
+						lcpStabilityTimer = setTimeout(finalize, LCP_STABILITY_DELAY)
 					}
-				}).observe({ entryTypes: ["largest-contentful-paint"], buffered: true })
+				})
+				lcpObserver.observe({ type: "largest-contentful-paint", buffered: true })
 			} catch (e) {}
 
 			// CLS
@@ -367,7 +336,7 @@ async function measureVitals(page) {
 							vitals.CLS += entry.value
 						}
 					})
-				}).observe({ entryTypes: ["layout-shift"], buffered: true })
+				}).observe({ type: "layout-shift", buffered: true })
 			} catch (e) {}
 
 			// FCP
@@ -387,8 +356,13 @@ async function measureVitals(page) {
 				}
 			} catch (e) {}
 
-			// Wait a bit for metrics to stabilize
-			setTimeout(() => resolve(vitals), 1000)
+			// Max wait timeout - finalize even if LCP hasn't stabilized
+			setTimeout(finalize, LCP_MAX_WAIT)
+
+			// If no LCP observer or it fails, still resolve after short delay
+			if (!lcpObserver) {
+				setTimeout(finalize, 1000)
+			}
 		})
 	})
 }
@@ -400,10 +374,11 @@ async function measureVitals(page) {
  * @param {Object} options - Additional options
  * @param {boolean} options.chatCollapsed - Whether to collapse chat
  * @param {boolean} options.useSimpleMode - Use simple mode (true) or advanced mode (false)
+ * @param {string} options.preset - Simple mode preset: "show_all" | "no_monetization" | "minimalist" | "focus"
  * @param {string[]} options.features - Features to enable (overrides config.features)
  */
 async function runBenchmark(withExtension, runNumber = 1, options = {}) {
-	const { chatCollapsed = false, useSimpleMode = false, features = null } = options
+	const { chatCollapsed = false, useSimpleMode = false, preset = null, features = null } = options
 
 	// Determine which features to enable
 	const featuresToEnable = features !== null ? [...features] : [...config.features]
@@ -411,7 +386,7 @@ async function runBenchmark(withExtension, runNumber = 1, options = {}) {
 	// Build label
 	let label = withExtension ? "WITH extension" : "WITHOUT extension"
 	if (withExtension) {
-		const modeLabel = useSimpleMode ? "simple" : "advanced"
+		const modeLabel = useSimpleMode ? `simple:${preset || "default"}` : "advanced"
 		label += ` (${modeLabel})`
 		if (featuresToEnable.length > 0) {
 			label += ` [${featuresToEnable.join(", ")}]`
@@ -480,7 +455,11 @@ async function runBenchmark(withExtension, runNumber = 1, options = {}) {
 		await new Promise((r) => setTimeout(r, 1000))
 		const extensionId = await getExtensionId(browser)
 		if (extensionId) {
-			await configureExtensionFeatures(page, extensionId, featuresToEnable, useSimpleMode)
+			await configureExtensionFeatures(page, extensionId, {
+				features: featuresToEnable,
+				useSimpleMode,
+				preset,
+			})
 		} else {
 			warn("Could not find extension ID - features may not be configured")
 		}
@@ -612,6 +591,7 @@ async function runBenchmark(withExtension, runNumber = 1, options = {}) {
 	return stats
 }
 
+
 /**
  * Compare two benchmark runs with optional statistical analysis
  * @param {Object} sample1Stats - Aggregated stats for sample 1
@@ -626,17 +606,23 @@ function compareResults(sample1Stats, sample2Stats, sample1Runs = null, sample2R
 	log(`COMPARISON: ${label1} vs ${label2}`)
 	log(`${"=".repeat(60)}`)
 
-	const heapDiff = sample1Stats.heapUsed.avg - sample2Stats.heapUsed.avg
-	const growthDiff = sample1Stats.heapUsed.growth - sample2Stats.heapUsed.growth
+	// Extract numeric values (handles both single runs and aggregated stats)
+	const sample1Avg = getStatValue(sample1Stats.heapUsed.avg)
+	const sample2Avg = getStatValue(sample2Stats.heapUsed.avg)
+	const sample1Growth = getStatValue(sample1Stats.heapUsed.growth)
+	const sample2Growth = getStatValue(sample2Stats.heapUsed.growth)
+
+	const heapDiff = sample1Avg - sample2Avg
+	const growthDiff = sample1Growth - sample2Growth
 
 	log("\nAverage Heap Usage:")
-	log(`  ${label2}: ${sample2Stats.heapUsed.avg.toFixed(2)} MB`)
-	log(`  ${label1}: ${sample1Stats.heapUsed.avg.toFixed(2)} MB`)
+	log(`  ${label2}: ${sample2Avg.toFixed(2)} MB`)
+	log(`  ${label1}: ${sample1Avg.toFixed(2)} MB`)
 	log(`  Difference:        ${heapDiff >= 0 ? "+" : ""}${heapDiff.toFixed(2)} MB`)
 
 	log("\nMemory Growth over test period:")
-	log(`  ${label2}: ${sample2Stats.heapUsed.growth >= 0 ? "+" : ""}${sample2Stats.heapUsed.growth.toFixed(2)} MB`)
-	log(`  ${label1}: ${sample1Stats.heapUsed.growth >= 0 ? "+" : ""}${sample1Stats.heapUsed.growth.toFixed(2)} MB`)
+	log(`  ${label2}: ${sample2Growth >= 0 ? "+" : ""}${sample2Growth.toFixed(2)} MB`)
+	log(`  ${label1}: ${sample1Growth >= 0 ? "+" : ""}${sample1Growth.toFixed(2)} MB`)
 	log(`  Difference:        ${growthDiff >= 0 ? "+" : ""}${growthDiff.toFixed(2)} MB`)
 
 	// Statistical analysis (only when we have multiple runs)
@@ -652,7 +638,7 @@ function compareResults(sample1Stats, sample2Stats, sample1Runs = null, sample2R
 
 		log("\nStatistical Analysis:")
 		log(`  Wilcoxon signed-rank test:`)
-		log(`    W = ${wilcoxon.W}, z = ${wilcoxon.z}, p = ${wilcoxon.pValue}`)
+		log(`    W = ${wilcoxon.statistic}, p = ${wilcoxon.pValue.toFixed(4)}`)
 		log(`    ${wilcoxon.significant ? "STATISTICALLY SIGNIFICANT (p < 0.05)" : "Not significant (p >= 0.05)"}`)
 		log(`  Cliff's delta effect size:`)
 		log(`    d = ${effectSize.d} (${effectSize.interpretation})`)
@@ -678,46 +664,6 @@ function compareResults(sample1Stats, sample2Stats, sample1Runs = null, sample2R
 	}
 }
 
-/**
- * Aggregate statistics from multiple runs
- */
-function aggregateRuns(allRuns) {
-	const heapAvgs = allRuns.map((r) => r.heapUsed.avg)
-	const heapGrowths = allRuns.map((r) => r.heapUsed.growth)
-	const lcpValues = allRuns.map((r) => r.vitals.LCP).filter((v) => v !== null)
-	const fcpValues = allRuns.map((r) => r.vitals.FCP).filter((v) => v !== null)
-	const clsValues = allRuns.map((r) => r.vitals.CLS)
-	const networkRequests = allRuns.map((r) => r.network.totalRequests)
-
-	return {
-		runs: allRuns.length,
-		heapUsed: {
-			avg: {
-				mean: heapAvgs.reduce((a, b) => a + b, 0) / heapAvgs.length,
-				median: median(heapAvgs),
-				stdDev: stdDev(heapAvgs),
-				min: Math.min(...heapAvgs),
-				max: Math.max(...heapAvgs),
-			},
-			growth: {
-				mean: heapGrowths.reduce((a, b) => a + b, 0) / heapGrowths.length,
-				median: median(heapGrowths),
-				stdDev: stdDev(heapGrowths),
-			},
-		},
-		vitals: {
-			LCP: lcpValues.length > 0 ? { median: median(lcpValues), stdDev: stdDev(lcpValues) } : null,
-			FCP: fcpValues.length > 0 ? { median: median(fcpValues), stdDev: stdDev(fcpValues) } : null,
-			CLS: { median: median(clsValues), stdDev: stdDev(clsValues) },
-		},
-		network: {
-			requests: {
-				mean: networkRequests.reduce((a, b) => a + b, 0) / networkRequests.length,
-				median: median(networkRequests),
-			},
-		},
-	}
-}
 
 // Main
 async function main() {
@@ -725,6 +671,7 @@ async function main() {
 		const results = {
 			success: true,
 			config: {
+				mode: config.mode,
 				duration: config.duration,
 				interval: config.interval,
 				stream: config.stream,
@@ -733,15 +680,16 @@ async function main() {
 			},
 		}
 
-		// WebSocket features to enable for extension runs in 4-way comparison
+		// WebSocket features for websocket-only mode (advanced mode)
 		const wsFeatures = ["auto_manage_chat_websocket", "block_hermes_websocket"]
 
-		if (config.compare4way) {
+		if (config.mode === "compare-all") {
 			// 4-way comparison: ext+chat, ext+nochat, noext+chat, noext+nochat
+			// Extension runs use simple mode with minimalist preset
 			log("\nRunning 4-way comparison benchmark...\n")
 			log("Scenarios:")
-			log("  A: Extension (simple mode) + chat visible")
-			log("  B: Extension (simple mode) + chat collapsed")
+			log("  A: Extension (simple mode, minimalist preset) + chat visible")
+			log("  B: Extension (simple mode, minimalist preset) + chat collapsed")
 			log("  C: No extension + chat visible")
 			log("  D: No extension + chat collapsed")
 			log("")
@@ -760,8 +708,16 @@ async function main() {
 
 				// Run all 4 scenarios in parallel for fair comparison
 				const [extChat, extNochat, noextChat, noextNochat] = await Promise.all([
-					runBenchmark(true, i + 1, { chatCollapsed: false, useSimpleMode: true, features: wsFeatures }),
-					runBenchmark(true, i + 1, { chatCollapsed: true, useSimpleMode: true, features: wsFeatures }),
+					runBenchmark(true, i + 1, {
+						chatCollapsed: false,
+						useSimpleMode: true,
+						preset: "minimalist",
+					}),
+					runBenchmark(true, i + 1, {
+						chatCollapsed: true,
+						useSimpleMode: true,
+						preset: "minimalist",
+					}),
 					runBenchmark(false, i + 1, { chatCollapsed: false }),
 					runBenchmark(false, i + 1, { chatCollapsed: true }),
 				])
@@ -784,32 +740,32 @@ async function main() {
 
 			const comparisons = {
 				extVsNoExt_chatOpen: compareResults(
-					scenarios.extChat.statistics.heapUsed.avg,
-					scenarios.noextChat.statistics.heapUsed.avg,
+					scenarios.extChat.statistics,
+					scenarios.noextChat.statistics,
 					scenarios.extChat.runs,
 					scenarios.noextChat.runs,
 					"Ext + Chat",
 					"No Ext + Chat"
 				),
 				extVsNoExt_chatClosed: compareResults(
-					scenarios.extNochat.statistics.heapUsed.avg,
-					scenarios.noextNochat.statistics.heapUsed.avg,
+					scenarios.extNochat.statistics,
+					scenarios.noextNochat.statistics,
 					scenarios.extNochat.runs,
 					scenarios.noextNochat.runs,
 					"Ext + No Chat",
 					"No Ext + No Chat"
 				),
 				chatCollapseImpact_withExt: compareResults(
-					scenarios.extNochat.statistics.heapUsed.avg,
-					scenarios.extChat.statistics.heapUsed.avg,
+					scenarios.extNochat.statistics,
+					scenarios.extChat.statistics,
 					scenarios.extNochat.runs,
 					scenarios.extChat.runs,
 					"Ext + No Chat",
 					"Ext + Chat"
 				),
 				chatCollapseImpact_noExt: compareResults(
-					scenarios.noextNochat.statistics.heapUsed.avg,
-					scenarios.noextChat.statistics.heapUsed.avg,
+					scenarios.noextNochat.statistics,
+					scenarios.noextChat.statistics,
 					scenarios.noextNochat.runs,
 					scenarios.noextChat.runs,
 					"No Ext + No Chat",
@@ -817,18 +773,121 @@ async function main() {
 				),
 			}
 
-			if (config.json) {
-				results.scenarios = {}
-				for (const [key, val] of Object.entries(scenarios)) {
-					results.scenarios[key] = {
-						runs: val.runs,
-						statistics: val.statistics,
-					}
+			// Always build results for saving
+			results.scenarios = {}
+			for (const [key, val] of Object.entries(scenarios)) {
+				results.scenarios[key] = {
+					runs: val.runs,
+					statistics: val.statistics,
 				}
-				results.comparisons = comparisons
+			}
+			results.comparisons = comparisons
+
+			// Save to file and optionally output JSON
+			saveResults(results)
+			if (config.json) {
 				outputJSON(results)
 			}
-		} else if (config.compare) {
+		} else if (config.mode === "websocket") {
+			// WebSocket-only mode: test only WebSocket features in advanced mode
+			log("\nRunning WebSocket-only benchmark...\n")
+			log("Testing WebSocket management features in isolation (advanced mode)")
+			log("Features: auto_manage_chat_websocket, block_hermes_websocket")
+			log("")
+			log("Scenarios:")
+			log("  A: Extension (WS features) + chat visible (WS active)")
+			log("  B: Extension (WS features) + chat collapsed (WS closed by extension)")
+			log("  C: No extension + chat visible (WS active)")
+			log("  D: No extension + chat collapsed (WS still active)")
+			log("")
+
+			const scenarios = {
+				extChat: { runs: [], label: "Ext + Chat (WS active)" },
+				extNochat: { runs: [], label: "Ext + No Chat (WS closed)" },
+				noextChat: { runs: [], label: "No Ext + Chat (WS active)" },
+				noextNochat: { runs: [], label: "No Ext + No Chat (WS active)" },
+			}
+
+			for (let i = 0; i < config.runs; i++) {
+				log(`\n${"=".repeat(60)}`)
+				log(`RUN ${i + 1}/${config.runs}`)
+				log(`${"=".repeat(60)}`)
+
+				// Run all 4 scenarios in parallel for fair comparison
+				const [extChat, extNochat, noextChat, noextNochat] = await Promise.all([
+					runBenchmark(true, i + 1, {
+						chatCollapsed: false,
+						useSimpleMode: false, // Advanced mode
+						features: wsFeatures,
+					}),
+					runBenchmark(true, i + 1, {
+						chatCollapsed: true,
+						useSimpleMode: false, // Advanced mode
+						features: wsFeatures,
+					}),
+					runBenchmark(false, i + 1, { chatCollapsed: false }),
+					runBenchmark(false, i + 1, { chatCollapsed: true }),
+				])
+
+				scenarios.extChat.runs.push(extChat)
+				scenarios.extNochat.runs.push(extNochat)
+				scenarios.noextChat.runs.push(noextChat)
+				scenarios.noextNochat.runs.push(noextNochat)
+			}
+
+			// Aggregate statistics for each scenario
+			for (const key of Object.keys(scenarios)) {
+				scenarios[key].statistics = aggregateRuns(scenarios[key].runs)
+			}
+
+			// Generate comparison matrix
+			log("\n" + "=".repeat(60))
+			log("WEBSOCKET-ONLY COMPARISON RESULTS")
+			log("=".repeat(60))
+
+			const comparisons = {
+				wsImpact_extChatCollapse: compareResults(
+					scenarios.extNochat.statistics,
+					scenarios.extChat.statistics,
+					scenarios.extNochat.runs,
+					scenarios.extChat.runs,
+					"Ext + No Chat (WS closed)",
+					"Ext + Chat (WS active)"
+				),
+				wsImpact_noExtChatCollapse: compareResults(
+					scenarios.noextNochat.statistics,
+					scenarios.noextChat.statistics,
+					scenarios.noextNochat.runs,
+					scenarios.noextChat.runs,
+					"No Ext + No Chat",
+					"No Ext + Chat"
+				),
+				extVsNoExt_chatClosed: compareResults(
+					scenarios.extNochat.statistics,
+					scenarios.noextNochat.statistics,
+					scenarios.extNochat.runs,
+					scenarios.noextNochat.runs,
+					"Ext + No Chat (WS closed)",
+					"No Ext + No Chat (WS active)"
+				),
+			}
+
+			// Always build results for saving
+			results.scenarios = {}
+			for (const [key, val] of Object.entries(scenarios)) {
+				results.scenarios[key] = {
+					runs: val.runs,
+					statistics: val.statistics,
+				}
+			}
+			results.comparisons = comparisons
+
+			// Save to file and optionally output JSON
+			saveResults(results)
+			if (config.json) {
+				outputJSON(results)
+			}
+		} else if (config.mode === "compare") {
 			// Run benchmarks for both modes (original 2-way comparison)
 			log("\nRunning benchmarks for comparison...\n")
 
@@ -851,26 +910,30 @@ async function main() {
 
 			// Use the new compareResults signature with statistical analysis
 			const comparison = compareResults(
-				config.runs === 1 ? withExtStats : { heapUsed: withExtStats.heapUsed.avg },
-				config.runs === 1 ? withoutExtStats : { heapUsed: withoutExtStats.heapUsed.avg },
+				withExtStats,
+				withoutExtStats,
 				config.runs > 1 ? withExtRuns : null,
 				config.runs > 1 ? withoutExtRuns : null,
 				"With Extension",
 				"Without Extension"
 			)
 
+			// Always build results for saving
+			results.withExtension =
+				config.runs === 1 ? withExtRuns[0] : { runs: withExtRuns, statistics: withExtStats }
+			results.withoutExtension =
+				config.runs === 1
+					? withoutExtRuns[0]
+					: { runs: withoutExtRuns, statistics: withoutExtStats }
+			results.comparison = comparison
+
+			// Save to file and optionally output JSON
+			saveResults(results)
 			if (config.json) {
-				results.withExtension =
-					config.runs === 1 ? withExtRuns[0] : { runs: withExtRuns, statistics: withExtStats }
-				results.withoutExtension =
-					config.runs === 1
-						? withoutExtRuns[0]
-						: { runs: withoutExtRuns, statistics: withoutExtStats }
-				results.comparison = comparison
 				outputJSON(results)
 			}
 		} else {
-			// Single mode runs
+			// Single mode runs (config.mode === "single")
 			const allRuns = []
 			for (let i = 0; i < config.runs; i++) {
 				const stats = await runBenchmark(config.withExtension, i + 1)
@@ -879,28 +942,26 @@ async function main() {
 
 			if (config.runs > 1) {
 				const statistics = aggregateRuns(allRuns)
-				if (!config.json) {
-					log(`\n${"=".repeat(60)}`)
-					log(`AGGREGATE STATISTICS (${config.runs} runs)`)
-					log(`${"=".repeat(60)}`)
-					log(`\nHeap Used Average:`)
-					log(`  Mean:   ${statistics.heapUsed.avg.mean.toFixed(2)} MB`)
-					log(`  Median: ${statistics.heapUsed.avg.median.toFixed(2)} MB`)
-					log(`  StdDev: ${statistics.heapUsed.avg.stdDev.toFixed(2)} MB`)
-					log(
-						`  Range:  ${statistics.heapUsed.avg.min.toFixed(2)} - ${statistics.heapUsed.avg.max.toFixed(2)} MB`
-					)
-					log(`\nHeap Growth:`)
-					log(
-						`  Median: ${statistics.heapUsed.growth.median >= 0 ? "+" : ""}${statistics.heapUsed.growth.median.toFixed(2)} MB`
-					)
-					log(`  StdDev: ${statistics.heapUsed.growth.stdDev.toFixed(2)} MB`)
-					if (statistics.vitals.LCP) {
-						log(`\nCore Web Vitals (median):`)
-						log(`  LCP: ${statistics.vitals.LCP.median.toFixed(2)} ms`)
-						log(`  FCP: ${statistics.vitals.FCP?.median.toFixed(2) || "N/A"} ms`)
-						log(`  CLS: ${statistics.vitals.CLS.median.toFixed(4)}`)
-					}
+				log(`\n${"=".repeat(60)}`)
+				log(`AGGREGATE STATISTICS (${config.runs} runs)`)
+				log(`${"=".repeat(60)}`)
+				log(`\nHeap Used Average:`)
+				log(`  Mean:   ${statistics.heapUsed.avg.mean.toFixed(2)} MB`)
+				log(`  Median: ${statistics.heapUsed.avg.median.toFixed(2)} MB`)
+				log(`  StdDev: ${statistics.heapUsed.avg.stdDev.toFixed(2)} MB`)
+				log(
+					`  Range:  ${statistics.heapUsed.avg.min.toFixed(2)} - ${statistics.heapUsed.avg.max.toFixed(2)} MB`
+				)
+				log(`\nHeap Growth:`)
+				log(
+					`  Median: ${statistics.heapUsed.growth.median >= 0 ? "+" : ""}${statistics.heapUsed.growth.median.toFixed(2)} MB`
+				)
+				log(`  StdDev: ${statistics.heapUsed.growth.stdDev.toFixed(2)} MB`)
+				if (statistics.vitals.LCP) {
+					log(`\nCore Web Vitals (median):`)
+					log(`  LCP: ${statistics.vitals.LCP.median.toFixed(2)} ms`)
+					log(`  FCP: ${statistics.vitals.FCP?.median.toFixed(2) || "N/A"} ms`)
+					log(`  CLS: ${statistics.vitals.CLS.median.toFixed(4)}`)
 				}
 				results.runs = allRuns
 				results.statistics = statistics
@@ -908,6 +969,8 @@ async function main() {
 				results.stats = allRuns[0]
 			}
 
+			// Save to file and optionally output JSON
+			saveResults(results)
 			if (config.json) {
 				outputJSON(results)
 			}
