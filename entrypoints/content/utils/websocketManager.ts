@@ -25,7 +25,7 @@ class ChatWebSocketManager {
 		if (this.enabled) return
 
 		this.enabled = true
-		this.enableLogging = true
+		this.enableLogging = options.enableLogging ?? false
 		this.setupEventListeners()
 
 		// Check initial chat visibility state and block if already hidden
