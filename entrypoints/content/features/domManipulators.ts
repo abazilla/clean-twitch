@@ -16,6 +16,9 @@ import { storageHandler } from "../utils/storageHandler"
 import { chatWebSocketManager } from "../utils/websocketManager"
 import { isChannelPage, TwitchURLs } from "./definitions"
 
+const isLoggedIn = (): boolean =>
+	document.querySelector('button[data-a-target="login-button"]') === null
+
 export function toggleTestMode(toggled: boolean) {
 	const styleIds = [
 		UNIVERSAL_STYLE_ID_JS,
@@ -165,15 +168,18 @@ export function toggleLeftSidebarFollowedChannels(value: boolean) {
 }
 
 export function toggleLeftSidebarLiveChannels(value: boolean) {
-	toggleCSSHidden("div[aria-label='Live Channels']", value)
+	const val = isLoggedIn() ? value : false
+	toggleCSSHidden("div[aria-label='Live Channels']", val)
 }
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
-	toggleCSSHidden("div[aria-label*='Viewers Also Watch']", value)
+	const val = isLoggedIn() ? value : false
+	toggleCSSHidden("div[aria-label*='Viewers Also Watch']", val)
 }
 
 export function toggleLeftSidebarRecommendedCategories(value: boolean) {
-	toggleCSSHidden("div[aria-label='Recommended Categories']", value)
+	const val = isLoggedIn() ? value : false
+	toggleCSSHidden("div[aria-label='Recommended Categories']", val)
 }
 
 export function toggleLeftSidebarOfflineChannels(value: boolean) {

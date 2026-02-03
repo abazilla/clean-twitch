@@ -22,7 +22,7 @@ export default defineContentScript({
 		const log = (msg: string) => DEBUG && console.log(msg)
 
 		const OriginalWebSocket = window.WebSocket
-		let chatWebSocket: WebSocket | null = null
+		let chatWebSockets: WebSocket[] = []
 		let hermesWebSockets: WebSocket[] = []
 		let blockChatWS = false
 		let blockHermesWS = false
@@ -49,12 +49,12 @@ export default defineContentScript({
 
 				// Track chat WebSocket
 				if (urlString.includes("irc-ws.chat.twitch.tv")) {
-					chatWebSocket = ws
+					chatWebSockets.push(ws)
 					log("[CT] 🟢 Chat WebSocket created")
 
 					ws.addEventListener("close", () => {
 						log("[CT] 🔴 Chat WebSocket closed")
-						chatWebSocket = null
+						// chatWebSockets = chatWebSockets.filter((s) => s !== ws)
 					})
 				}
 
@@ -77,8 +77,12 @@ export default defineContentScript({
 		// The isolated content script will dispatch these events
 		window.addEventListener("__cleanTwitch_closeAndBlock", () => {
 			blockChatWS = true
-			if (chatWebSocket && chatWebSocket.readyState === WebSocket.OPEN) {
-				chatWebSocket.close(1000, "Chat hidden by CT")
+			const openWS = chatWebSockets?.filter((ws) => ws.readyState === WebSocket.OPEN) || []
+			log(`[CT] 🚫 Chat WebSocket blocked (${openWS.length} open connections)`)
+			if (chatWebSockets && openWS.length > 0) {
+				for (const ws of openWS) {
+					ws.close(1000, "Chat hidden by CT")
+				}
 			}
 		})
 
@@ -108,8 +112,8 @@ export default defineContentScript({
 		window.addEventListener("__cleanTwitch_getState", ((e: CustomEvent) => {
 			e.detail.callback({
 				blocking: blockChatWS,
-				hasWebSocket: chatWebSocket !== null,
-				wsState: chatWebSocket?.readyState,
+				hasWebSocket: chatWebSockets.length > 0,
+				wsState: chatWebSockets?.map((ws) => ws.readyState),
 				blockingHermes: blockHermesWS,
 				hermesWebSocketCount: hermesWebSockets.length,
 			})

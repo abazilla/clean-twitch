@@ -250,14 +250,15 @@ export const features = [
 			},
 			{
 				id: "auto_manage_chat_websocket",
-				label: "Auto-close Chat WebSocket When Hidden",
+				label:
+					"Auto-close Chat WebSocket When Hidden (Improves Performance, disable if chat connection issues arise)",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "block_hermes_websocket",
-				label: "Block Notification WebSockets",
-				simpleModeActive: ["minimalist", "focus"],
+				label: "Block Notification WebSockets (Improves Performance)",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 		],

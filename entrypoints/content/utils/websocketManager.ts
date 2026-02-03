@@ -97,6 +97,7 @@ class ChatWebSocketManager {
 	 * Handle right column toggle button clicks (collapse/expand chat)
 	 */
 	private hideChatColumnClick(e: Event) {
+		this.log("Chat column toggle click detected")
 		if (!this.enabled) return
 
 		const target = e.target as HTMLElement
@@ -114,6 +115,7 @@ class ChatWebSocketManager {
 	 * Handle fullscreen change events
 	 */
 	private handleFullscreenChange() {
+		this.log("Fullscreen change detected")
 		if (!this.enabled) return
 
 		// Small delay to allow DOM to update
