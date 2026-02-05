@@ -1,4 +1,5 @@
 import { browser } from "wxt/browser"
+import { mergeStorageData } from "./content/utils/storageHandler"
 
 export default defineBackground(() => {
 	// Periodic sync from sync storage to local storage
@@ -11,8 +12,12 @@ export default defineBackground(() => {
 			// Only pull full data if sync storage is newer
 			if ((syncTimestamp || 0) > (localTimestamp || 0)) {
 				// console.log("Pulling newer data from sync storage")
-				const fullSyncData = await browser.storage.sync.get()
-				await browser.storage.local.set(fullSyncData)
+				const [syncResult, localResult] = await Promise.all([
+					browser.storage.sync.get(),
+					browser.storage.local.get(),
+				])
+				const merged = mergeStorageData(syncResult, localResult)
+				await browser.storage.local.set(merged)
 			}
 		} catch (error) {
 			console.error("Periodic sync error:", error)

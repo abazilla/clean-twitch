@@ -28,10 +28,8 @@ class ChatWebSocketManager {
 		this.enableLogging = options.enableLogging ?? false
 		this.setupEventListeners()
 
-		// Check initial chat visibility state and block if already hidden
-		setTimeout(() => {
-			this.updateChatWebSocketState()
-		}, 200) // Small delay to ensure DOM is ready
+		// Check initial chat visibility state with retries to handle variable load times
+		this.checkInitialState()
 
 		this.log("WebSocket manager enabled")
 	}
@@ -61,6 +59,36 @@ class ChatWebSocketManager {
 	 */
 	isBlocking(): boolean {
 		return this.blockReconnection
+	}
+
+	/**
+	 * Check initial chat visibility state with retries
+	 * Polls every 500ms up to 3 seconds to catch the DOM when ready
+	 */
+	private checkInitialState() {
+		let attempts = 0
+		const maxAttempts = 6
+		const interval = 500
+
+		const check = () => {
+			attempts++
+			const chatColumn = document.querySelector(".channel-root__right-column")
+
+			if (chatColumn) {
+				// Element found, do the visibility check
+				this.log(`Chat column found after ${attempts} attempt(s)`)
+				this.updateChatWebSocketState()
+			} else if (attempts < maxAttempts) {
+				// Keep trying
+				setTimeout(check, interval)
+			} else {
+				// Give up, assume visible (don't block)
+				this.log("Chat column not found after max attempts - assuming visible")
+			}
+		}
+
+		// Start checking after a small initial delay
+		setTimeout(check, 200)
 	}
 
 	/**

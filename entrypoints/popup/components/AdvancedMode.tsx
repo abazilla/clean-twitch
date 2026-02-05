@@ -11,13 +11,9 @@ import { FeatureToggle } from "./FeatureToggle"
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-4">
 		<div className="grid grid-cols-2 gap-3">
-			{alwaysShowFeatures.map((item: FeatureItem) =>
-				item.renderSimpleOrAdvanced === "always_show" ? (
-					<FeatureToggle key={item.id} item={item} />
-				) : (
-					<></>
-				)
-			)}
+			{alwaysShowFeatures.map((item: FeatureItem) => (
+				<FeatureToggle key={item.id} item={item} />
+			))}
 		</div>
 		{features.map((item: FeatureItem) =>
 			item.renderSimpleOrAdvanced === "always_hide" ||

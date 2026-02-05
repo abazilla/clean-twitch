@@ -73,13 +73,9 @@ const SimpleMode = (): JSX.Element => {
 			</div>
 
 			<div className="grid grid-cols-2 gap-3">
-				{alwaysShowFeatures.map((item: FeatureItem) =>
-					item.renderSimpleOrAdvanced === "always_show" ? (
-						<FeatureToggle key={item.id} item={item} />
-					) : (
-						<></>
-					)
-				)}
+				{alwaysShowFeatures.map((item: FeatureItem) => (
+					<FeatureToggle key={item.id} item={item} />
+				))}
 			</div>
 
 			<div>
