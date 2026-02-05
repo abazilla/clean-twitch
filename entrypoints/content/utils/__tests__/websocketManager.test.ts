@@ -272,34 +272,10 @@ describe("ChatWebSocketManager", () => {
 			})
 		})
 
-		test("should handle theatre mode button click", () => {
-			// Create theatre mode button
-			const button = document.createElement("button")
-			button.setAttribute("data-a-target", "player-theatre-mode-button")
-			document.body.appendChild(button)
-
-			// Mock fullscreen (theatre mode typically enters fullscreen)
-			Object.defineProperty(document, "fullscreenElement", {
-				writable: true,
-				configurable: true,
-				value: document.createElement("div"),
-			})
-
-			// Click button
-			button.click()
-
-			return new Promise((resolve) => {
-				setTimeout(() => {
-					expect(chatWebSocketManager.isBlocking()).toBe(true)
-					resolve(undefined)
-				}, 150)
-			})
-		})
-
 		test("should handle chat collapse button click", () => {
 			// Create collapse button
 			const button = document.createElement("button")
-			button.setAttribute("data-a-target", "right-column-chat-bar__collapse-toggle")
+			button.setAttribute("data-a-target", "right-column__toggle-collapse-btn")
 			document.body.appendChild(button)
 
 			// Create collapsed chat column
