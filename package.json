@@ -2,7 +2,7 @@
 	"name": "clean-twitch",
 	"description": "Twitch without the clutter.",
 	"private": true,
-	"version": "0.1.9",
+	"version": "0.2.0",
 	"type": "module",
 	"scripts": {
 		"dev:chrome": "wxt",
@@ -25,8 +25,8 @@
 		"benchmark:compare": "node scripts/benchmark.mjs --compare"
 	},
 	"dependencies": {
-		"react": "^19.1.1",
-		"react-dom": "^19.1.1"
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4"
 	},
 	"pnpm": {
 		"overrides": {
@@ -41,24 +41,24 @@
 	},
 	"devDependencies": {
 		"@stdlib/stats-wilcoxon": "^0.2.2",
-		"@tailwindcss/vite": "^4.1.4",
-		"@testing-library/react": "^16.3.0",
+		"@tailwindcss/vite": "^4.1.18",
+		"@testing-library/react": "^16.3.2",
 		"@testing-library/react-hooks": "^8.0.1",
-		"@types/react": "^19.1.12",
-		"@types/react-dom": "^19.1.9",
+		"@types/react": "^19.2.13",
+		"@types/react-dom": "^19.2.3",
 		"@vitest/ui": "^3.2.4",
-		"@wxt-dev/module-react": "^1.1.3",
+		"@wxt-dev/module-react": "^1.1.5",
 		"husky": "^9.1.7",
-		"jsdom": "^27.0.0",
+		"jsdom": "^27.4.0",
 		"prettier": "3.4.2",
-		"prettier-plugin-organize-imports": "^4.1.0",
-		"prettier-plugin-tailwindcss": "^0.6.11",
-		"puppeteer": "^24.35.0",
+		"prettier-plugin-organize-imports": "^4.3.0",
+		"prettier-plugin-tailwindcss": "^0.6.14",
+		"puppeteer": "^24.37.1",
 		"simple-statistics": "^7.8.8",
-		"tailwindcss": "^4.0.9",
-		"typescript": "^5.9.2",
+		"tailwindcss": "^4.1.18",
+		"typescript": "^5.9.3",
 		"vite-plugin-checker": "^0.11.0",
 		"vitest": "^3.2.4",
-		"wxt": "^0.20.9"
+		"wxt": "^0.20.13"
 	}
 }

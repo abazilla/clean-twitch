@@ -109,13 +109,13 @@ export const storageHandler = {
 	async get<T>(key: string): Promise<T | undefined> {
 		try {
 			// Try local first (faster)
-			const localResult = await browser.storage.local.get(key)
+			const localResult: Record<string, T | undefined> = await browser.storage.local.get(key)
 			if (localResult[key] !== undefined) {
 				return localResult[key]
 			}
 
 			// Fallback to sync storage
-			const syncResult = await browser.storage.sync.get(key)
+			const syncResult: Record<string, T | undefined> = await browser.storage.sync.get(key)
 			if (syncResult[key] !== undefined) {
 				// Cache in local for next time
 				await browser.storage.local.set({ [key]: syncResult[key] })

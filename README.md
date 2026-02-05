@@ -55,8 +55,6 @@ window.dispatchEvent(                  ← Shared DOM →
                                        Proxy blocks next 'new WebSocket()'
 ```
 
-**Why two worlds?**
-
 - **ISOLATED**: Content scripts run here by default. Cannot access page's `window.WebSocket`
 - **MAIN**: Runs in the page's JavaScript context. Can intercept `WebSocket` but must bypass CSP
 
