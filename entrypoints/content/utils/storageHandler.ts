@@ -1,12 +1,65 @@
 import { browser } from "wxt/browser"
+import { BlockedCategory, BlockedUsername } from "../features/definitions"
+
+/**
+ * Merge sync and local storage data, deduplicating blocked categories/channels
+ * Local data takes priority for duplicates
+ */
+export function mergeStorageData(
+	syncResult: Record<string, any>,
+	localResult: Record<string, any>
+): Record<string, any> {
+	const localCategories = localResult.blocked_categories?.categories ?? []
+	const syncCategories = syncResult.blocked_categories?.categories ?? []
+	const localChannels = localResult.blocked_channels?.usernames ?? []
+	const syncChannels = syncResult.blocked_channels?.usernames ?? []
+	const categoriesSeen = new Map<string, true>()
+	const usernamesSeen = new Map<string, true>()
+
+	const categories: BlockedCategory[] = []
+	localCategories.concat(syncCategories).forEach((cat: BlockedCategory) => {
+		if (categoriesSeen.has(cat.category)) return
+		categoriesSeen.set(cat.category, true)
+		categories.push(cat)
+	})
+	const usernames: BlockedUsername[] = []
+	localChannels.concat(syncChannels).forEach((chan: BlockedUsername) => {
+		if (usernamesSeen.has(chan.username)) return
+		usernamesSeen.set(chan.username, true)
+		usernames.push(chan)
+	})
+
+	return {
+		...syncResult,
+		...localResult,
+		blocked_categories: {
+			...syncResult.blocked_categories,
+			...localResult.blocked_categories,
+			categories,
+		},
+		blocked_channels: {
+			...syncResult.blocked_channels,
+			...localResult.blocked_channels,
+			usernames,
+		},
+	}
+}
 
 // Note: does not run if popup is closed before timeout
 // Batched sync storage writer - accumulates all pending changes and writes them together
 let syncTimeout: NodeJS.Timeout | null = null
 const pendingSyncChanges: Record<string, any> = {}
+// Ensure sync happens once before setting.
+let syncInitialized = false
 
+// TODO: properly type storage items
+// maybe instead of extracting a type from features, just type it manual
 function scheduleBatchedSync(key: string, value: any) {
-	const hadPendingChanges = Object.keys(pendingSyncChanges).length > 0
+	if (!syncInitialized) {
+		// console.log("Sync not initialized yet - skipping batched sync")
+		return
+	}
+	// const hadPendingChanges = Object.keys(pendingSyncChanges).length > 0
 
 	// Add to pending changes
 	pendingSyncChanges[key] = value
@@ -111,14 +164,15 @@ export const storageHandler = {
 		return {}
 	},
 	async pullFromSync(): Promise<void> {
-		// gets sync storage keys.
-		// console.log("Pulling from sync storage")
-		const syncResult = await browser.storage.sync.get()
-		// console.log("Setting local storage from sync:")
-		await browser.storage.local.set(syncResult)
-		// if they exist,
-		// check if they're different from local
-		// then update local storage keys
+		const [syncResult, localResult] = await Promise.all([
+			browser.storage.sync.get(),
+			browser.storage.local.get(),
+		])
+
+		const merged = mergeStorageData(syncResult, localResult)
+		await browser.storage.local.set(merged)
+
+		syncInitialized = true
 	},
 
 	onChanged: {

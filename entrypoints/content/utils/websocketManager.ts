@@ -71,7 +71,6 @@ class ChatWebSocketManager {
 		const interval = 500
 
 		const check = () => {
-			console.log({ attempts })
 			attempts++
 			const chatColumn = document.querySelector(".channel-root__right-column")
 
