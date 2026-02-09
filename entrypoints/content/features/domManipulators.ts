@@ -72,6 +72,10 @@ export function hideFollowingButton(isHidden: boolean) {
 	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="following-link"])', isHidden)
 }
 
+export function hideRobloxButton(isHidden: boolean) {
+	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="roblox-link"])', isHidden)
+}
+
 export function hideBrowseButton(isHidden: boolean) {
 	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="browse-link"])', isHidden)
 }

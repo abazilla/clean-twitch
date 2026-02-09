@@ -104,6 +104,11 @@ export const features = [
 				label: 'Hide "Browse" Button',
 			},
 			{
+				id: "hide_topbar_roblox_button",
+				label: 'Hide "Roblox" Button',
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
 				id: "hide_topbar_dots_button",
 				label: 'Hide "Dots" Button',
 				simpleModeActive: ["minimalist", "focus"],
