@@ -4,17 +4,43 @@ import { BlockedCategories } from "./definitions"
 
 let categoryStyleElement: HTMLStyleElement
 
+const DEFAULT_BLOCKED_CATEGORIES: BlockedCategories = {
+	enabled: true,
+	hideFromSidebar: true,
+	hideFromDirectory: true,
+	hideFromSearch: true,
+	categories: [],
+}
+
 export async function initializeBlockedCategories() {
 	// Create dedicated style element for blocked categories
 	categoryStyleElement = document.createElement("style")
 	categoryStyleElement.id = BLOCKED_CATEGORIES_STYLE_ID
 	document.head.appendChild(categoryStyleElement)
 
-	// Load and apply initial blocked categories
-	const blockedCategories = (await storageHandler.get("blocked_categories")) as BlockedCategories
-	if (blockedCategories && blockedCategories.categories) {
-		handleBlockedCategories(blockedCategories)
+	// Load and apply initial blocked categories, merging with defaults for missing fields
+	const stored = (await storageHandler.get("blocked_categories")) as
+		| Partial<BlockedCategories>
+		| undefined
+	const blockedCategories: BlockedCategories = {
+		enabled: stored?.enabled ?? DEFAULT_BLOCKED_CATEGORIES.enabled,
+		hideFromSidebar: stored?.hideFromSidebar ?? DEFAULT_BLOCKED_CATEGORIES.hideFromSidebar,
+		hideFromDirectory: stored?.hideFromDirectory ?? DEFAULT_BLOCKED_CATEGORIES.hideFromDirectory,
+		hideFromSearch: stored?.hideFromSearch ?? DEFAULT_BLOCKED_CATEGORIES.hideFromSearch,
+		categories: stored?.categories ?? DEFAULT_BLOCKED_CATEGORIES.categories,
 	}
+
+	// Save back if we had to fill in any defaults
+	if (
+		!stored ||
+		Object.keys(DEFAULT_BLOCKED_CATEGORIES).some(
+			(key) => stored[key as keyof BlockedCategories] === undefined
+		)
+	) {
+		await storageHandler.set("blocked_categories", blockedCategories)
+	}
+
+	handleBlockedCategories(blockedCategories)
 }
 
 export function handleBlockedCategories(blockedCategories: BlockedCategories) {
@@ -58,7 +84,7 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 						`div > h2 > a[href*="${c.category}"] ~ div`,
 						// `a[href*="/directory/category/${c.category}"] ~ .shelf-card__impression-wrapper`,
 						`div.tw-transition:has(> .shelf-card__impression-wrapper):has(a[href="/directory/category/${c.category}"])`, // home
-						`div.vertical-selector__wrapper > div.vertical-selector > a[href*="/directory/${c.category}"]`,
+						`div.vertical-selector__wrapper:has(a[href*="/directory/${c.category}"])`, // long purp button on directory
 					]
 				: []),
 		])

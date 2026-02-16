@@ -4,17 +4,36 @@ import { BlockedChannels } from "./definitions"
 
 let channelStyleElement: HTMLStyleElement
 
+const DEFAULT_BLOCKED_CHANNELS: BlockedChannels = {
+	enabled: true,
+	hideFromSidebar: true,
+	hideFromDirectory: true,
+	hideFromSearch: true,
+	usernames: [],
+}
+
 export async function initializeBlockedChannels() {
 	// Create dedicated style element for blocked channels
 	channelStyleElement = document.createElement("style")
 	channelStyleElement.id = BLOCKED_CHANNELS_STYLE_ID
 	document.head.appendChild(channelStyleElement)
 
-	// Load and apply initial blocked channels
-	const blockedChannels = (await storageHandler.get("blocked_channels")) as BlockedChannels
-	if (blockedChannels && blockedChannels.usernames) {
-		handleBlockedChannels(blockedChannels)
+	// Load and apply initial blocked channels, merging with defaults for missing fields
+	const stored = (await storageHandler.get("blocked_channels")) as Partial<BlockedChannels> | undefined
+	const blockedChannels: BlockedChannels = {
+		enabled: stored?.enabled ?? DEFAULT_BLOCKED_CHANNELS.enabled,
+		hideFromSidebar: stored?.hideFromSidebar ?? DEFAULT_BLOCKED_CHANNELS.hideFromSidebar,
+		hideFromDirectory: stored?.hideFromDirectory ?? DEFAULT_BLOCKED_CHANNELS.hideFromDirectory,
+		hideFromSearch: stored?.hideFromSearch ?? DEFAULT_BLOCKED_CHANNELS.hideFromSearch,
+		usernames: stored?.usernames ?? DEFAULT_BLOCKED_CHANNELS.usernames,
 	}
+
+	// Save back if we had to fill in any defaults
+	if (!stored || Object.keys(DEFAULT_BLOCKED_CHANNELS).some((key) => stored[key as keyof BlockedChannels] === undefined)) {
+		await storageHandler.set("blocked_channels", blockedChannels)
+	}
+
+	handleBlockedChannels(blockedChannels)
 }
 
 export function handleBlockedChannels(blockedChannels: BlockedChannels) {

@@ -9,24 +9,30 @@ import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
 import { FeatureToggle } from "./FeatureToggle"
 
-const presetLabels = {
-	show_all: {
+type Presets = { id: SimplePresetMode; label: string; description: string }[]
+
+export const presetLabels: Presets = [
+	{
+		id: "show_all",
 		label: "Show All",
 		description: "Show everything",
 	},
-	no_monetization: {
+	{
+		id: "no_monetization",
 		label: "No Monetization",
 		description: "Keep your money",
 	},
-	minimalist: {
+	{
+		id: "minimalist",
 		label: "Minimalist",
 		description: "Minimal distractions",
 	},
-	focus: {
+	{
+		id: "focus",
 		label: "Focus mode",
 		description: "Background noise only",
 	},
-}
+]
 
 const SimpleMode = (): JSX.Element => {
 	const [currentPreset, setCurrentPreset] = useStorageState<SimplePresetMode>(
@@ -43,29 +49,24 @@ const SimpleMode = (): JSX.Element => {
 			<div className="space-y-3">
 				<h3 className="mt-2 text-sm font-medium">Choose a preset:</h3>
 				<div className="grid grid-cols-2 gap-3">
-					{(
-						Object.entries(presetLabels) as [
-							SimplePresetMode,
-							(typeof presetLabels)[SimplePresetMode],
-						][]
-					).map(([key, config]) => (
+					{presetLabels.map(({ id, label, description }) => (
 						<label
-							key={key}
+							key={id}
 							className={`flex cursor-pointer items-start gap-3 rounded border p-3 ${
-								currentPreset === key ? "bg-purple-400" : "border-gray-200"
+								currentPreset === id ? "bg-purple-400" : "border-gray-200"
 							}`}
 						>
 							<input
 								type="radio"
 								name="preset"
-								value={key}
-								checked={currentPreset === key}
-								onChange={() => applyPreset(key)}
+								value={id}
+								checked={currentPreset === id}
+								onChange={() => applyPreset(id as SimplePresetMode)}
 								className="sr-only"
 							/>
 							<div className="flex-1">
-								<div className="text-sm font-medium">{config.label}</div>
-								<div className="text-xs opacity-75">{config.description}</div>
+								<div className="text-sm font-medium">{label}</div>
+								<div className="text-xs opacity-75">{description}</div>
 							</div>
 						</label>
 					))}

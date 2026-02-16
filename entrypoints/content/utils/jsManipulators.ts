@@ -1,4 +1,5 @@
 import { UNIVERSAL_CLASS_NAME } from "./cssManipulators"
+import { disposeObserver, registerObserver } from "./observerRegistry"
 
 type PersistenceSettingType = "always_on" | "stop_on_found" | "stop_after_timeout"
 
@@ -7,7 +8,7 @@ type ElementCollection = NodeListOf<Element> | Element | null
 // Helper to check if collection has elements
 export function hasElements(elements: ElementCollection): boolean {
 	if (!elements) return false
-	if ('length' in elements) return elements.length > 0
+	if ("length" in elements) return elements.length > 0
 	return true // single Element
 }
 
@@ -17,7 +18,8 @@ function updateElementAsync(
 	action: (element: ElementCollection) => void,
 	timeoutMs: number | "no_timeout",
 	persistenceSetting: PersistenceSettingType,
-	functionName?: string
+	functionName?: string,
+	featureId?: string
 ): MutationObserver {
 	const observer = new MutationObserver((mutations, obs) => {
 		const element = getElement()
@@ -39,6 +41,11 @@ function updateElementAsync(
 		subtree: true,
 	})
 
+	// Register observer for manual cleanup if featureId provided
+	if (featureId) {
+		registerObserver(featureId, observer)
+	}
+
 	if (persistenceSetting === "stop_on_found" || persistenceSetting === "stop_after_timeout") {
 		if (timeoutMs !== "no_timeout" && timeoutMs > 0) {
 			setTimeout(() => {
@@ -51,6 +58,7 @@ function updateElementAsync(
 				// 	persistenceSetting
 				// )
 				observer.disconnect()
+				if (featureId) disposeObserver(featureId)
 			}, timeoutMs)
 		}
 	}
@@ -63,23 +71,27 @@ export const updateElement = (
 	action: (element: ElementCollection) => void,
 	timeoutMs: number | "no_timeout" = 10000,
 	persistenceSetting: PersistenceSettingType = "stop_on_found",
-	functionName?: string
+	functionName?: string,
+	featureId?: string
 ) => {
 	const element = getElement()
 	if (hasElements(element)) action(element)
-	else updateElementAsync(getElement, action, timeoutMs, persistenceSetting, functionName)
+	else
+		updateElementAsync(getElement, action, timeoutMs, persistenceSetting, functionName, featureId)
 }
 
 export function toggleElementVisibility(element: ElementCollection, toggled: boolean) {
 	if (!element) return
-	
-	if ('length' in element) {
+
+	if ("length" in element) {
 		// NodeListOf<Element>
-		element.forEach(el => {
+		element.forEach((el) => {
 			toggled ? el.classList.add(UNIVERSAL_CLASS_NAME) : el.classList.remove(UNIVERSAL_CLASS_NAME)
 		})
 	} else {
 		// Single Element
-		toggled ? element.classList.add(UNIVERSAL_CLASS_NAME) : element.classList.remove(UNIVERSAL_CLASS_NAME)
+		toggled
+			? element.classList.add(UNIVERSAL_CLASS_NAME)
+			: element.classList.remove(UNIVERSAL_CLASS_NAME)
 	}
 }

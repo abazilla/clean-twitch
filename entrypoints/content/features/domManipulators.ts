@@ -12,6 +12,7 @@ import {
 	UNIVERSAL_STYLE_ID_JS,
 } from "../utils/cssManipulators"
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
+import { disposeObserver, registerObserver } from "../utils/observerRegistry"
 import { storageHandler } from "../utils/storageHandler"
 import { chatWebSocketManager } from "../utils/websocketManager"
 import { isChannelPage, TwitchURLs } from "./definitions"
@@ -191,6 +192,7 @@ export function toggleLeftSidebarOfflineChannels(value: boolean) {
 }
 
 export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
+	const featureId = "left_sidebar_always_show_more"
 	toggleCSSHidden('[data-a-target="side-nav-show-more-button"]', value)
 	toggleCSSHidden('[data-a-target="side-nav-show-less-button"]', value)
 	if (value) {
@@ -203,16 +205,16 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 					})
 					setTimeout(() => {
 						toggleLeftSidebarAlwaysShowMore(value)
-						// toggleElementVisibility(document.querySelectorAll('[data-a-target="side-nav-show-less-button"]'), value)
 					}, 100)
-				} else {
-					// toggleElementVisibility(document.querySelectorAll('[data-a-target="side-nav-show-less-button"]'), value)
 				}
 			},
 			5000,
 			"stop_after_timeout",
-			"toggleLeftSidebarAlwaysShowMore"
+			"toggleLeftSidebarAlwaysShowMore",
+			featureId
 		)
+	} else {
+		disposeObserver(featureId)
 	}
 }
 
@@ -255,12 +257,16 @@ export function toggleChatClipBestMoments(value: boolean) {
 
 // HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
+	const featureId = "featured_stream_play_by_default"
 	const url = window.location.pathname
-	if (url !== TwitchURLs.Home) return
+	if (url !== TwitchURLs.Home) {
+		disposeObserver(featureId)
+		return
+	}
 
 	if (value) {
 		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
-		const observer = new MutationObserver((_mutations, obs) => {
+		const observer = new MutationObserver(() => {
 			const element = document.querySelector(
 				'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
 			) as HTMLButtonElement
@@ -268,6 +274,7 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 				if (element.getAttribute("data-a-player-state") === "paused") {
 					if (foundPlaying >= 2) {
 						observer.disconnect()
+						disposeObserver(featureId)
 					}
 				} else {
 					foundPlaying++
@@ -275,6 +282,8 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 				}
 			}
 		})
+
+		registerObserver(featureId, observer)
 
 		observer.observe(document.body, {
 			attributeFilter: ["data-a-player-state", "data-a-target"],
@@ -284,9 +293,11 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 		})
 
 		setTimeout(() => {
-			// console.log("timing out observer")
 			observer.disconnect()
+			disposeObserver(featureId)
 		}, 5000)
+	} else {
+		disposeObserver(featureId)
 	}
 }
 
@@ -319,37 +330,49 @@ export function toggleVideoViewership(value: boolean) {
 	toggleCSSHidden('strong[data-a-target="animated-channel-viewers-count"]', value)
 }
 
-export function toggleAlwaysCloseAdblockPopup(_value: boolean) {
-	updateElement(
-		() => document.querySelector('button[aria-label="Return to stream"]'),
-		(el) => {
-			if (el && !("length" in el)) {
-				;(el as HTMLButtonElement).click()
-				storageHandler.get<number>("adblock_popups_clicked").then((val) => {
-					storageHandler.set("adblock_popups_clicked", (val || 0) + 1)
-				})
-			}
-		},
-		"no_timeout",
-		"always_on",
-		"toggleAlwaysCloseAdblockPopup"
-	)
+export function toggleAlwaysCloseAdblockPopup(value: boolean) {
+	const featureId = "always_close_adblock_popup"
+	if (value) {
+		updateElement(
+			() => document.querySelector('button[aria-label="Return to stream"]'),
+			(el) => {
+				if (el && !("length" in el)) {
+					;(el as HTMLButtonElement).click()
+					storageHandler.get<number>("adblock_popups_clicked").then((val) => {
+						storageHandler.set("adblock_popups_clicked", (val || 0) + 1)
+					})
+				}
+			},
+			"no_timeout",
+			"always_on",
+			"toggleAlwaysCloseAdblockPopup",
+			featureId
+		)
+	} else {
+		disposeObserver(featureId)
+	}
 }
 
-export function toggleAlwaysClickRobloxFooter(_value: boolean) {
-	if (!isLoggedIn()) return
-	if (isChannelPage()) return
-	updateElement(
-		() => document.querySelector('button[id*="robloxBannerDismiss"]'),
-		(el) => {
-			if (el && !("length" in el)) {
-				;(el as HTMLButtonElement).click()
-			}
-		},
-		5000,
-		"stop_on_found",
-		"toggleAlwaysClickRobloxFooter"
-	)
+export function toggleAlwaysClickRobloxFooter(value: boolean) {
+	const featureId = "close_roblox_footer"
+	if (value) {
+		if (!isLoggedIn()) return
+		if (isChannelPage()) return
+		updateElement(
+			() => document.querySelector('button[id*="robloxBannerDismiss"]'),
+			(el) => {
+				if (el && !("length" in el)) {
+					;(el as HTMLButtonElement).click()
+				}
+			},
+			5000,
+			"stop_on_found",
+			"toggleAlwaysClickRobloxFooter",
+			featureId
+		)
+	} else {
+		disposeObserver(featureId)
+	}
 }
 
 // TODO: only hides - resize still occurs
@@ -365,17 +388,23 @@ export function toggleInfoSectionGrayscale(value: boolean) {
 
 // TODO: fix when you see this
 export function toggleInfoViralClipSection(value: boolean) {
-	if (!isChannelPage()) return
-	updateElement(
-		() => {
-			const element = document.querySelector("div[style*='social-sharing-badge-promo-banner']")
-			return element?.parentElement?.parentElement?.parentElement || null
-		},
-		(el) => toggleElementVisibility(el, value),
-		5000,
-		"stop_on_found",
-		"toggleInfoViralClipSection"
-	)
+	const featureId = "hide_info_viral_clip_section"
+	if (value) {
+		if (!isChannelPage()) return
+		updateElement(
+			() => {
+				const element = document.querySelector("div[style*='social-sharing-badge-promo-banner']")
+				return element?.parentElement?.parentElement?.parentElement || null
+			},
+			(el) => toggleElementVisibility(el, value),
+			5000,
+			"stop_on_found",
+			"toggleInfoViralClipSection",
+			featureId
+		)
+	} else {
+		disposeObserver(featureId)
+	}
 }
 
 export function toggleInfoMonthlyRecap(value: boolean) {
