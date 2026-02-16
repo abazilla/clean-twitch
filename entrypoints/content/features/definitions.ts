@@ -53,7 +53,7 @@ export const features = [
 	{
 		id: "test_mode",
 		label: "Test Mode",
-		renderSimpleOrAdvanced: "always_show",
+		renderSimpleOrAdvanced: "advanced_only",
 	},
 	{
 		id: "grayscale_all",
