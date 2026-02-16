@@ -1,4 +1,4 @@
-import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
+import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssInjector"
 import { storageHandler } from "../utils/storageHandler"
 import { BlockedCategories } from "./definitions"
 

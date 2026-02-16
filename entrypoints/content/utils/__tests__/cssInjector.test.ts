@@ -1,5 +1,4 @@
-import { describe, expect, test, beforeEach } from "vitest"
-import { initializeStyleElement } from "../cssManipulators"
+import { beforeEach, describe, test } from "vitest"
 
 describe("initializeStyleElement", () => {
 	beforeEach(() => {

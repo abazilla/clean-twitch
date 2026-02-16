@@ -1,4 +1,4 @@
-import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssManipulators"
+import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssInjector"
 import { storageHandler } from "../utils/storageHandler"
 import { BlockedChannels } from "./definitions"
 
@@ -19,7 +19,9 @@ export async function initializeBlockedChannels() {
 	document.head.appendChild(channelStyleElement)
 
 	// Load and apply initial blocked channels, merging with defaults for missing fields
-	const stored = (await storageHandler.get("blocked_channels")) as Partial<BlockedChannels> | undefined
+	const stored = (await storageHandler.get("blocked_channels")) as
+		| Partial<BlockedChannels>
+		| undefined
 	const blockedChannels: BlockedChannels = {
 		enabled: stored?.enabled ?? DEFAULT_BLOCKED_CHANNELS.enabled,
 		hideFromSidebar: stored?.hideFromSidebar ?? DEFAULT_BLOCKED_CHANNELS.hideFromSidebar,
@@ -29,7 +31,12 @@ export async function initializeBlockedChannels() {
 	}
 
 	// Save back if we had to fill in any defaults
-	if (!stored || Object.keys(DEFAULT_BLOCKED_CHANNELS).some((key) => stored[key as keyof BlockedChannels] === undefined)) {
+	if (
+		!stored ||
+		Object.keys(DEFAULT_BLOCKED_CHANNELS).some(
+			(key) => stored[key as keyof BlockedChannels] === undefined
+		)
+	) {
 		await storageHandler.set("blocked_channels", blockedChannels)
 	}
 

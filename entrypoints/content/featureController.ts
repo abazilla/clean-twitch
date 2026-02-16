@@ -21,7 +21,7 @@ import {
 	TEST_MODE_STYLES,
 	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
-} from "./utils/cssManipulators"
+} from "./utils/cssInjector"
 import { storageHandler } from "./utils/storageHandler"
 
 // Toggle feature functionality
@@ -142,9 +142,6 @@ export async function applyAdvancedModeFeatures() {
 }
 
 export async function initializeStylesAndFeatures() {
-	// Sync from sync storage
-	storageHandler.pullFromSync()
-
 	await initializeBlockedChannels()
 	await initializeBlockedCategories()
 	await initializeStyleElement()

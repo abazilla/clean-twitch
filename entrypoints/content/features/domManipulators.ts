@@ -10,9 +10,9 @@ import {
 	toggleCSSHidden,
 	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
-} from "../utils/cssManipulators"
+} from "../utils/cssInjector"
 import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
-import { disposeObserver, registerObserver } from "../utils/observerRegistry"
+import { disposeObserver, registerObserver } from "../utils/observerManager"
 import { storageHandler } from "../utils/storageHandler"
 import { chatWebSocketManager } from "../utils/websocketManager"
 import { isChannelPage, TwitchURLs } from "./definitions"
@@ -152,17 +152,6 @@ export function toggleSideNavGrayscale(value: boolean) {
 export function toggleLeftSidebarStories(value: boolean) {
 	toggleCSSHidden("div.storiesLeftNavSection--csO9S", value)
 }
-
-// Seems like it was removed
-// export function toggleLeftSidebarStoriesXS(value: boolean) {
-// 	updateElement(
-// 		() => $("div.storiesLeftNavSectionCollapsedButton--txKvw").parents().eq(2),
-// 		($el) => toggleElementVisibility($el, value),
-// 		5000,
-// 		"stop_on_found",
-// 		"toggleLeftSidebarStoriesXS"
-// 	)
-// }
 
 export function toggleLeftSidebarViewership(value: boolean) {
 	toggleCSSHidden("div[data-a-target='side-nav-live-status']", value)
@@ -353,28 +342,6 @@ export function toggleAlwaysCloseAdblockPopup(value: boolean) {
 	}
 }
 
-export function toggleAlwaysClickRobloxFooter(value: boolean) {
-	const featureId = "close_roblox_footer"
-	if (value) {
-		if (!isLoggedIn()) return
-		if (isChannelPage()) return
-		updateElement(
-			() => document.querySelector('button[id*="robloxBannerDismiss"]'),
-			(el) => {
-				if (el && !("length" in el)) {
-					;(el as HTMLButtonElement).click()
-				}
-			},
-			5000,
-			"stop_on_found",
-			"toggleAlwaysClickRobloxFooter",
-			featureId
-		)
-	} else {
-		disposeObserver(featureId)
-	}
-}
-
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	if (!isChannelPage()) return
@@ -454,6 +421,28 @@ export function toggleInfoChannelPanelSection(value: boolean) {
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
 	toggleCSSHidden("#twilight-sticky-footer-root", value)
+}
+
+export function toggleAlwaysClickRobloxFooter(value: boolean) {
+	const featureId = "close_roblox_footer"
+	if (value) {
+		if (!isLoggedIn()) return
+		if (isChannelPage()) return
+		updateElement(
+			() => document.querySelector('button[id*="robloxBannerDismiss"]'),
+			(el) => {
+				if (el && !("length" in el)) {
+					;(el as HTMLButtonElement).click()
+				}
+			},
+			5000,
+			"stop_on_found",
+			"toggleAlwaysClickRobloxFooter",
+			featureId
+		)
+	} else {
+		disposeObserver(featureId)
+	}
 }
 
 // WEBSOCKET MANAGEMENT

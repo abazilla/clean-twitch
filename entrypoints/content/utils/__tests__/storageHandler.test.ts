@@ -1,22 +1,17 @@
-import { describe, expect, test, vi, beforeEach } from "vitest"
-import { storageHandler } from "../storageHandler"
+import { beforeEach, describe, test, vi } from "vitest"
 
 // Mock browser storage APIs
 const mockBrowserStorage = {
 	local: {
 		get: vi.fn(),
-		set: vi.fn()
+		set: vi.fn(),
 	},
-	sync: {
-		get: vi.fn(),
-		set: vi.fn()
-	}
 }
 
 vi.mock("wxt/browser", () => ({
 	browser: {
-		storage: mockBrowserStorage
-	}
+		storage: mockBrowserStorage,
+	},
 }))
 
 describe("storageHandler.get", () => {
@@ -26,10 +21,6 @@ describe("storageHandler.get", () => {
 
 	test("should get value from local storage when available", async () => {
 		// TODO: Test local storage retrieval
-	})
-
-	test("should fallback to sync storage when local is empty", async () => {
-		// TODO: Test sync storage fallback
 	})
 
 	test("should return undefined when key doesn't exist", async () => {
@@ -50,10 +41,6 @@ describe("storageHandler.set", () => {
 		// TODO: Test immediate local write
 	})
 
-	test("should schedule batched sync write", async () => {
-		// TODO: Test batched sync scheduling
-	})
-
 	test("should handle write errors", async () => {
 		// TODO: Test error handling
 	})
@@ -66,10 +53,6 @@ describe("storageHandler.getMultiple", () => {
 
 	test("should get all keys from local when available", async () => {
 		// TODO: Test getting all keys from local
-	})
-
-	test("should fetch missing keys from sync", async () => {
-		// TODO: Test missing key detection and sync fetch
 	})
 
 	test("should cache missing data in local", async () => {

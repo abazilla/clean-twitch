@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest"
-import { UNIVERSAL_CLASS_NAME } from "../cssManipulators"
+import { UNIVERSAL_CLASS_NAME } from "../cssInjector"
 import { hasElements, toggleElementVisibility } from "../jsManipulators"
 
 describe("hasElements", () => {
