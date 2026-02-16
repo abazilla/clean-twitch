@@ -1,11 +1,11 @@
 import { ContentScriptContext } from "#imports"
+import { getTargetConfigs } from "./configs"
 import {
 	ButtonConfig,
 	clearInjectedButtons,
 	injectButton,
 	injectButtonsInNewNodes,
-} from "./buttonInjector"
-import { getTargetConfigs } from "./targetConfigs"
+} from "./injector"
 
 let isInitialized = false
 let currentConfigs: ButtonConfig[] = []

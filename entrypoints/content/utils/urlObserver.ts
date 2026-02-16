@@ -1,5 +1,5 @@
 import { handleModeSwitch } from "../featureController"
-import { reinitializeButtonManager } from "../ui/buttonManager"
+import { reinitializeButtonManager } from "../ui/hideButton/manager"
 import { storageHandler } from "./storageHandler"
 
 export function setupUrlChangeListener() {

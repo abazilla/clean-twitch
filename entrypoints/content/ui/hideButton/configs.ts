@@ -1,5 +1,5 @@
-import { blockCategory, blockChannel } from "./buttonHandlers"
-import { ButtonConfig } from "./buttonInjector"
+import { blockCategory, blockChannel } from "./handlers"
+import { ButtonConfig } from "./injector"
 
 export function getTargetConfigs(): ButtonConfig[] {
 	return [

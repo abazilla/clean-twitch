@@ -1,8 +1,8 @@
 import { ContentScriptContext } from "#imports"
 import { handleFeatureOnToggle, initializeStylesAndFeatures } from "./featureController"
 import { FeatureID } from "./features/definitions"
-import { initializeButtonManager } from "./ui/buttonManager"
-import { injectFallbackStyles } from "./ui/buttonStyles"
+import { initializeButtonManager } from "./ui/hideButton/manager"
+import { injectFallbackStyles } from "./ui/hideButton/styles"
 import { storageHandler } from "./utils/storageHandler"
 import { setupUrlChangeListener } from "./utils/urlObserver"
 
