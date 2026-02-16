@@ -336,6 +336,22 @@ export function toggleAlwaysCloseAdblockPopup(_value: boolean) {
 	)
 }
 
+export function toggleAlwaysClickRobloxFooter(_value: boolean) {
+	if (!isLoggedIn()) return
+	if (isChannelPage()) return
+	updateElement(
+		() => document.querySelector('button[id*="robloxBannerDismiss"]'),
+		(el) => {
+			if (el && !("length" in el)) {
+				;(el as HTMLButtonElement).click()
+			}
+		},
+		5000,
+		"stop_on_found",
+		"toggleAlwaysClickRobloxFooter"
+	)
+}
+
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	if (!isChannelPage()) return

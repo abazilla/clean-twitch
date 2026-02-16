@@ -262,7 +262,8 @@ export const features = [
 			},
 			{
 				id: "block_hermes_websocket",
-				label: "Block Notification WebSockets (Improves Performance)",
+				label:
+					"Block Notification WebSockets (Improves Performance, will cause issues with Viewer counts and Raids)",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
@@ -361,6 +362,12 @@ export const features = [
 				id: "hide_sticky_footer",
 				label: "Remove Purple Footer",
 				simpleModeActive: ["minimalist", "focus"],
+				children: [],
+			},
+			{
+				id: "close_roblox_footer",
+				label: "Remove the Roblox Footer",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 		],

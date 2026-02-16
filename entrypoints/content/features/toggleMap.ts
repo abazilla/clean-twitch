@@ -10,6 +10,7 @@ import {
 	hideTopBitsButton,
 	hideTopTurboButton,
 	hideWhispersButton,
+	toggleAlwaysClickRobloxFooter,
 	toggleAlwaysCloseAdblockPopup,
 	toggleAutoManageChatWebSocket,
 	toggleBelowVideoAdSection,
@@ -103,6 +104,9 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	},
 	always_close_adblock_popup: (value: boolean) => {
 		toggleAlwaysCloseAdblockPopup(value)
+	},
+	close_roblox_footer: (value: boolean) => {
+		toggleAlwaysClickRobloxFooter(value)
 	},
 	toggle_info_grayscale: (value: boolean) => toggleInfoSectionGrayscale(value),
 	hide_info_monetization_buttons: (value: boolean) => toggleInfoMonetizationButtons(value),
