@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { parseCategory } from "../categoryParser"
+import { parseCategory } from "./categoryParser"
 
 describe("parseCategoryName", () => {
 	test("converts spaces to hyphens", () => {

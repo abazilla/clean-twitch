@@ -62,7 +62,7 @@ const App = (): JSX.Element => {
 				)}
 			</div>
 
-			<div className="flex-shrink-0 bg-purple-600 px-4 py-2 text-center text-xs">
+			<div className="shrink-0 bg-purple-600 px-4 py-2 text-center text-xs">
 				v{__APP_VERSION__} • made by aba
 			</div>
 		</div>

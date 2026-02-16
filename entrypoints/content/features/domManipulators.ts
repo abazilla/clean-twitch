@@ -10,11 +10,11 @@ import {
 	toggleCSSHidden,
 	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
-} from "../utils/cssInjector"
-import { toggleElementVisibility, updateElement } from "../utils/jsManipulators"
-import { disposeObserver, registerObserver } from "../utils/observerManager"
-import { storageHandler } from "../utils/storageHandler"
-import { chatWebSocketManager } from "../utils/websocketManager"
+} from "../dom/cssManager"
+import { toggleElementVisibility, updateElement } from "../dom/elementHelpers"
+import { disposeObserver, registerObserver } from "../dom/observerRegistry"
+import { storageHandler } from "../storage/handler"
+import { chatWebSocketManager } from "../network/chatWebSocket"
 import { isChannelPage, TwitchURLs } from "./definitions"
 
 const isLoggedIn = (): boolean =>

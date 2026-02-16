@@ -1,5 +1,5 @@
 import { BlockedCategories, BlockedChannels } from "../../features/definitions"
-import { storageHandler } from "../../utils/storageHandler"
+import { storageHandler } from "../../storage/handler"
 
 export async function blockCategory([name, category]: string[]): Promise<void> {
 	try {

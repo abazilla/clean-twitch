@@ -1,6 +1,6 @@
 import { handleModeSwitch } from "../featureController"
 import { reinitializeButtonManager } from "../ui/hideButton/manager"
-import { storageHandler } from "./storageHandler"
+import { storageHandler } from "../storage/handler"
 
 export function setupUrlChangeListener() {
 	let lastUrl = window.location.href

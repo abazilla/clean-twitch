@@ -21,8 +21,8 @@ import {
 	TEST_MODE_STYLES,
 	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
-} from "./utils/cssInjector"
-import { storageHandler } from "./utils/storageHandler"
+} from "./dom/cssManager"
+import { storageHandler } from "./storage/handler"
 
 // Toggle feature functionality
 export async function handleFeatureOnToggle(id: FeatureID, value: any) {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
-import { chatWebSocketManager } from "../websocketManager"
+import { chatWebSocketManager } from "./chatWebSocket"
 
 describe("ChatWebSocketManager", () => {
 	beforeEach(() => {

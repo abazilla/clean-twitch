@@ -30,7 +30,7 @@ The extension blocks chat WebSocket connections when chat is hidden to save band
 
 ```
 ISOLATED World                         MAIN World
-(websocketManager.ts)                  (websocket-interceptor.content.ts)
+(network/chatWebSocket.ts)             (websocket-interceptor.content.ts)
 ───────────────────────────────────────────────────────────────────────────
                                        window.WebSocket = Proxy
                                               ↓

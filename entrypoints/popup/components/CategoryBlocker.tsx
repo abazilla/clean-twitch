@@ -1,5 +1,5 @@
 import { BlockedCategories } from "@/entrypoints/content/features/definitions"
-import { parseCategory } from "@/entrypoints/content/utils/categoryParser"
+import { parseCategory } from "@/entrypoints/content/helpers/categoryParser"
 import { JSX, useState } from "react"
 import { useStorageState } from "../storage"
 

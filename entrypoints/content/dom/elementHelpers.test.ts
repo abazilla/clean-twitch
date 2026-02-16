@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest"
-import { UNIVERSAL_CLASS_NAME } from "../cssInjector"
-import { hasElements, toggleElementVisibility } from "../jsManipulators"
+import { UNIVERSAL_CLASS_NAME } from "./cssManager"
+import { hasElements, toggleElementVisibility } from "./elementHelpers"
 
 describe("hasElements", () => {
 	test("returns false for null", () => {

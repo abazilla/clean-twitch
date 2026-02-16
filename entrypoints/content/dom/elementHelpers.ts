@@ -1,5 +1,5 @@
-import { UNIVERSAL_CLASS_NAME } from "./cssInjector"
-import { disposeObserver, registerObserver } from "./observerManager"
+import { UNIVERSAL_CLASS_NAME } from "./cssManager"
+import { disposeObserver, registerObserver } from "./observerRegistry"
 
 type PersistenceSettingType = "always_on" | "stop_on_found" | "stop_after_timeout"
 

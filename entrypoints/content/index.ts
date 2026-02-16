@@ -3,8 +3,8 @@ import { handleFeatureOnToggle, initializeStylesAndFeatures } from "./featureCon
 import { FeatureID } from "./features/definitions"
 import { initializeButtonManager } from "./ui/hideButton/manager"
 import { injectFallbackStyles } from "./ui/hideButton/styles"
-import { storageHandler } from "./utils/storageHandler"
-import { setupUrlChangeListener } from "./utils/urlObserver"
+import { storageHandler } from "./storage/handler"
+import { setupUrlChangeListener } from "./dom/urlObserver"
 
 export default defineContentScript({
 	matches: ["https://*.twitch.tv/*"],

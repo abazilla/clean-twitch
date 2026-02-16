@@ -1,5 +1,5 @@
-import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssInjector"
-import { storageHandler } from "../utils/storageHandler"
+import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../dom/cssManager"
+import { storageHandler } from "../storage/handler"
 import { BlockedChannels } from "./definitions"
 
 let channelStyleElement: HTMLStyleElement

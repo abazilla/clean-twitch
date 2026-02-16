@@ -4,7 +4,7 @@ import {
 	toggleableFeatureIDs,
 } from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
-import { storageHandler } from "@/entrypoints/content/utils/storageHandler"
+import { storageHandler } from "@/entrypoints/content/storage/handler"
 import { useStorageState } from "@/entrypoints/popup/storage"
 
 type PresetOption = { id: SimplePresetMode | "reset"; label: string }

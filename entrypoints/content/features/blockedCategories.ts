@@ -1,5 +1,5 @@
-import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../utils/cssInjector"
-import { storageHandler } from "../utils/storageHandler"
+import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../dom/cssManager"
+import { storageHandler } from "../storage/handler"
 import { BlockedCategories } from "./definitions"
 
 let categoryStyleElement: HTMLStyleElement
