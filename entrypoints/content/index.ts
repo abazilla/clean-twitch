@@ -1,10 +1,10 @@
 import { ContentScriptContext } from "#imports"
+import { setupUrlChangeListener } from "./dom/urlObserver"
 import { handleFeatureOnToggle, initializeStylesAndFeatures } from "./featureController"
 import { FeatureID } from "./features/definitions"
+import { storageHandler } from "./storage/handler"
 import { initializeButtonManager } from "./ui/hideButton/manager"
 import { injectFallbackStyles } from "./ui/hideButton/styles"
-import { storageHandler } from "./storage/handler"
-import { setupUrlChangeListener } from "./dom/urlObserver"
 
 export default defineContentScript({
 	matches: ["https://*.twitch.tv/*"],

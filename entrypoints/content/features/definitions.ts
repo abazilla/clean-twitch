@@ -58,7 +58,7 @@ export const features = [
 	{
 		id: "grayscale_all",
 		label: "Grayscale Site",
-		renderSimpleOrAdvanced: "always_show",
+		renderSimpleOrAdvanced: "advanced_only",
 	},
 	{
 		id: "blocked_categories",

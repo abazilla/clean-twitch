@@ -3,9 +3,9 @@ import {
 	SimplePresetMode,
 	toggleableFeatureIDs,
 } from "@/entrypoints/content/features/definitions"
-import { JSX } from "react"
 import { storageHandler } from "@/entrypoints/content/storage/handler"
 import { useStorageState } from "@/entrypoints/popup/storage"
+import { JSX } from "react"
 
 type PresetOption = { id: SimplePresetMode | "reset"; label: string }
 
@@ -38,25 +38,28 @@ const PresetDropdown = (): JSX.Element => {
 	}
 
 	return (
-		<div className="flex flex-wrap items-center gap-2">
-			<span className="text-sm">Copy settings from</span>
-			<select
-				value={selectedPreset}
-				onChange={(e) => setSelectedPreset(e.target.value as SimplePresetMode | "reset")}
-				className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-black focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-			>
-				{presetOptions.map(({ id, label }) => (
-					<option key={id} value={id}>
-						{label}
-					</option>
-				))}
-			</select>
-			<button
-				onClick={applyPreset}
-				className="rounded bg-purple-600 px-3 py-1 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
-			>
-				Apply
-			</button>
+		<div className="flex flex-wrap items-center justify-between gap-2">
+			<span className="text-sm">Copy preset settings from:</span>
+			{/* make the next section align to the right */}
+			<div className="flex gap-2">
+				<select
+					value={selectedPreset}
+					onChange={(e) => setSelectedPreset(e.target.value as SimplePresetMode | "reset")}
+					className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-black focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none"
+				>
+					{presetOptions.map(({ id, label }) => (
+						<option key={id} value={id}>
+							{label}
+						</option>
+					))}
+				</select>
+				<button
+					onClick={applyPreset}
+					className="rounded bg-purple-600 px-3 py-1 text-sm font-medium text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 focus:outline-none"
+				>
+					Apply
+				</button>
+			</div>
 		</div>
 	)
 }

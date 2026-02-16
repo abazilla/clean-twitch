@@ -35,6 +35,20 @@ export const storageHandler = {
 		}
 		return {}
 	},
+	async exportAll(): Promise<string> {
+		const data = await browser.storage.local.get(null)
+		return btoa(JSON.stringify(data))
+	},
+
+	async importAll(code: string): Promise<void> {
+		const data = JSON.parse(atob(code))
+		if (typeof data !== "object" || data === null || Array.isArray(data)) {
+			throw new Error("Invalid settings data")
+		}
+		await browser.storage.local.clear()
+		await browser.storage.local.set(data)
+	},
+
 	onChanged: {
 		addListener(callback: (changes: Record<string, any>, areaName: string) => void) {
 			browser.storage.onChanged.addListener(callback)

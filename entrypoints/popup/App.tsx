@@ -26,7 +26,7 @@ const App = (): JSX.Element => {
 	}
 
 	return (
-		<div className="flex h-96 w-96 flex-col overflow-hidden bg-purple-500 text-white">
+		<div className="flex h-96 w-md flex-col overflow-hidden bg-purple-500 text-white">
 			<div className="scrollbar-hide flex-1 overflow-y-auto p-4">
 				<div className="flex items-center justify-between">
 					<h1 className="m-0 p-0 text-lg">Clean Twitch</h1>
@@ -63,7 +63,15 @@ const App = (): JSX.Element => {
 			</div>
 
 			<div className="shrink-0 bg-purple-600 px-4 py-2 text-center text-xs">
-				v{__APP_VERSION__} • made by aba
+				v{__APP_VERSION__} • made by{" "}
+				<a
+					className="text-blue-200 underline"
+					href="https://github.com/abazilla"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					aba
+				</a>
 			</div>
 		</div>
 	)
