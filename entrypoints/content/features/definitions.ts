@@ -248,6 +248,18 @@ export const features = [
 		hideToggleButton: true,
 		children: [
 			{
+				id: "featured_stream_play_by_default",
+				label: "Prevent Homepage Carousel Stream from Auto-Playing",
+				simpleModeActive: [],
+				children: [],
+			},
+			{
+				id: "hide_carousel",
+				label: "Hide Homepage Carousel",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
 				id: "hide_thumbnail_viewership",
 				label: "Hide Thumbnail Viewership Numbers",
 				simpleModeActive: ["focus"],
@@ -278,12 +290,6 @@ export const features = [
 				id: "toggle_video_grayscale",
 				label: "Grayscale Video Player/Browse Section",
 				simpleModeActive: ["focus"],
-				children: [],
-			},
-			{
-				id: "featured_stream_play_by_default",
-				label: "Prevent Homepage Stream from Auto-Playing",
-				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{

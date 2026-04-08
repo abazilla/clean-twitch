@@ -2,6 +2,7 @@
 import { FeatureID } from "./definitions"
 import {
 	hideBrowseButton,
+	hideCarousel,
 	hideDotsButton,
 	hideFollowingButton,
 	hideNotificationsButton,
@@ -96,6 +97,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	toggle_chat_grayscale: (value: boolean) => toggleChatGrayscale(value),
 	hide_chat_clip_best_moments: (value: boolean) => toggleChatClipBestMoments(value),
 	featured_stream_play_by_default: (value: boolean) => toggleFeaturedStreamPlayByDefault(value),
+	hide_carousel: (value: boolean) => hideCarousel(value),
 	toggle_video_grayscale: (value: boolean) => toggleVideoGrayscale(value),
 	hide_video_gift_section: (value: boolean) => toggleVideoGiftButtonSection(value),
 	hide_video_ad_wrapper: (value: boolean) => {

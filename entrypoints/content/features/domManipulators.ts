@@ -13,8 +13,8 @@ import {
 } from "../dom/cssManager"
 import { toggleElementVisibility, updateElement } from "../dom/elementHelpers"
 import { disposeObserver, registerObserver } from "../dom/observerRegistry"
-import { storageHandler } from "../storage/handler"
 import { chatWebSocketManager } from "../network/chatWebSocket"
+import { storageHandler } from "../storage/handler"
 import { isChannelPage, TwitchURLs } from "./definitions"
 
 const isLoggedIn = (): boolean =>
@@ -244,50 +244,79 @@ export function toggleChatClipBestMoments(value: boolean) {
 	toggleCSSHidden('div.cMeiZH:has(div[aria-label="Expand Top Clips Leaderboard"])', value)
 }
 
+export function hideCarousel(value: boolean) {
+	if (!value) return
+	updateElement(
+		() => document.querySelector('[data-a-target="front-page-carousel"]'),
+		(el) => {
+			if (!el || "length" in el) return
+			const carousel = el as HTMLElement
+			const video = carousel.querySelector("video") as HTMLVideoElement
+			if (video) {
+				video.pause()
+				video.removeAttribute("src")
+				video.load()
+			}
+			carousel.querySelectorAll("iframe").forEach((iframe) => {
+				iframe.src = ""
+				iframe.remove()
+			})
+			carousel.remove()
+		},
+		5000,
+		"stop_on_found",
+		"hideCarousel",
+		"hideCarousel"
+	)
+}
+
 // HOMEPAGE
 export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	const featureId = "featured_stream_play_by_default"
+
+	if (value === false) {
+		disposeObserver(featureId)
+		return
+	}
+
 	const url = window.location.pathname
+	console.log({ url, h: TwitchURLs.Home })
 	if (url !== TwitchURLs.Home) {
 		disposeObserver(featureId)
 		return
 	}
 
-	if (value) {
-		let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
-		const observer = new MutationObserver(() => {
-			const element = document.querySelector(
-				'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
-			) as HTMLButtonElement
-			if (element) {
-				if (element.getAttribute("data-a-player-state") === "paused") {
-					if (foundPlaying >= 2) {
-						observer.disconnect()
-						disposeObserver(featureId)
-					}
-				} else {
-					foundPlaying++
-					element.click()
+	let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
+	const observer = new MutationObserver(() => {
+		const element = document.querySelector(
+			'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
+		) as HTMLButtonElement
+		if (element) {
+			if (element.getAttribute("data-a-player-state") === "paused") {
+				if (foundPlaying >= 2) {
+					observer.disconnect()
+					disposeObserver(featureId)
 				}
+			} else {
+				foundPlaying++
+				element.click()
 			}
-		})
+		}
+	})
 
-		registerObserver(featureId, observer)
+	registerObserver(featureId, observer)
 
-		observer.observe(document.body, {
-			attributeFilter: ["data-a-player-state", "data-a-target"],
-			attributes: true,
-			subtree: true,
-			childList: true,
-		})
+	observer.observe(document.body, {
+		attributeFilter: ["data-a-player-state", "data-a-target"],
+		attributes: true,
+		subtree: true,
+		childList: true,
+	})
 
-		setTimeout(() => {
-			observer.disconnect()
-			disposeObserver(featureId)
-		}, 5000)
-	} else {
+	setTimeout(() => {
+		observer.disconnect()
 		disposeObserver(featureId)
-	}
+	}, 5000)
 }
 
 // THUMBNAILS
