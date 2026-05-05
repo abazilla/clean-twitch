@@ -247,21 +247,17 @@ export function toggleChatClipBestMoments(value: boolean) {
 export function hideCarousel(value: boolean) {
 	if (!value) return
 	updateElement(
-		() => document.querySelector('[data-a-target="front-page-carousel"]'),
+		() => document.querySelector('div[data-a-player-type="frontpage"]:has(video)'),
 		(el) => {
 			if (!el || "length" in el) return
-			const carousel = el as HTMLElement
-			const video = carousel.querySelector("video") as HTMLVideoElement
+			const playerDiv = el as HTMLElement
+			const video = playerDiv.querySelector("video") as HTMLVideoElement
 			if (video) {
 				video.pause()
-				video.removeAttribute("src")
+				video.src = ""
 				video.load()
 			}
-			carousel.querySelectorAll("iframe").forEach((iframe) => {
-				iframe.src = ""
-				iframe.remove()
-			})
-			carousel.remove()
+			playerDiv.closest('[data-a-target="front-page-carousel"]')?.remove()
 		},
 		5000,
 		"stop_on_found",
@@ -280,29 +276,28 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	}
 
 	const url = window.location.pathname
-	console.log({ url, h: TwitchURLs.Home })
 	if (url !== TwitchURLs.Home) {
 		disposeObserver(featureId)
 		return
 	}
 
-	let foundPlaying = 0 // for some reason, it plays after the first pause, but not the second
-	const observer = new MutationObserver(() => {
-		const element = document.querySelector(
-			'[data-a-target="featured-item-index-0"] [data-a-target="player-play-pause-button"]'
-		) as HTMLButtonElement
-		if (element) {
-			if (element.getAttribute("data-a-player-state") === "paused") {
-				if (foundPlaying >= 2) {
-					observer.disconnect()
-					disposeObserver(featureId)
-				}
-			} else {
-				foundPlaying++
-				element.click()
-			}
+	let pauseCount = 0
+
+	const handleVideo = () => {
+		const playerDiv = document.querySelector('div[data-a-player-type="frontpage"]:has(video)')
+		if (!playerDiv) return
+		const video = playerDiv.querySelector("video") as HTMLVideoElement
+		if (!video) return
+		if (!video.paused) {
+			video.pause()
+			pauseCount++
+		} else if (pauseCount >= 2) {
+			observer.disconnect()
+			disposeObserver(featureId)
 		}
-	})
+	}
+
+	const observer = new MutationObserver(handleVideo)
 
 	registerObserver(featureId, observer)
 
@@ -310,8 +305,9 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 		attributeFilter: ["data-a-player-state", "data-a-target"],
 		attributes: true,
 		subtree: true,
-		childList: true,
 	})
+
+	handleVideo()
 
 	setTimeout(() => {
 		observer.disconnect()
