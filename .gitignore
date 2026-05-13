@@ -27,4 +27,6 @@ CLAUDE.md
 *.sln
 *.sw?
 
+.sandcastle
+docs
 submit.md

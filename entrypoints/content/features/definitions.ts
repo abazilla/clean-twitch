@@ -162,6 +162,11 @@ export const features = [
 				simpleModeActive: ["minimalist", "focus"],
 			},
 			{
+				id: "hide_left_sidebar_sponsored",
+				label: 'Hide "Sponsored" Channels',
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
 				id: "hide_left_sidebar_followed_channels",
 				label: 'Hide "Followed Channels"',
 			},
@@ -255,7 +260,7 @@ export const features = [
 			},
 			{
 				id: "hide_carousel",
-				label: "Hide Homepage Carousel",
+				label: "Remove Homepage Carousel",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},

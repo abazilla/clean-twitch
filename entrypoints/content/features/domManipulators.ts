@@ -176,6 +176,10 @@ export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 	toggleCSSHidden("div[aria-label='Recommended Categories']", val)
 }
 
+export function toggleLeftSidebarSponsored(value: boolean) {
+	toggleCSSHidden(".side-nav-card:has(.side-nav-card__link--promoted-followed)", value)
+}
+
 export function toggleLeftSidebarOfflineChannels(value: boolean) {
 	toggleCSSHidden('div[class*="ScTransitionBase"]:has(.side-nav-card__avatar--offline)', value)
 }

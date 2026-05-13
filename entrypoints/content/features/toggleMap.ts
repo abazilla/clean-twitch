@@ -35,6 +35,7 @@ import {
 	toggleLeftSidebarLiveChannels,
 	toggleLeftSidebarOfflineChannels,
 	toggleLeftSidebarRecommendedCategories,
+	toggleLeftSidebarSponsored,
 	toggleLeftSidebarStories,
 	toggleLeftSidebarViewersAlsoWatch,
 	toggleLeftSidebarViewership,
@@ -80,6 +81,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 		toggleLeftSidebarStories(value)
 		// toggleLeftSidebarStoriesXS(value)
 	},
+	hide_left_sidebar_sponsored: (value: boolean) => toggleLeftSidebarSponsored(value),
 	hide_thumbnail_viewership: (value: boolean) => toggleThumbnailViewership(value),
 	hide_video_viewership: (value: boolean) => toggleVideoViewership(value),
 	hide_left_sidebar_viewership: (value: boolean) => toggleLeftSidebarViewership(value),
