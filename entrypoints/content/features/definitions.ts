@@ -245,6 +245,16 @@ export const features = [
 				label: "Hide Chat Badges",
 				simpleModeActive: ["focus"],
 			},
+			{
+				id: "hide_chat_private_callout",
+				label: "Hide Chat Weekly Rewards Callout",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
+				id: "hide_chat_sub_upsell",
+				label: "Hide Chat Subscribe Upsell",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
 		],
 	},
 	{
@@ -262,6 +272,12 @@ export const features = [
 				id: "hide_carousel",
 				label: "Remove Homepage Carousel",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
+				id: "hide_mini_player",
+				label: "Disable Picture-in-Picture Mini Player",
+				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
 			{

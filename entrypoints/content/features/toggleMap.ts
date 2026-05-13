@@ -3,6 +3,7 @@ import { FeatureID } from "./definitions"
 import {
 	hideBrowseButton,
 	hideCarousel,
+	hideMiniPlayer,
 	hideDotsButton,
 	hideFollowingButton,
 	hideNotificationsButton,
@@ -20,6 +21,8 @@ import {
 	toggleChatClipBestMoments,
 	toggleChatGrayscale,
 	toggleChatMonetizationButtons,
+	toggleChatPrivateCallout,
+	toggleChatSubUpsell,
 	toggleComboButton,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
@@ -98,8 +101,11 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_chat_highlights: (value: boolean) => toggleCommunityHighlightStack(value),
 	toggle_chat_grayscale: (value: boolean) => toggleChatGrayscale(value),
 	hide_chat_clip_best_moments: (value: boolean) => toggleChatClipBestMoments(value),
+	hide_chat_private_callout: (value: boolean) => toggleChatPrivateCallout(value),
+	hide_chat_sub_upsell: (value: boolean) => toggleChatSubUpsell(value),
 	featured_stream_play_by_default: (value: boolean) => toggleFeaturedStreamPlayByDefault(value),
 	hide_carousel: (value: boolean) => hideCarousel(value),
+	hide_mini_player: (value: boolean) => hideMiniPlayer(value),
 	toggle_video_grayscale: (value: boolean) => toggleVideoGrayscale(value),
 	hide_video_gift_section: (value: boolean) => toggleVideoGiftButtonSection(value),
 	hide_video_ad_wrapper: (value: boolean) => {

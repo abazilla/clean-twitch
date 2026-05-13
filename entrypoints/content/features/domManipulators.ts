@@ -248,26 +248,153 @@ export function toggleChatClipBestMoments(value: boolean) {
 	toggleCSSHidden('div.cMeiZH:has(div[aria-label="Expand Top Clips Leaderboard"])', value)
 }
 
+export function toggleChatPrivateCallout(value: boolean) {
+	toggleCSSHidden('div[data-test-selector="chat-private-callout-queue__callout-container"]', value)
+}
+
+export function toggleChatSubUpsell(value: boolean) {
+	toggleCSSHidden('button:has(> div[style*="sub-upsell"])', value)
+}
+
+// SPA route-change pub/sub. history.pushState / replaceState do not fire
+// any native event, so we patch them once and fan out to subscribers.
+let routeListenerInstalled = false
+const routeChangeSubscribers = new Set<() => void>()
+
+function installRouteListener() {
+	if (routeListenerInstalled) return
+	routeListenerInstalled = true
+	const fire = () => routeChangeSubscribers.forEach((cb) => cb())
+	const wrap = (key: "pushState" | "replaceState") => {
+		const orig = history[key]
+		history[key] = function (this: History, ...args: unknown[]) {
+			const r = orig.apply(this, args as Parameters<typeof orig>)
+			fire()
+			return r
+		} as typeof orig
+	}
+	wrap("pushState")
+	wrap("replaceState")
+	window.addEventListener("popstate", fire)
+	window.addEventListener("hashchange", fire)
+}
+
+let currentCarouselRouteCb: (() => void) | null = null
+
+// CSS selector for the picture-in-picture mini player.
+const MINI_PLAYER_SELECTOR = '.persistent-player[data-a-player-state="mini"]'
+// Home-scoped variant used by hideCarousel so toggling it off does not
+// interfere with the all-pages hide controlled by hideMiniPlayer.
+const HOME_MINI_PLAYER_SELECTOR = `body[data-ct-on-home="1"] ${MINI_PLAYER_SELECTOR}`
+
+function updateHomeBodyAttr() {
+	if (location.pathname === "/") {
+		document.body?.setAttribute("data-ct-on-home", "1")
+	} else {
+		document.body?.removeAttribute("data-ct-on-home")
+	}
+}
+
 export function hideCarousel(value: boolean) {
-	if (!value) return
-	updateElement(
-		() => document.querySelector('div[data-a-player-type="frontpage"]:has(video)'),
-		(el) => {
-			if (!el || "length" in el) return
-			const playerDiv = el as HTMLElement
-			const video = playerDiv.querySelector("video") as HTMLVideoElement
-			if (video) {
-				video.pause()
-				video.src = ""
-				video.load()
-			}
-			playerDiv.closest('[data-a-target="front-page-carousel"]')?.remove()
-		},
-		5000,
-		"stop_on_found",
-		"hideCarousel",
-		"hideCarousel"
-	)
+	const featureId = "hide_carousel"
+
+	const syncBackground = () => {
+		const shouldBlock = value && location.pathname === "/"
+		try {
+			browser.runtime.sendMessage({ type: "carousel-block-set", block: shouldBlock })
+		} catch {
+			// ignore; background may be temporarily unavailable
+		}
+	}
+
+	const sweep = () => {
+		document
+			.querySelectorAll(
+				'[data-a-target="front-page-carousel"], div[data-a-player-type="frontpage"]'
+			)
+			.forEach((el) => el.remove())
+	}
+
+	// Tear down any prior subscription so toggling does not leak callbacks.
+	if (currentCarouselRouteCb) {
+		routeChangeSubscribers.delete(currentCarouselRouteCb)
+		currentCarouselRouteCb = null
+	}
+
+	if (!value) {
+		disposeObserver(featureId)
+		toggleCSSHidden(HOME_MINI_PLAYER_SELECTOR, false)
+		document.body?.removeAttribute("data-ct-on-home")
+		syncBackground()
+		return
+	}
+
+	installRouteListener()
+	const routeCb = () => {
+		updateHomeBodyAttr()
+		syncBackground()
+		sweep()
+	}
+	currentCarouselRouteCb = routeCb
+	routeChangeSubscribers.add(routeCb)
+
+	updateHomeBodyAttr()
+	// CSS rule stays installed for the lifetime of the feature; the body
+	// attribute decides whether it matches anything, so route changes are
+	// effectively free from a styling perspective.
+	toggleCSSHidden(HOME_MINI_PLAYER_SELECTOR, true)
+	syncBackground()
+	sweep()
+
+	const observer = new MutationObserver(sweep)
+	registerObserver(featureId, observer)
+	observer.observe(document.body, { childList: true, subtree: true })
+}
+
+export function hideMiniPlayer(value: boolean) {
+	const featureId = "hide_mini_player"
+	toggleCSSHidden(MINI_PLAYER_SELECTOR, value)
+	try {
+		window.dispatchEvent(
+			new CustomEvent("__cleanTwitch_setBlockMiniPlayer", { detail: { block: value } })
+		)
+	} catch {
+		// no-op
+	}
+
+	if (!value) {
+		disposeObserver(featureId)
+		return
+	}
+
+	// Twitch reuses the same <video> element when the player transitions
+	// from full to mini (route change away from a stream page). The play()
+	// override in the MAIN-world script doesn't fire because Twitch never
+	// calls .play() again — it just flips data-a-player-type / state.
+	// Catch that case here: pause + mute any video that ends up inside a
+	// mini player. MutationObserver only watches attribute changes, no
+	// childList walking, so per-mutation cost stays low.
+	const pauseMiniVideos = () => {
+		document
+			.querySelectorAll<HTMLVideoElement>('[data-a-player-type="site_mini"] video')
+			.forEach((v) => {
+				try {
+					v.pause()
+					v.muted = true
+				} catch {
+					// detached element, ignore
+				}
+			})
+	}
+
+	pauseMiniVideos()
+	const observer = new MutationObserver(pauseMiniVideos)
+	registerObserver(featureId, observer)
+	observer.observe(document.body, {
+		subtree: true,
+		attributes: true,
+		attributeFilter: ["data-a-player-type", "data-a-player-state"],
+	})
 }
 
 // HOMEPAGE

@@ -40,6 +40,7 @@
 		]
 	},
 	"devDependencies": {
+		"@ai-hero/sandcastle": "0.5.7",
 		"@stdlib/stats-wilcoxon": "^0.2.2",
 		"@tailwindcss/vite": "^4.1.18",
 		"@testing-library/react": "^16.3.2",
