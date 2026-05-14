@@ -180,6 +180,10 @@ export function toggleLeftSidebarSponsored(value: boolean) {
 	toggleCSSHidden(".side-nav-card:has(.side-nav-card__link--promoted-followed)", value)
 }
 
+export function toggleLeftSidebarGiftSubDiscount(value: boolean) {
+	toggleCSSHidden('div.Layout-sc-1xcs6mc-0:has(> div[aria-label="Gift Sub"])', value)
+}
+
 export function toggleLeftSidebarOfflineChannels(value: boolean) {
 	toggleCSSHidden('div[class*="ScTransitionBase"]:has(.side-nav-card__avatar--offline)', value)
 }

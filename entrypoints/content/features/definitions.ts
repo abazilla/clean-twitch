@@ -167,6 +167,11 @@ export const features = [
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
+				id: "hide_left_sidebar_gift_sub_discount",
+				label: "Hide Gift Sub Discount Banner",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
 				id: "hide_left_sidebar_followed_channels",
 				label: 'Hide "Followed Channels"',
 			},
