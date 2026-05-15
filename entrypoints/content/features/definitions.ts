@@ -172,6 +172,11 @@ export const features = [
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
+				id: "hide_left_sidebar_hype_train",
+				label: "Hide Hype Train Indicator",
+				simpleModeActive: ["minimalist", "focus"],
+			},
+			{
 				id: "hide_left_sidebar_followed_channels",
 				label: 'Hide "Followed Channels"',
 			},
