@@ -1,8 +1,4 @@
-import {
-	alwaysShowFeatures,
-	FeatureItem,
-	features,
-} from "@/entrypoints/content/features/definitions"
+import { FeatureItem, features } from "@/entrypoints/content/features/definitions"
 import { storageHandler } from "@/entrypoints/content/storage/handler"
 import { JSX, useState } from "react"
 import CategoryBlocker from "./CategoryBlocker"
@@ -44,6 +40,7 @@ const ImportExport = (): JSX.Element => {
 	return (
 		<div className="flex items-center justify-between gap-2">
 			<div className="flex items-center gap-2">
+				<SectionTitle>Backup</SectionTitle>
 				{status && <span className="text-sm text-yellow-200">{status}</span>}
 			</div>
 			<div className="flex items-center gap-2">
@@ -77,21 +74,11 @@ const advancedFeatures = (features as readonly FeatureItem[]).filter(
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-4">
 		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
-			<SectionTitle>Always On</SectionTitle>
-			<div className="divide-y divide-purple-700/60">
-				{alwaysShowFeatures.map((item: FeatureItem) => (
-					<FeatureToggle key={item.id} item={item} />
-				))}
-			</div>
-		</section>
-
-		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
 			<SectionTitle>Presets</SectionTitle>
 			<PresetDropdown />
 		</section>
 
-		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
-			<SectionTitle>Backup</SectionTitle>
+		<section className="rounded-md border border-purple-700 bg-purple-800/40 px-3 py-2">
 			<ImportExport />
 		</section>
 

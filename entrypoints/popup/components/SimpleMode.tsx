@@ -1,13 +1,8 @@
-import {
-	alwaysShowFeatures,
-	FeatureItem,
-	SimplePresetMode,
-} from "@/entrypoints/content/features/definitions"
+import { SimplePresetMode } from "@/entrypoints/content/features/definitions"
 import { JSX } from "react"
 import { useStorageState } from "../storage"
 import CategoryBlocker from "./CategoryBlocker"
 import ChannelBlocker from "./ChannelBlocker"
-import { FeatureToggle } from "./FeatureToggle"
 
 type Presets = { id: SimplePresetMode; label: string; description: string }[]
 
@@ -73,17 +68,6 @@ const SimpleMode = (): JSX.Element => {
 								<div className="text-xs text-purple-200/80">{description}</div>
 							</div>
 						</label>
-					))}
-				</div>
-			</section>
-
-			<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
-				<h2 className="text-xs font-semibold tracking-wider text-purple-200 uppercase">
-					Always On
-				</h2>
-				<div className="divide-y divide-purple-700/60">
-					{alwaysShowFeatures.map((item: FeatureItem) => (
-						<FeatureToggle key={item.id} item={item} />
 					))}
 				</div>
 			</section>

@@ -28,6 +28,7 @@ export function isChannelPage(): boolean {
 export interface FeatureItem {
 	id: string
 	label: string
+	description?: string
 	// conflicts?: readonly string[]
 	children?: readonly FeatureItem[]
 	hideToggleButton?: boolean
@@ -220,7 +221,6 @@ export const features = [
 			{
 				id: "no_chat",
 				label: "Hide Chat",
-				ignoreToggle: true,
 				children: [],
 			},
 			{
@@ -281,6 +281,7 @@ export const features = [
 			{
 				id: "hide_carousel",
 				label: "Remove Homepage Carousel",
+				description: "Improves Performance",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
@@ -298,15 +299,15 @@ export const features = [
 			},
 			{
 				id: "auto_manage_chat_websocket",
-				label:
-					"Auto-close Chat WebSocket When Hidden (Improves Performance, disable if chat connection issues arise)",
+				label: "Auto-close Chat WebSocket When Hidden",
+				description: "Improves Performance, disable if chat connection issues arise",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
 				id: "block_hermes_websocket",
-				label:
-					"Block Notification WebSockets (Improves Performance, will cause issues with Viewer counts and Raids)",
+				label: "Block Notification WebSockets",
+				description: "Improves Performance, will cause issues with Viewer counts and Raids",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
@@ -471,9 +472,5 @@ type ExtractFeatureIDs<T extends readonly FeatureItem[]> = T extends readonly (i
 	: never
 
 export type FeatureID = ExtractFeatureIDs<typeof features>
-
-export const alwaysShowFeatures = features.filter(
-	(item: FeatureItem) => item.renderSimpleOrAdvanced === "always_show"
-)
 
 // export type FeatureID = string

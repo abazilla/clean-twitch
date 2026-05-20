@@ -26,6 +26,7 @@ import {
 	toggleComboButton,
 	toggleCommunityHighlightStack,
 	toggleFeaturedStreamPlayByDefault,
+	toggleHideChat,
 	toggleInfoAboutSection,
 	toggleInfoChannelPanelSection,
 	toggleInfoMonetizationButtons,
@@ -57,7 +58,7 @@ import {
 } from "./domManipulators"
 
 export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
-	no_chat: () => {},
+	no_chat: (value: boolean) => toggleHideChat(value),
 	test_mode: () => {},
 	grayscale_all: () => {},
 	blocked_categories: () => {},

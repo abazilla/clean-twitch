@@ -4,12 +4,14 @@ import { useStorageState } from "../storage"
 interface ChildFeatureToggleProps {
 	id: string
 	label: string
+	description?: string
 	parentEnabled: boolean
 }
 
 export const ChildFeatureToggle = ({
 	id,
 	label,
+	description,
 	parentEnabled,
 }: ChildFeatureToggleProps): JSX.Element => {
 	const [checked, setChecked] = useStorageState<boolean>(id, false)
@@ -29,6 +31,9 @@ export const ChildFeatureToggle = ({
 					{label}
 				</label>
 			</div>
+			{description && (
+				<p className="ml-6 text-xs text-purple-300">{description}</p>
+			)}
 		</div>
 	)
 }

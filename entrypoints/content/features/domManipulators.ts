@@ -189,6 +189,7 @@ export function toggleLeftSidebarHypeTrain(value: boolean) {
 }
 
 export function toggleVideoHypeTrain(value: boolean) {
+	// TODO: disable the wss if possible
 	toggleCSSHidden(
 		'div[aria-label="Chat Happening Now Overlay"]:has([class*="hypeTrainBanner"])',
 		value
@@ -227,6 +228,27 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 }
 
 // RIGHT SIDEBAR
+const COLLAPSE_CHAT_BTN =
+	'button[data-a-target="right-column__toggle-collapse-btn"][aria-label="Collapse Chat"]'
+const EXPAND_CHAT_BTN =
+	'button[data-a-target="right-column__toggle-collapse-btn"][aria-label="Expand Chat"]'
+
+export function toggleHideChat(value: boolean) {
+	const featureId = "no_chat"
+	const expandedSelector = 'div[data-a-target="right-column-chat-bar"]'
+	const collapsedSelector = 'div[data-a-target="right-column-chat-bar-collapsed"]'
+
+	toggleCSSHidden(expandedSelector, value)
+	toggleCSSHidden(collapsedSelector, value)
+
+	if (value) {
+		document.querySelector<HTMLButtonElement>(COLLAPSE_CHAT_BTN)?.click()
+	} else {
+		document.querySelector<HTMLButtonElement>(EXPAND_CHAT_BTN)?.click()
+	}
+	disposeObserver(featureId)
+}
+
 export function toggleTopGifters(value: boolean) {
 	toggleCSSHidden(
 		'div.ScTransitionBase-sc-hx4quq-0.hhLPgp.tw-transition:has(button[aria-label="Expand Top Gifters Leaderboard"])',

@@ -32,6 +32,9 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 					{item.label}
 				</label>
 			</div>
+			{item.description && (
+				<p className="ml-6 text-xs text-purple-300">{item.description}</p>
+			)}
 
 			{item.children && item.children.length > 0 && (
 				<div className="mt-1 space-y-0.5">
@@ -40,6 +43,7 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 							key={child.id}
 							id={child.id}
 							label={child.label}
+							description={child.description}
 							parentEnabled={checked}
 						/>
 					))}
