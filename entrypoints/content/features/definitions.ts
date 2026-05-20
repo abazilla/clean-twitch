@@ -346,6 +346,12 @@ export const features = [
 				label: 'Automatically Close "Adblock Popup"',
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
+			{
+				id: "hide_video_hype_train",
+				label: "Hide Hype Train Overlay on Video",
+				simpleModeActive: ["minimalist", "focus"],
+				children: [],
+			},
 		],
 	},
 	{

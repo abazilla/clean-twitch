@@ -52,6 +52,7 @@ import {
 	toggleVideoAdWrapper,
 	toggleVideoGiftButtonSection,
 	toggleVideoGrayscale,
+	toggleVideoHypeTrain,
 	toggleVideoViewership,
 } from "./domManipulators"
 
@@ -112,6 +113,7 @@ export const featureToggleMap: Record<FeatureID, (enabled: boolean) => void> = {
 	hide_mini_player: (value: boolean) => hideMiniPlayer(value),
 	toggle_video_grayscale: (value: boolean) => toggleVideoGrayscale(value),
 	hide_video_gift_section: (value: boolean) => toggleVideoGiftButtonSection(value),
+	hide_video_hype_train: (value: boolean) => toggleVideoHypeTrain(value),
 	hide_video_ad_wrapper: (value: boolean) => {
 		toggleVideoAdWrapper(value)
 		toggleBelowVideoAdSection(value)

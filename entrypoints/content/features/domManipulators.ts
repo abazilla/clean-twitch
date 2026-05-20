@@ -188,6 +188,13 @@ export function toggleLeftSidebarHypeTrain(value: boolean) {
 	toggleCSSHidden("div.Layout-sc-1xcs6mc-0:has(> div.hype-train-icon)", value)
 }
 
+export function toggleVideoHypeTrain(value: boolean) {
+	toggleCSSHidden(
+		'div[aria-label="Chat Happening Now Overlay"]:has([class*="hypeTrainBanner"])',
+		value
+	)
+}
+
 export function toggleLeftSidebarOfflineChannels(value: boolean) {
 	toggleCSSHidden('div[class*="ScTransitionBase"]:has(.side-nav-card__avatar--offline)', value)
 }
