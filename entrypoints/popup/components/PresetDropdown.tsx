@@ -39,23 +39,22 @@ const PresetDropdown = (): JSX.Element => {
 
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-2">
-			<span className="text-sm">Copy preset settings from:</span>
-			{/* make the next section align to the right */}
+			<span className="text-sm text-purple-200/80">Copy settings from:</span>
 			<div className="flex gap-2">
 				<select
 					value={selectedPreset}
 					onChange={(e) => setSelectedPreset(e.target.value as SimplePresetMode | "reset")}
-					className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-black focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none"
+					className="rounded border border-purple-700 bg-purple-950 px-2 py-1 text-sm text-white focus:border-purple-400 focus:outline-none"
 				>
 					{presetOptions.map(({ id, label }) => (
-						<option key={id} value={id}>
+						<option key={id} value={id} className="bg-purple-950 text-white">
 							{label}
 						</option>
 					))}
 				</select>
 				<button
 					onClick={applyPreset}
-					className="rounded bg-purple-600 px-3 py-1 text-sm font-medium text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 focus:outline-none"
+					className="rounded bg-purple-600 px-3 py-1 text-sm font-medium text-white hover:bg-purple-500 focus-visible:ring-2 focus-visible:ring-purple-300 focus:outline-none"
 				>
 					Apply
 				</button>

@@ -43,18 +43,19 @@ const ImportExport = (): JSX.Element => {
 
 	return (
 		<div className="flex items-center justify-between gap-2">
-			<span className="text-sm">Settings Export/Import:</span>
 			<div className="flex items-center gap-2">
 				{status && <span className="text-sm text-yellow-200">{status}</span>}
+			</div>
+			<div className="flex items-center gap-2">
 				<button
 					onClick={handleImport}
-					className="rounded bg-purple-400 px-2 py-0.5 text-sm hover:bg-purple-300"
+					className="rounded bg-purple-800 px-3 py-1 text-sm hover:bg-purple-700"
 				>
 					Import
 				</button>
 				<button
 					onClick={handleExport}
-					className="rounded bg-purple-400 px-2 py-0.5 text-sm hover:bg-purple-300"
+					className="rounded bg-purple-800 px-3 py-1 text-sm hover:bg-purple-700"
 				>
 					Export
 				</button>
@@ -63,29 +64,48 @@ const ImportExport = (): JSX.Element => {
 	)
 }
 
+const SectionTitle = ({ children }: { children: React.ReactNode }): JSX.Element => (
+	<h2 className="text-xs font-semibold tracking-wider text-purple-200 uppercase">{children}</h2>
+)
+
+const advancedFeatures = (features as readonly FeatureItem[]).filter(
+	(item) =>
+		item.renderSimpleOrAdvanced !== "always_hide" &&
+		item.renderSimpleOrAdvanced !== "always_show"
+)
+
 const AdvancedMode = (): JSX.Element => (
 	<div className="space-y-4">
-		<div className="grid grid-cols-2 gap-3">
-			{alwaysShowFeatures.map((item: FeatureItem) => (
-				<FeatureToggle key={item.id} item={item} />
-			))}
-		</div>
-		<PresetDropdown />
-		<ImportExport />
-		<div className="grid grid-cols-2 gap-3">
-			{features.map((item: FeatureItem) =>
-				item.renderSimpleOrAdvanced === "always_hide" ||
-				item.renderSimpleOrAdvanced === "always_show" ? (
-					<></>
-				) : (
+		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+			<SectionTitle>Always On</SectionTitle>
+			<div className="divide-y divide-purple-700/60">
+				{alwaysShowFeatures.map((item: FeatureItem) => (
 					<FeatureToggle key={item.id} item={item} />
-				)
-			)}
-		</div>
-		<div>
-			<ChannelBlocker />
-			<CategoryBlocker />
-		</div>
+				))}
+			</div>
+		</section>
+
+		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+			<SectionTitle>Presets</SectionTitle>
+			<PresetDropdown />
+		</section>
+
+		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+			<SectionTitle>Backup</SectionTitle>
+			<ImportExport />
+		</section>
+
+		<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+			<SectionTitle>Features</SectionTitle>
+			<div className="divide-y divide-purple-700/60">
+				{advancedFeatures.map((item: FeatureItem) => (
+					<FeatureToggle key={item.id} item={item} />
+				))}
+			</div>
+		</section>
+
+		<ChannelBlocker />
+		<CategoryBlocker />
 	</div>
 )
 

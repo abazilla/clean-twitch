@@ -1,10 +1,12 @@
 import { ContentScriptContext } from "#imports"
+import "@/assets/tailwind.css"
 import { setupUrlChangeListener } from "./dom/urlObserver"
 import { handleFeatureOnToggle, initializeStylesAndFeatures } from "./featureController"
 import { FeatureID } from "./features/definitions"
 import { storageHandler } from "./storage/handler"
 import { initializeButtonManager } from "./ui/hideButton/manager"
 import { injectFallbackStyles } from "./ui/hideButton/styles"
+import { initializeTopNavMenu } from "./ui/topNavMenu/manager"
 
 export default defineContentScript({
 	matches: ["https://*.twitch.tv/*"],
@@ -19,6 +21,9 @@ export default defineContentScript({
 
 		// Initialize button injection system
 		await initializeButtonManager(ctx)
+
+		// Inject TC menu button into Twitch top nav
+		initializeTopNavMenu(ctx)
 
 		// Set up listeners after initialization is complete
 		setupUrlChangeListener()

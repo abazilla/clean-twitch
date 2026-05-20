@@ -15,17 +15,17 @@ export const ChildFeatureToggle = ({
 	const [checked, setChecked] = useStorageState<boolean>(id, false)
 
 	return (
-		<div className="mt-0.5 ml-4">
-			<div className="flex items-center gap-1">
+		<div className="ml-6">
+			<div className="flex items-center gap-2">
 				<input
 					type="checkbox"
 					id={id}
-					className="mt-0.5 h-4 w-4 place-self-start rounded border-gray-300 text-purple-800 focus:ring-purple-500"
+					className="h-4 w-4 accent-purple-400 disabled:opacity-50"
 					checked={checked}
 					disabled={parentEnabled}
 					onChange={(e) => setChecked((e.target as HTMLInputElement).checked)}
 				/>
-				<label htmlFor={id} className="text-sm font-medium select-none">
+				<label htmlFor={id} className="text-sm text-purple-100 select-none">
 					{label}
 				</label>
 			</div>
