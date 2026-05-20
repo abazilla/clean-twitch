@@ -17,13 +17,13 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 	}
 
 	return (
-		<div className="mt-1">
-			<div className="flex items-center gap-1">
+		<div className="py-1.5">
+			<div className="flex items-center gap-2">
 				{item.hideToggleButton ? null : (
 					<input
 						type="checkbox"
 						id={item.id}
-						className="h-4 w-4 rounded border-gray-300 text-purple-800 focus:ring-purple-500"
+						className="h-4 w-4 accent-purple-400"
 						checked={checked}
 						onChange={handleParentToggle}
 					/>
@@ -34,7 +34,7 @@ export const FeatureToggle = ({ item }: FeatureToggleProps): JSX.Element => {
 			</div>
 
 			{item.children && item.children.length > 0 && (
-				<div className="mb-2">
+				<div className="mt-1 space-y-0.5">
 					{item.children?.map((child) => (
 						<ChildFeatureToggle
 							key={child.id}

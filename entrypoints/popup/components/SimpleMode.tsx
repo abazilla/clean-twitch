@@ -45,15 +45,19 @@ const SimpleMode = (): JSX.Element => {
 	}
 
 	return (
-		<div className="mt-1 space-y-4">
-			<div className="space-y-3">
-				<h3 className="mt-2 text-sm font-medium">Choose a preset:</h3>
-				<div className="grid grid-cols-2 gap-3">
+		<div className="space-y-4">
+			<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+				<h2 className="text-xs font-semibold tracking-wider text-purple-200 uppercase">
+					Preset
+				</h2>
+				<div className="grid grid-cols-2 gap-2">
 					{presetLabels.map(({ id, label, description }) => (
 						<label
 							key={id}
-							className={`flex cursor-pointer items-start gap-3 rounded border p-3 ${
-								currentPreset === id ? "bg-purple-400" : "border-gray-200"
+							className={`flex cursor-pointer items-start gap-3 rounded border p-3 transition-colors ${
+								currentPreset === id
+									? "border-purple-400 bg-purple-700 ring-1 ring-purple-300"
+									: "border-purple-700 hover:bg-purple-800/60"
 							}`}
 						>
 							<input
@@ -66,23 +70,26 @@ const SimpleMode = (): JSX.Element => {
 							/>
 							<div className="flex-1">
 								<div className="text-sm font-medium">{label}</div>
-								<div className="text-xs opacity-75">{description}</div>
+								<div className="text-xs text-purple-200/80">{description}</div>
 							</div>
 						</label>
 					))}
 				</div>
-			</div>
+			</section>
 
-			<div className="grid grid-cols-2 gap-3">
-				{alwaysShowFeatures.map((item: FeatureItem) => (
-					<FeatureToggle key={item.id} item={item} />
-				))}
-			</div>
+			<section className="space-y-2 rounded-md border border-purple-700 bg-purple-800/40 p-3">
+				<h2 className="text-xs font-semibold tracking-wider text-purple-200 uppercase">
+					Always On
+				</h2>
+				<div className="divide-y divide-purple-700/60">
+					{alwaysShowFeatures.map((item: FeatureItem) => (
+						<FeatureToggle key={item.id} item={item} />
+					))}
+				</div>
+			</section>
 
-			<div>
-				<ChannelBlocker />
-				<CategoryBlocker />
-			</div>
+			<ChannelBlocker />
+			<CategoryBlocker />
 		</div>
 	)
 }
