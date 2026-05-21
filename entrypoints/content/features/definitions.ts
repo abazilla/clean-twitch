@@ -230,6 +230,13 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "auto_manage_chat_websocket",
+				label: "Auto-close Chat WebSocket When Hidden",
+				description: "Improves Performance, disable if chat connection issues arise",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
 				id: "toggle_chat_grayscale",
 				label: "Grayscale Chat",
 				simpleModeActive: ["focus"],
@@ -306,13 +313,6 @@ export const features = [
 				id: "hide_thumbnail_viewership",
 				label: "Hide Thumbnail Viewership Numbers",
 				simpleModeActive: ["focus"],
-				children: [],
-			},
-			{
-				id: "auto_manage_chat_websocket",
-				label: "Auto-close Chat WebSocket When Hidden",
-				description: "Improves Performance, disable if chat connection issues arise",
-				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 				children: [],
 			},
 			{
@@ -486,3 +486,19 @@ type ExtractFeatureIDs<T extends readonly FeatureItem[]> = T extends readonly (i
 export type FeatureID = ExtractFeatureIDs<typeof features>
 
 // export type FeatureID = string
+
+// Features whose toggle should cascade to other features when the user flips
+// them in the UI. Turning the controller ON forces each dependent ON (stashing
+// its prior value); turning it OFF restores each dependent's stashed value.
+// Scoped to genuine user toggles only — not preset/bulk application.
+export const coupledFeatures: Partial<Record<FeatureID, readonly FeatureID[]>> = {
+	no_chat: ["auto_manage_chat_websocket"],
+}
+
+// Reverse lookup: dependent feature -> its controller. A dependent is greyed
+// out / locked in the UI while its controller is enabled.
+export const coupledControllerOf: Partial<Record<FeatureID, FeatureID>> = Object.fromEntries(
+	Object.entries(coupledFeatures).flatMap(([controller, deps]) =>
+		(deps ?? []).map((dep) => [dep, controller as FeatureID])
+	)
+) as Partial<Record<FeatureID, FeatureID>>
