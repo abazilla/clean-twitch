@@ -16,9 +16,18 @@ import { disposeObserver, registerObserver } from "../dom/observerRegistry"
 import { chatWebSocketManager } from "../network/chatWebSocket"
 import { storageHandler } from "../storage/handler"
 import { isChannelPage, TwitchURLs } from "./definitions"
+import {
+	Chat,
+	ChannelInfo,
+	ChannelVideo,
+	Footer,
+	LeftSidebar,
+	Player,
+	Thumbnails,
+	TopNav,
+} from "./selectors"
 
-const isLoggedIn = (): boolean =>
-	document.querySelector('button[data-a-target="login-button"]') === null
+const isLoggedIn = (): boolean => document.querySelector(TopNav.LOGIN_BUTTON) === null
 
 export function toggleTestMode(toggled: boolean) {
 	const styleIds = [
@@ -66,77 +75,60 @@ export function toggleGrayscale(toggled: boolean) {
 
 // TOP BAR
 export function toggleTopBarGrayscale(value: boolean) {
-	toggleCSSGrayscale('nav[data-a-target="top-nav-container"]', value)
+	toggleCSSGrayscale(TopNav.CONTAINER, value)
 }
 
 export function hideFollowingButton(isHidden: boolean) {
-	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="following-link"])', isHidden)
+	toggleCSSHidden(TopNav.FOLLOWING_BUTTON, isHidden)
 }
 
 export function hideRobloxButton(isHidden: boolean) {
-	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="roblox-link"])', isHidden)
+	toggleCSSHidden(TopNav.ROBLOX_BUTTON, isHidden)
 }
 
 export function hideBrowseButton(isHidden: boolean) {
-	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.fRzsnK:has(a[data-a-target="browse-link"])', isHidden)
+	toggleCSSHidden(TopNav.BROWSE_BUTTON, isHidden)
 }
 
 export function hideDotsButton(isHidden: boolean) {
-	toggleCSSHidden('div.Layout-sc-1xcs6mc-0.jNQxNh:has(button[aria-label="More Options"])', isHidden)
+	toggleCSSHidden(TopNav.DOTS_BUTTON, isHidden)
 }
 
 export function hidePrimeGamingButton(isHidden: boolean) {
-	toggleCSSHidden(".top-nav__prime", isHidden)
+	toggleCSSHidden(TopNav.PRIME_GAMING_BUTTON, isHidden)
 }
 
 export function hideNotificationsButton(isHidden: boolean) {
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.VxLcr:has(.onsite-notifications)", isHidden)
+	toggleCSSHidden(TopNav.NOTIFICATIONS_BUTTON, isHidden)
 }
 
 export function hideWhispersButton(isHidden: boolean) {
-	toggleCSSHidden(
-		".Layout-sc-1xcs6mc-0.VxLcr:has(button[data-a-target='whisper-box-button'])",
-		isHidden
-	)
+	toggleCSSHidden(TopNav.WHISPERS_BUTTON, isHidden)
 }
 
 export function hideTopBitsButton(isHidden: boolean) {
-	toggleCSSHidden(
-		".Layout-sc-1xcs6mc-0.VxLcr:has(button[data-a-target='top-nav-get-bits-button'])",
-		isHidden
-	)
+	toggleCSSHidden(TopNav.BITS_BUTTON, isHidden)
 }
 
 export function hideTopTurboButton(isHidden: boolean) {
-	toggleCSSHidden(
-		'.Layout-sc-1xcs6mc-0.VxLcr:has(div[data-a-target="tw-core-button-label-text"])',
-		isHidden
-	)
+	toggleCSSHidden(TopNav.TURBO_BUTTON, isHidden)
 }
 
 // LEFT SIDEBAR
 export function toggleLeftSidebar(value: boolean) {
 	if (value) {
-		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
-		const sideNavBarCollapsed = document.querySelector(
-			'div[data-a-target="side-nav-bar-collapsed"]'
-		) as HTMLElement
-		const collapseButton = document.querySelector(
-			'button[aria-label="Collapse Side Nav"]'
-		) as HTMLButtonElement
+		const sideNavBar = document.querySelector(LeftSidebar.BAR) as HTMLElement
+		const sideNavBarCollapsed = document.querySelector(LeftSidebar.BAR_COLLAPSED) as HTMLElement
+		const collapseButton = document.querySelector(LeftSidebar.COLLAPSE_BUTTON) as HTMLButtonElement
 
 		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
 		if (sideNavBarCollapsed) sideNavBarCollapsed.style.cssText = "width: 0 !important;"
 		if (collapseButton) collapseButton.click()
 		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
 	} else {
-		const sideNavBar = document.querySelector('div[data-a-target="side-nav-bar"]') as HTMLElement
-		const sideNavBarCollapsed = document.querySelector(
-			'div[data-a-target="side-nav-bar-collapsed"]'
-		) as HTMLElement
-		const expandButton = document.querySelector(
-			'button[aria-label="Expand Side Nav"]'
-		) as HTMLButtonElement
+		const sideNavBar = document.querySelector(LeftSidebar.BAR) as HTMLElement
+		const sideNavBarCollapsed = document.querySelector(LeftSidebar.BAR_COLLAPSED) as HTMLElement
+		const expandButton = document.querySelector(LeftSidebar.EXPAND_BUTTON) as HTMLButtonElement
 
 		if (sideNavBar) sideNavBar.removeAttribute("style")
 		if (sideNavBarCollapsed) sideNavBarCollapsed.removeAttribute("style")
@@ -145,68 +137,65 @@ export function toggleLeftSidebar(value: boolean) {
 }
 
 export function toggleSideNavGrayscale(value: boolean) {
-	toggleCSSGrayscale('div[data-a-target="side-nav-bar"]', value)
-	toggleCSSGrayscale('div[data-a-target="side-nav-bar-collapsed"]', value)
+	toggleCSSGrayscale(LeftSidebar.BAR, value)
+	toggleCSSGrayscale(LeftSidebar.BAR_COLLAPSED, value)
 }
 
 export function toggleLeftSidebarStories(value: boolean) {
-	toggleCSSHidden("div.storiesLeftNavSection--csO9S", value)
+	toggleCSSHidden(LeftSidebar.STORIES_SECTION, value)
 }
 
 export function toggleLeftSidebarViewership(value: boolean) {
-	toggleCSSHidden("div[data-a-target='side-nav-live-status']", value)
+	toggleCSSHidden(LeftSidebar.LIVE_STATUS_TOGGLE, value)
 }
 
 export function toggleLeftSidebarFollowedChannels(value: boolean) {
-	toggleCSSHidden("div[aria-label='Followed Channels']", value)
+	toggleCSSHidden(LeftSidebar.FOLLOWED_CHANNELS, value)
 }
 
 export function toggleLeftSidebarLiveChannels(value: boolean) {
 	const val = isLoggedIn() ? value : false
-	toggleCSSHidden("div[aria-label='Live Channels']", val)
+	toggleCSSHidden(LeftSidebar.LIVE_CHANNELS, val)
 }
 
 export function toggleLeftSidebarViewersAlsoWatch(value: boolean) {
 	const val = isLoggedIn() ? value : false
-	toggleCSSHidden("div[aria-label*='Viewers Also Watch']", val)
+	toggleCSSHidden(LeftSidebar.VIEWERS_ALSO_WATCH, val)
 }
 
 export function toggleLeftSidebarRecommendedCategories(value: boolean) {
 	const val = isLoggedIn() ? value : false
-	toggleCSSHidden("div[aria-label='Recommended Categories']", val)
+	toggleCSSHidden(LeftSidebar.RECOMMENDED_CATEGORIES, val)
 }
 
 export function toggleLeftSidebarSponsored(value: boolean) {
-	toggleCSSHidden(".side-nav-card:has(.side-nav-card__link--promoted-followed)", value)
+	toggleCSSHidden(LeftSidebar.SPONSORED_CARD, value)
 }
 
 export function toggleLeftSidebarGiftSubDiscount(value: boolean) {
-	toggleCSSHidden('div.Layout-sc-1xcs6mc-0:has(> div[aria-label="Gift Sub"])', value)
+	toggleCSSHidden(LeftSidebar.GIFT_SUB_DISCOUNT, value)
 }
 
 export function toggleLeftSidebarHypeTrain(value: boolean) {
-	toggleCSSHidden("div.Layout-sc-1xcs6mc-0:has(> div.hype-train-icon)", value)
+	toggleCSSHidden(LeftSidebar.HYPE_TRAIN, value)
 }
 
 export function toggleVideoHypeTrain(value: boolean) {
 	// TODO: disable the wss if possible
-	toggleCSSHidden(
-		'div[aria-label="Chat Happening Now Overlay"]:has([class*="hypeTrainBanner"])',
-		value
-	)
+	toggleCSSHidden(ChannelVideo.HYPE_TRAIN_OVERLAY, value)
 }
 
 export function toggleLeftSidebarOfflineChannels(value: boolean) {
-	toggleCSSHidden('div[class*="ScTransitionBase"]:has(.side-nav-card__avatar--offline)', value)
+	toggleCSSHidden(LeftSidebar.OFFLINE_CHANNELS, value)
 }
 
 export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 	const featureId = "left_sidebar_always_show_more"
-	toggleCSSHidden('[data-a-target="side-nav-show-more-button"]', value)
-	toggleCSSHidden('[data-a-target="side-nav-show-less-button"]', value)
+	toggleCSSHidden(LeftSidebar.SHOW_MORE_BUTTON, value)
+	toggleCSSHidden(LeftSidebar.SHOW_LESS_BUTTON, value)
 	if (value) {
 		updateElement(
-			() => document.querySelectorAll('[data-a-target="side-nav-show-more-button"]'),
+			() => document.querySelectorAll(LeftSidebar.SHOW_MORE_BUTTON),
 			(buttons) => {
 				if (buttons && "length" in buttons && buttons.length > 0) {
 					buttons.forEach((button) => {
@@ -228,69 +217,53 @@ export function toggleLeftSidebarAlwaysShowMore(value: boolean) {
 }
 
 // RIGHT SIDEBAR
-const COLLAPSE_CHAT_BTN =
-	'button[data-a-target="right-column__toggle-collapse-btn"][aria-label="Collapse Chat"]'
-const EXPAND_CHAT_BTN =
-	'button[data-a-target="right-column__toggle-collapse-btn"][aria-label="Expand Chat"]'
-
 export function toggleHideChat(value: boolean) {
 	const featureId = "no_chat"
-	const expandedSelector = 'div[data-a-target="right-column-chat-bar"]'
-	const collapsedSelector = 'div[data-a-target="right-column-chat-bar-collapsed"]'
 
-	toggleCSSHidden(expandedSelector, value)
-	toggleCSSHidden(collapsedSelector, value)
+	toggleCSSHidden(Chat.BAR_EXPANDED, value)
+	toggleCSSHidden(Chat.BAR_COLLAPSED, value)
 
 	if (value) {
-		document.querySelector<HTMLButtonElement>(COLLAPSE_CHAT_BTN)?.click()
+		document.querySelector<HTMLButtonElement>(Chat.COLLAPSE_BUTTON)?.click()
 	} else {
-		document.querySelector<HTMLButtonElement>(EXPAND_CHAT_BTN)?.click()
+		document.querySelector<HTMLButtonElement>(Chat.EXPAND_BUTTON)?.click()
 	}
 	disposeObserver(featureId)
 }
 
 export function toggleTopGifters(value: boolean) {
-	toggleCSSHidden(
-		'div.ScTransitionBase-sc-hx4quq-0.hhLPgp.tw-transition:has(button[aria-label="Expand Top Gifters Leaderboard"])',
-		value
-	)
+	toggleCSSHidden(Chat.TOP_GIFTERS, value)
 }
 
 export function toggleChatMonetizationButtons(value: boolean) {
-	toggleCSSHidden(
-		".InjectLayout-sc-1i43xsx-0.iDMNUO:has(button[data-a-target='bits-button'])",
-		value
-	)
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.eCNebZ:has(.channel-points-icon)", value)
-	toggleCSSHidden('div[data-test-selector="bits-balance-string"]', value)
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.gLwKGU:has(.ScNewItemIndicator-sc-1udtibe-0)", value)
+	toggleCSSHidden(Chat.BITS_BUTTON, value)
+	toggleCSSHidden(Chat.CHANNEL_POINTS_ICON, value)
+	toggleCSSHidden(Chat.BITS_BALANCE, value)
+	toggleCSSHidden(Chat.NEW_ITEM_INDICATOR, value)
 }
 
 export function toggleCommunityHighlightStack(value: boolean) {
-	toggleCSSHidden(
-		".Layout-sc-1xcs6mc-0.cEllaX:has(div.community-highlight-stack__scroll-area--disable)",
-		value
-	)
+	toggleCSSHidden(Chat.COMMUNITY_HIGHLIGHT_STACK, value)
 }
 
 export function toggleChatGrayscale(value: boolean) {
-	toggleCSSGrayscale(".channel-root__right-column", value)
+	toggleCSSGrayscale(Chat.CHANNEL_RIGHT_COLUMN, value)
 }
 
 export function toggleChatBadges(value: boolean) {
-	toggleCSSHidden(".chat-line__username-container > span:first-child", value)
+	toggleCSSHidden(Chat.BADGES, value)
 }
 
 export function toggleChatClipBestMoments(value: boolean) {
-	toggleCSSHidden('div.cMeiZH:has(div[aria-label="Expand Top Clips Leaderboard"])', value)
+	toggleCSSHidden(Chat.BEST_MOMENTS_CLIP, value)
 }
 
 export function toggleChatPrivateCallout(value: boolean) {
-	toggleCSSHidden('div[data-test-selector="chat-private-callout-queue__callout-container"]', value)
+	toggleCSSHidden(Chat.PRIVATE_CALLOUT, value)
 }
 
 export function toggleChatSubUpsell(value: boolean) {
-	toggleCSSHidden('button:has(> div[style*="sub-upsell"])', value)
+	toggleCSSHidden(Chat.SUB_UPSELL, value)
 }
 
 // SPA route-change pub/sub. history.pushState / replaceState do not fire
@@ -318,12 +291,6 @@ function installRouteListener() {
 
 let currentCarouselRouteCb: (() => void) | null = null
 
-// CSS selector for the picture-in-picture mini player.
-const MINI_PLAYER_SELECTOR = '.persistent-player[data-a-player-state="mini"]'
-// Home-scoped variant used by hideCarousel so toggling it off does not
-// interfere with the all-pages hide controlled by hideMiniPlayer.
-const HOME_MINI_PLAYER_SELECTOR = `body[data-ct-on-home="1"] ${MINI_PLAYER_SELECTOR}`
-
 function updateHomeBodyAttr() {
 	if (location.pathname === "/") {
 		document.body?.setAttribute("data-ct-on-home", "1")
@@ -346,9 +313,7 @@ export function hideCarousel(value: boolean) {
 
 	const sweep = () => {
 		document
-			.querySelectorAll(
-				'[data-a-target="front-page-carousel"], div[data-a-player-type="frontpage"]'
-			)
+			.querySelectorAll(`${Player.FRONT_PAGE_CAROUSEL}, ${Player.FRONTPAGE_PLAYER}`)
 			.forEach((el) => el.remove())
 	}
 
@@ -360,7 +325,7 @@ export function hideCarousel(value: boolean) {
 
 	if (!value) {
 		disposeObserver(featureId)
-		toggleCSSHidden(HOME_MINI_PLAYER_SELECTOR, false)
+		toggleCSSHidden(Player.MINI_BODY_HOME_SCOPED, false)
 		document.body?.removeAttribute("data-ct-on-home")
 		syncBackground()
 		return
@@ -379,7 +344,7 @@ export function hideCarousel(value: boolean) {
 	// CSS rule stays installed for the lifetime of the feature; the body
 	// attribute decides whether it matches anything, so route changes are
 	// effectively free from a styling perspective.
-	toggleCSSHidden(HOME_MINI_PLAYER_SELECTOR, true)
+	toggleCSSHidden(Player.MINI_BODY_HOME_SCOPED, true)
 	syncBackground()
 	sweep()
 
@@ -390,7 +355,7 @@ export function hideCarousel(value: boolean) {
 
 export function hideMiniPlayer(value: boolean) {
 	const featureId = "hide_mini_player"
-	toggleCSSHidden(MINI_PLAYER_SELECTOR, value)
+	toggleCSSHidden(Player.MINI, value)
 	try {
 		window.dispatchEvent(
 			new CustomEvent("__cleanTwitch_setBlockMiniPlayer", { detail: { block: value } })
@@ -412,16 +377,14 @@ export function hideMiniPlayer(value: boolean) {
 	// mini player. MutationObserver only watches attribute changes, no
 	// childList walking, so per-mutation cost stays low.
 	const pauseMiniVideos = () => {
-		document
-			.querySelectorAll<HTMLVideoElement>('[data-a-player-type="site_mini"] video')
-			.forEach((v) => {
-				try {
-					v.pause()
-					v.muted = true
-				} catch {
-					// detached element, ignore
-				}
-			})
+		document.querySelectorAll<HTMLVideoElement>(Player.MINI_VIDEO).forEach((v) => {
+			try {
+				v.pause()
+				v.muted = true
+			} catch {
+				// detached element, ignore
+			}
+		})
 	}
 
 	pauseMiniVideos()
@@ -452,7 +415,7 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 	let pauseCount = 0
 
 	const handleVideo = () => {
-		const playerDiv = document.querySelector('div[data-a-player-type="frontpage"]:has(video)')
+		const playerDiv = document.querySelector(Player.FRONTPAGE_PLAYER_WITH_VIDEO)
 		if (!playerDiv) return
 		const video = playerDiv.querySelector("video") as HTMLVideoElement
 		if (!video) return
@@ -486,37 +449,37 @@ export function toggleFeaturedStreamPlayByDefault(value: boolean) {
 // THUMBNAILS
 export function toggleThumbnailViewership(value: boolean) {
 	if (!isChannelPage()) return
-	toggleCSSHidden("p.kdDAY", value)
-	toggleCSSHidden("div.tw-media-card-stat", value)
+	toggleCSSHidden(Thumbnails.VIEWERSHIP_LABEL, value)
+	toggleCSSHidden(Thumbnails.MEDIA_CARD_STAT, value)
 }
 
 // VIDEO PLAYER
 export function toggleVideoGrayscale(value: boolean) {
-	toggleCSSGrayscale("div.common-centered-column", value)
-	toggleCSSGrayscale('div[data-a-target="video-player"]', value)
+	toggleCSSGrayscale(Player.COMMON_CENTERED_COLUMN, value)
+	toggleCSSGrayscale(Player.VIDEO_PLAYER, value)
 }
 
 export function toggleVideoGiftButtonSection(value: boolean) {
 	if (!isChannelPage()) return
-	toggleCSSHidden('div.theatre-social-panel:has(button[data-a-target="gift-button"])', value)
+	toggleCSSHidden(ChannelVideo.GIFT_BUTTON_SECTION, value)
 }
 
 export function toggleVideoAdWrapper(value: boolean) {
 	if (!isChannelPage()) return
-	toggleCSSHidden("div.stream-display-ad__wrapper", value)
+	toggleCSSHidden(ChannelVideo.BELOW_VIDEO_AD_WRAPPER, value)
 }
 
 export function toggleVideoViewership(value: boolean) {
 	if (!isChannelPage()) return
-	toggleCSSHidden("div.cbxBks", value)
-	toggleCSSHidden('strong[data-a-target="animated-channel-viewers-count"]', value)
+	toggleCSSHidden(ChannelVideo.VIEWERSHIP_DIV, value)
+	toggleCSSHidden(ChannelVideo.ANIMATED_VIEWERS_COUNT, value)
 }
 
 export function toggleAlwaysCloseAdblockPopup(value: boolean) {
 	const featureId = "always_close_adblock_popup"
 	if (value) {
 		updateElement(
-			() => document.querySelector('button[aria-label="Return to stream"]'),
+			() => document.querySelector(Player.RETURN_TO_STREAM_BUTTON),
 			(el) => {
 				if (el && !("length" in el)) {
 					;(el as HTMLButtonElement).click()
@@ -538,12 +501,12 @@ export function toggleAlwaysCloseAdblockPopup(value: boolean) {
 // TODO: only hides - resize still occurs
 export function toggleBelowVideoAdSection(value: boolean) {
 	if (!isChannelPage()) return
-	toggleCSSHidden('div[aria-label="chan-sda-upsell-third-view"]', value)
+	toggleCSSHidden(ChannelVideo.BELOW_VIDEO_AD_SECTION, value)
 }
 
 // BELOW VIDEO PLAYER
 export function toggleInfoSectionGrayscale(value: boolean) {
-	toggleCSSGrayscale("div.channel-root__info", value)
+	toggleCSSGrayscale(ChannelInfo.ROOT, value)
 }
 
 // TODO: fix when you see this
@@ -553,7 +516,7 @@ export function toggleInfoViralClipSection(value: boolean) {
 		if (!isChannelPage()) return
 		updateElement(
 			() => {
-				const element = document.querySelector("div[style*='social-sharing-badge-promo-banner']")
+				const element = document.querySelector(ChannelInfo.VIRAL_CLIP_SOCIAL_BANNER)
 				return element?.parentElement?.parentElement?.parentElement || null
 			},
 			(el) => toggleElementVisibility(el, value),
@@ -568,22 +531,16 @@ export function toggleInfoViralClipSection(value: boolean) {
 }
 
 export function toggleInfoMonthlyRecap(value: boolean) {
-	toggleCSSHidden("div.Layout-sc-1xcs6mc-0.dHnDFr:has(div.ScCalloutMessage-sc-23utpo-0)", value)
+	toggleCSSHidden(ChannelInfo.MONTHLY_RECAP, value)
 }
 
 // UNDER VIDEO PANEL
 export function toggleInfoMonetizationButtons(value: boolean) {
-	toggleCSSHidden(
-		".Layout-sc-1xcs6mc-0.gWaIYG:has(button[data-a-target='top-nav-get-bits-button'])",
-		value
-	)
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.kaAEut:has(button[data-a-target='gift-button'])", value)
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.kaAEut:has(button[aria-label='Continue Sub'])", value)
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.PiZST:has(button[data-a-target='subscribe-button'])", value)
-	toggleCSSHidden(
-		".Layout-sc-1xcs6mc-0.PiZST:has(button[data-a-target='subscribe-button__dropdown'])",
-		value
-	)
+	toggleCSSHidden(ChannelInfo.MONETIZATION_BITS, value)
+	toggleCSSHidden(ChannelInfo.MONETIZATION_GIFT, value)
+	toggleCSSHidden(ChannelInfo.MONETIZATION_CONTINUE_SUB, value)
+	toggleCSSHidden(ChannelInfo.MONETIZATION_SUBSCRIBE, value)
+	toggleCSSHidden(ChannelInfo.MONETIZATION_SUBSCRIBE_DROPDOWN, value)
 	// SUBSCRIBE BUTTON (LOGGED OUT)
 	// updateElement(
 	// 	() =>
@@ -600,20 +557,20 @@ export function toggleInfoMonetizationButtons(value: boolean) {
 }
 
 export function toggleComboButton(value: boolean) {
-	toggleCSSHidden("div.gEvECC:has(button[aria-label='Open Combos modal'])", value)
+	toggleCSSHidden(ChannelInfo.COMBO_BUTTON, value)
 }
 
 export function toggleInfoAboutSection(value: boolean) {
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.hisUmW:has(.channel-panels)", value)
+	toggleCSSHidden(ChannelInfo.ABOUT_SECTION, value)
 }
 
 export function toggleInfoChannelPanelSection(value: boolean) {
-	toggleCSSHidden(".Layout-sc-1xcs6mc-0.hisUmW > div:nth-child(2):has(.channel-panels)", value)
+	toggleCSSHidden(ChannelInfo.CHANNEL_PANEL_SECTION, value)
 }
 
 // FOOTER
 export function toggleStickyFooter(value: boolean) {
-	toggleCSSHidden("#twilight-sticky-footer-root", value)
+	toggleCSSHidden(Footer.STICKY_ROOT, value)
 }
 
 export function toggleAlwaysClickRobloxFooter(value: boolean) {
@@ -622,7 +579,7 @@ export function toggleAlwaysClickRobloxFooter(value: boolean) {
 		if (!isLoggedIn()) return
 		if (isChannelPage()) return
 		updateElement(
-			() => document.querySelector('button[id*="robloxBannerDismiss"]'),
+			() => document.querySelector(Footer.ROBLOX_DISMISS_BUTTON),
 			(el) => {
 				if (el && !("length" in el)) {
 					;(el as HTMLButtonElement).click()

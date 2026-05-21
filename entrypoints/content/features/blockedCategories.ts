@@ -1,6 +1,11 @@
 import { BLOCKED_CATEGORIES_STYLE_ID, DISPLAY_NONE_STYLES } from "../dom/cssManager"
 import { storageHandler } from "../storage/handler"
 import { BlockedCategories } from "./definitions"
+import {
+	blockedCategoryDirectorySelectors,
+	blockedCategorySearchSelectors,
+	blockedCategorySidebarSelectors,
+} from "./selectors"
 
 let categoryStyleElement: HTMLStyleElement
 
@@ -52,41 +57,9 @@ export function handleBlockedCategories(blockedCategories: BlockedCategories) {
 	const categoryRules = categories
 		.filter((c) => c.enabled && enabled)
 		.flatMap((c) => [
-			...(hideFromSearch
-				? [
-						`div[role="row"]:has(a[href="/directory/category/${c.category}"])`,
-						`div[data-a-target="search-result-category"]:has(a[href="/directory/category/${c.category}"])`,
-						`div[data-a-target="search-results-live-channel"]:has(a[href="/directory/category/${c.category}"])`,
-						`#search-tray__container a[href="/directory/category/${c.category}"]`,
-						`a[data-tray-item="true"][href="/directory/category/${c.category}"]`,
-						`a[data-a-target="search-result-live-channel"][href="/directory/category/${c.category}"]`,
-						`a[href*="/directory/category/${c.category}"] ~ .search-result`,
-						`a[href*="/directory/category/${c.category}"] ~ .search-result-card`,
-						`div.efCikq:has(.search-result-card__img-wrapper):has(a[href="/${c.category}"])`,
-						`div[data-a-target="search-result-live-channel"]:has(a[href="/directory/category/${c.category}"])`,
-						`div[data-a-target="search-result-video"]:has(a[href="/directory/category/${c.category}"])`,
-					]
-				: []),
-			...(hideFromSidebar
-				? [
-						`div.side-nav-card:has(a[href*="/directory/category/${c.category}" i])`,
-						`div.side-nav-card:has(p[title="${c.name}" i])`,
-					]
-				: []),
-			...(hideFromDirectory
-				? [
-						`div[data-target="directory-first-item"]:has(a[href="/directory/category/${c.category}"])`,
-						`div[data-target=""]:has(a[href="/directory/category/${c.category}"])`,
-						// `.ScTransitionBase-sc-hx4quq-0.ldiLWn:has(a[href="/directory/category/${c.category}"])`, // caused a bug on channels vod list if category existed in vods, may be removed in future
-						`a[href*="/directory/category/${c.category}"] ~ div[data-target="directory-page__card-container"]`, // /directory
-						`div.game-card:has(a[href="/directory/category/${c.category}"])`,
-						`div[data-a-target="shelf-card"]:has(a[href="/directory/category/${c.category}"])`,
-						`div > h2 > a[href*="${c.category}"] ~ div`,
-						// `a[href*="/directory/category/${c.category}"] ~ .shelf-card__impression-wrapper`,
-						`div.tw-transition:has(> .shelf-card__impression-wrapper):has(a[href="/directory/category/${c.category}"])`, // home
-						`div.vertical-selector__wrapper:has(a[href*="/directory/${c.category}"])`, // long purp button on directory
-					]
-				: []),
+			...(hideFromSearch ? blockedCategorySearchSelectors(c.category) : []),
+			...(hideFromSidebar ? blockedCategorySidebarSelectors(c.category, c.name) : []),
+			...(hideFromDirectory ? blockedCategoryDirectorySelectors(c.category) : []),
 		])
 		.join(",")
 
