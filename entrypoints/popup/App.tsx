@@ -26,7 +26,7 @@ const App = (): JSX.Element => {
 	}
 
 	return (
-		<div className="flex h-[600px] w-md flex-col overflow-hidden bg-purple-900 text-white">
+		<div className="flex h-[37.5rem] w-md flex-col overflow-hidden bg-purple-900 text-white">
 			<div className="flex shrink-0 items-center justify-between border-b border-purple-800 bg-purple-950 px-4 py-3">
 				<h1 className="m-0 p-0 text-lg font-semibold">Clean Twitch</h1>
 				<div className="flex gap-2">
