@@ -155,12 +155,12 @@ export const features = [
 		children: [
 			{
 				id: "hide_left_sidebar",
-				label: "Toggle Side Nav",
+				label: "Hide left sidebar",
 				simpleModeActive: [],
 			},
 			{
 				id: "toggle_sidenav_grayscale",
-				label: "Toggle Side Nav Grayscale",
+				label: "Toggle left sidebar Grayscale",
 				simpleModeActive: ["focus"],
 			},
 			{

@@ -116,23 +116,15 @@ export function hideTopTurboButton(isHidden: boolean) {
 
 // LEFT SIDEBAR
 export function toggleLeftSidebar(value: boolean) {
+	// Hide via the persistent stylesheet (survives Twitch re-renders and gets
+	// mirrored for the document_start early inject — no flash on cold load).
+	// Keep the collapse/expand click so Twitch reflows its own layout.
+	toggleCSSHidden(LeftSidebar.BAR, value)
+	toggleCSSHidden(LeftSidebar.BAR_COLLAPSED, value)
 	if (value) {
-		const sideNavBar = document.querySelector(LeftSidebar.BAR) as HTMLElement
-		const sideNavBarCollapsed = document.querySelector(LeftSidebar.BAR_COLLAPSED) as HTMLElement
-		const collapseButton = document.querySelector(LeftSidebar.COLLAPSE_BUTTON) as HTMLButtonElement
-
-		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
-		if (sideNavBarCollapsed) sideNavBarCollapsed.style.cssText = "width: 0 !important;"
-		if (collapseButton) collapseButton.click()
-		if (sideNavBar) sideNavBar.style.cssText = "width: 0 !important;"
+		document.querySelector<HTMLButtonElement>(LeftSidebar.COLLAPSE_BUTTON)?.click()
 	} else {
-		const sideNavBar = document.querySelector(LeftSidebar.BAR) as HTMLElement
-		const sideNavBarCollapsed = document.querySelector(LeftSidebar.BAR_COLLAPSED) as HTMLElement
-		const expandButton = document.querySelector(LeftSidebar.EXPAND_BUTTON) as HTMLButtonElement
-
-		if (sideNavBar) sideNavBar.removeAttribute("style")
-		if (sideNavBarCollapsed) sideNavBarCollapsed.removeAttribute("style")
-		if (expandButton) expandButton.click()
+		document.querySelector<HTMLButtonElement>(LeftSidebar.EXPAND_BUTTON)?.click()
 	}
 }
 

@@ -1,3 +1,5 @@
+import { CSS_CACHE_KEY, EARLY_STYLE_ID } from "./cssCache"
+
 export const UNIVERSAL_CLASS_NAME = "clean-twitch-clutter"
 export const GRAYSCALE_CLASS_NAME = "clean-twitch-grayscale"
 export const UNIVERSAL_STYLE_ID_JS = "clean-twitch-id-js"
@@ -31,6 +33,24 @@ export function initializeStyleElement() {
 		"/* DISPLAY_NONE_STYLES_START */\n/* DISPLAY_NONE_STYLES_END */" +
 		"\n/* GRAYSCALE_STYLES_START */\n/* GRAYSCALE_STYLES_END */"
 	document.head.appendChild(globalStyleElementCSS)
+}
+
+// Mirror the computed stylesheet to localStorage (sync-readable) so the
+// document_start early script can re-inject it before Twitch paints. Prevents
+// flash-of-unhidden-content on cold load. chrome.storage.local stays the source
+// of truth; this is a disposable, self-healing cache.
+export function persistCssCache() {
+	try {
+		if (globalStyleElementCSS) {
+			localStorage.setItem(CSS_CACHE_KEY, globalStyleElementCSS.textContent ?? "")
+		}
+	} catch {
+		// localStorage unavailable (private mode / quota) — fall back to no cache.
+	}
+}
+
+export function removeEarlyStyle() {
+	document.getElementById(EARLY_STYLE_ID)?.remove()
 }
 
 export function toggleCSSHidden(selector: string, toggled: boolean) {
@@ -89,6 +109,7 @@ export function toggleCSSHidden(selector: string, toggled: boolean) {
 	}
 
 	globalStyleElementCSS.textContent = beforeSection + newSection + afterSection
+	persistCssCache()
 }
 
 export function toggleCSSGrayscale(selector: string, toggled: boolean) {
@@ -147,4 +168,5 @@ export function toggleCSSGrayscale(selector: string, toggled: boolean) {
 	}
 
 	globalStyleElementCSS.textContent = beforeSection + newSection + afterSection
+	persistCssCache()
 }

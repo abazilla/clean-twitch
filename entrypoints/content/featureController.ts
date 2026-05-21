@@ -18,6 +18,8 @@ import {
 	GRAYSCALE_DISABLED,
 	GRAYSCALE_FILTER_ON,
 	initializeStyleElement,
+	persistCssCache,
+	removeEarlyStyle,
 	TEST_MODE_STYLES,
 	UNIVERSAL_STYLE_ID_CSS,
 	UNIVERSAL_STYLE_ID_JS,
@@ -99,6 +101,8 @@ export async function toggleExtensionEnabled(enabled: boolean) {
 			}
 		}
 	}
+	// Keep the early-inject cache in sync with the enabled/disabled state.
+	persistCssCache()
 }
 
 // Handle switching between Simple and Advanced modes, and on init.
@@ -164,4 +168,8 @@ export async function initializeStylesAndFeatures() {
 	document.documentElement.classList.add(GRAYSCALE_CLASS_NAME)
 	const testMode = await storageHandler.get<boolean>("test_mode")
 	toggleTestMode(testMode || false)
+
+	// Real stylesheet is now fully populated — drop the document_start early
+	// inject so the two don't diverge (e.g. on later extension disable).
+	removeEarlyStyle()
 }
