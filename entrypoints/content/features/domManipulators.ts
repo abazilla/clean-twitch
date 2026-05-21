@@ -266,6 +266,10 @@ export function toggleChatSubUpsell(value: boolean) {
 	toggleCSSHidden(Chat.SUB_UPSELL, value)
 }
 
+export function toggleChatSponsorBanner(value: boolean) {
+	toggleCSSHidden(Chat.SPONSOR_BANNER, value)
+}
+
 // SPA route-change pub/sub. history.pushState / replaceState do not fire
 // any native event, so we patch them once and fan out to subscribers.
 let routeListenerInstalled = false

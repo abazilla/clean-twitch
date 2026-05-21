@@ -70,6 +70,7 @@ export const Chat = {
 	BEST_MOMENTS_CLIP: 'div.cMeiZH:has(div[aria-label="Expand Top Clips Leaderboard"])', // FRAGILE
 	PRIVATE_CALLOUT: 'div[data-test-selector="chat-private-callout-queue__callout-container"]',
 	SUB_UPSELL: 'button:has(> div[style*="sub-upsell"])',
+	SPONSOR_BANNER: "div:has(> button.channel-skins-banner__interactive)",
 } as const
 
 // ---------- PLAYER / CAROUSEL ----------

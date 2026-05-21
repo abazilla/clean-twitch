@@ -148,10 +148,16 @@ export const features = [
 		],
 	},
 	{
-		id: "hide_left_sidebar",
+		id: "left_sidebar",
 		label: "Left sidebar",
+		hideToggleButton: true,
 		simpleModeActive: [],
 		children: [
+			{
+				id: "hide_left_sidebar",
+				label: "Toggle Side Nav",
+				simpleModeActive: [],
+			},
 			{
 				id: "toggle_sidenav_grayscale",
 				label: "Toggle Side Nav Grayscale",
@@ -265,6 +271,11 @@ export const features = [
 				label: "Hide Chat Subscribe Upsell",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
+			{
+				id: "hide_chat_sponsor_banner",
+				label: "Hide Sponsored Banner",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
 		],
 	},
 	{
@@ -350,6 +361,7 @@ export const features = [
 			{
 				id: "hide_video_hype_train",
 				label: "Hide Hype Train Overlay on Video",
+				description: "only visible when sidebar is closed",
 				simpleModeActive: ["minimalist", "focus"],
 				children: [],
 			},
