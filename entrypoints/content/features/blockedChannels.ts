@@ -1,6 +1,11 @@
 import { BLOCKED_CHANNELS_STYLE_ID, DISPLAY_NONE_STYLES } from "../dom/cssManager"
 import { storageHandler } from "../storage/handler"
 import { BlockedChannels } from "./definitions"
+import {
+	blockedChannelDirectorySelectors,
+	blockedChannelSearchSelectors,
+	blockedChannelSidebarSelectors,
+} from "./selectors"
 
 let channelStyleElement: HTMLStyleElement
 
@@ -50,31 +55,9 @@ export function handleBlockedChannels(blockedChannels: BlockedChannels) {
 	const channelRules = usernames
 		.filter((u) => u.enabled && enabled)
 		.flatMap((u) => [
-			...(hideFromSearch
-				? [
-						`#search-tray__container a[href="/${u.username}"]`,
-						`a[data-tray-item="true"][href="/${u.username}"]`,
-						`a[data-a-target="search-result-live-channel"][href="/${u.username}"]`,
-						`div[data-a-target="search-results-live-channel"]:has(a[href="/${u.username}"])`,
-						`div.search-result-offline_channel--body:has(a[href="/${u.username}"]) .search-result`,
-						`a[href="/${u.username}"][data-a-target="search-result-live-channel"] ~ .search-result`,
-						`div[data-a-target="search-result-live-channel"]:has(a[href="/${u.username}"])`,
-						`div[data-a-target="search-result-video"]:has(a[href*="/${u.username}/"])`,
-					]
-				: []),
-			...(hideFromSidebar ? [`div.side-nav-card:has(a[href="/${u.username}"])`] : []),
-			...(hideFromDirectory
-				? [
-						`div[data-target="directory-first-item"]:has(a[href="/${u.username}"])`,
-						`div[data-target=""]:has(a[href="/${u.username}"])`,
-						`a[href="/${u.username}"][data-a-target="preview-card-image-link"] ~ div.shelf-card__impression-wrapper`,
-						`a[data-a-target="preview-card-image-link"][href="/${u.username}"] ~ div[data-target="directory-game__card_container"]`,
-						`a[href="/${u.username}"] ~ .recommended-channel`,
-						`a[href="/${u.username}"][data-test-selector="recommended-channel"] ~ div.recommended-channel`,
-						`div.tw-col:has(a[href="/${u.username}"])`,
-						`div.tw-transition:has(> .shelf-card__impression-wrapper):has(a[href="/${u.username}"])`,
-					]
-				: []),
+			...(hideFromSearch ? blockedChannelSearchSelectors(u.username) : []),
+			...(hideFromSidebar ? blockedChannelSidebarSelectors(u.username) : []),
+			...(hideFromDirectory ? blockedChannelDirectorySelectors(u.username) : []),
 		])
 		.join(",")
 
