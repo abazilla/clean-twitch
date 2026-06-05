@@ -119,6 +119,10 @@ export const ChannelInfo = {
 	ABOUT_SECTION: ".Layout-sc-1xcs6mc-0.hisUmW:has(.channel-panels)", // FRAGILE
 	CHANNEL_PANEL_SECTION:
 		".Layout-sc-1xcs6mc-0.hisUmW > div:nth-child(2):has(.channel-panels)", // FRAGILE
+	CHANNEL_PROMO_BANNER:
+		'div:has(> div > [class*="tw-root--theme-light"] [style*="Channel_Promo_Banner"])', // FRAGILE
+	GIFT_SUB_DISCOUNT_PROMO:
+		'div.Layout-sc-1xcs6mc-0:has(> div > div > [aria-label="Gift sub discount promotion"])', // FRAGILE: depth-sensitive
 } as const
 
 // ---------- FOOTER ----------

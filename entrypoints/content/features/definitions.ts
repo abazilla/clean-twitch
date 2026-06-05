@@ -403,6 +403,18 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "hide_info_channel_promo_banner",
+				label: "Hide Channel Promo Banner",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
+				id: "hide_info_gift_sub_discount_promo",
+				label: "Hide Gift Sub Discount Promo",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
 				id: "hide_info_about_section",
 				label: "Hide About Section",
 				simpleModeActive: ["minimalist", "focus"],

@@ -556,6 +556,14 @@ export function toggleComboButton(value: boolean) {
 	toggleCSSHidden(ChannelInfo.COMBO_BUTTON, value)
 }
 
+export function toggleInfoChannelPromoBanner(value: boolean) {
+	toggleCSSHidden(ChannelInfo.CHANNEL_PROMO_BANNER, value)
+}
+
+export function toggleInfoGiftSubDiscountPromo(value: boolean) {
+	toggleCSSHidden(ChannelInfo.GIFT_SUB_DISCOUNT_PROMO, value)
+}
+
 export function toggleInfoAboutSection(value: boolean) {
 	toggleCSSHidden(ChannelInfo.ABOUT_SECTION, value)
 }
