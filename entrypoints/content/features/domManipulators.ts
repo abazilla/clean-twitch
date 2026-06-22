@@ -227,6 +227,10 @@ export function toggleTopGifters(value: boolean) {
 	toggleCSSHidden(Chat.TOP_GIFTERS, value)
 }
 
+export function toggleTopCheerers(value: boolean) {
+	toggleCSSHidden(Chat.TOP_CHEERERS, value)
+}
+
 export function toggleChatMonetizationButtons(value: boolean) {
 	toggleCSSHidden(Chat.BITS_BUTTON, value)
 	toggleCSSHidden(Chat.CHANNEL_POINTS_ICON, value)

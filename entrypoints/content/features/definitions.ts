@@ -254,6 +254,11 @@ export const features = [
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],
 			},
 			{
+				id: "hide_top_cheerers",
+				label: "Hide Top Cheerers",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+			},
+			{
 				id: "hide_chat_highlights",
 				label: "Hide Chat Highlights",
 				simpleModeActive: ["no_monetization", "minimalist", "focus"],

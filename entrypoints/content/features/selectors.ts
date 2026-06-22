@@ -60,6 +60,8 @@ export const Chat = {
 	CHANNEL_RIGHT_COLUMN: ".channel-root__right-column",
 	TOP_GIFTERS:
 		'div.ScTransitionBase-sc-hx4quq-0.hhLPgp.tw-transition:has(button[aria-label="Expand Top Gifters Leaderboard"])', // FRAGILE: generated classes
+	TOP_CHEERERS:
+		'div.ScTransitionBase-sc-hx4quq-0.tw-transition:has(button[aria-label="Expand Top Cheerers Leaderboard"])', // FRAGILE: generated classes
 	BITS_BUTTON: ".InjectLayout-sc-1i43xsx-0.iDMNUO:has(button[data-a-target='bits-button'])", // FRAGILE
 	CHANNEL_POINTS_ICON: ".Layout-sc-1xcs6mc-0.eCNebZ:has(.channel-points-icon)", // FRAGILE
 	BITS_BALANCE: 'div[data-test-selector="bits-balance-string"]',
