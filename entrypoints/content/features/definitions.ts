@@ -415,6 +415,12 @@ export const features = [
 				children: [],
 			},
 			{
+				id: "hide_info_gift_expiration_callout",
+				label: "Hide Gift Sub Limited-Time Discount Banner",
+				simpleModeActive: ["no_monetization", "minimalist", "focus"],
+				children: [],
+			},
+			{
 				id: "hide_info_about_section",
 				label: "Hide About Section",
 				simpleModeActive: ["minimalist", "focus"],

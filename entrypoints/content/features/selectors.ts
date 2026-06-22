@@ -123,6 +123,8 @@ export const ChannelInfo = {
 		'div:has(> div > [class*="tw-root--theme-light"] [style*="Channel_Promo_Banner"])', // FRAGILE
 	GIFT_SUB_DISCOUNT_PROMO:
 		'div.Layout-sc-1xcs6mc-0:has(> div > div > [aria-label="Gift sub discount promotion"])', // FRAGILE: depth-sensitive
+	GIFT_EXPIRATION_CALLOUT:
+		'div.Layout-sc-1xcs6mc-0:has(> div > div > div > [class*="giftExpirationCalloutCreatorLed"])', // FRAGILE: depth-sensitive + hashed class substring
 } as const
 
 // ---------- FOOTER ----------

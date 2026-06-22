@@ -564,6 +564,10 @@ export function toggleInfoGiftSubDiscountPromo(value: boolean) {
 	toggleCSSHidden(ChannelInfo.GIFT_SUB_DISCOUNT_PROMO, value)
 }
 
+export function toggleInfoGiftExpirationCallout(value: boolean) {
+	toggleCSSHidden(ChannelInfo.GIFT_EXPIRATION_CALLOUT, value)
+}
+
 export function toggleInfoAboutSection(value: boolean) {
 	toggleCSSHidden(ChannelInfo.ABOUT_SECTION, value)
 }
